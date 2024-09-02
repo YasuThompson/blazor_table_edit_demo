@@ -1,10 +1,22 @@
 using MovieTableEdit.Components;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MovieTableEdit.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddDbContextFactory<MovieTableEditContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("BlazorWebAppMoviesContext") ?? 
+        throw new InvalidOperationException("Connection string 'BlazorWebAppMoviesContext' not found.")));
+
+builder.Services.AddQuickGridEntityFrameworkAdapter();
+
+// builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
 var app = builder.Build();
 
