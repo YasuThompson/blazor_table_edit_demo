@@ -3,3 +3,4 @@ MovieTableEdit.sln
 MovieTableEdit/bin
 MovieTableEdit/obj
 MovieTableEdit/Data/MockMovie.db*
+MovieTableEdit/Data/MockMovie.db
