@@ -24,6 +24,7 @@ namespace MovieTableEdit.Data
         List<MockMovieFact> mock_movie_facts = new List<MockMovieFact>{
             new MockMovieFact
             {   
+                Id = 1, 
                 MovieId = 1111, 
                 Date = new DateOnly(1979, 4, 12),
                 Price = 2.51M,
@@ -31,24 +32,28 @@ namespace MovieTableEdit.Data
             },
             new MockMovieFact
             {   
+                Id = 2, 
                 MovieId = 1112, 
                 Date = new DateOnly(1981, 12, 24),
                 Price = 2.78M,
             },
             new MockMovieFact
-            {
+            {   
+                Id = 3, 
                 MovieId = 1113,
                 Date = new DateOnly(1985, 7, 10),
                 Price = 3.55M,
             },
             new MockMovieFact
             {
+                Id = 4, 
                 MovieId = 1114, 
                 Date = new DateOnly(2015, 5, 15),
                 Price = 8.43M,
             },
             new MockMovieFact
             {
+                Id = 5, 
                 MovieId = 1115, 
                 Date = new DateOnly(2024, 5, 24),
                 Price = 13.49M,

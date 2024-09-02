@@ -7,7 +7,7 @@ public class MockMovieFact
 {
     // public int Id { get; set; }
 
-    [Key]
+    public int Id { get; set;}
     public int MovieId { get; set; }
 
     public DateOnly Date { get; set; }

@@ -96,49 +96,57 @@ namespace MovieTableEdit.Migrations
 
             modelBuilder.Entity("MovieTableEdit.Models.MockMovieFact", b =>
                 {
-                    b.Property<int>("MovieId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("MovieId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.HasKey("MovieId");
+                    b.HasKey("Id");
 
                     b.ToTable("MockMovieFact", (string)null);
 
                     b.HasData(
                         new
                         {
-                            MovieId = 1111,
+                            Id = 1,
                             Date = new DateOnly(1979, 4, 12),
+                            MovieId = 1111,
                             Price = 2.51m
                         },
                         new
                         {
-                            MovieId = 1112,
+                            Id = 2,
                             Date = new DateOnly(1981, 12, 24),
+                            MovieId = 1112,
                             Price = 2.78m
                         },
                         new
                         {
-                            MovieId = 1113,
+                            Id = 3,
                             Date = new DateOnly(1985, 7, 10),
+                            MovieId = 1113,
                             Price = 3.55m
                         },
                         new
                         {
-                            MovieId = 1114,
+                            Id = 4,
                             Date = new DateOnly(2015, 5, 15),
+                            MovieId = 1114,
                             Price = 8.43m
                         },
                         new
                         {
-                            MovieId = 1115,
+                            Id = 5,
                             Date = new DateOnly(2024, 5, 24),
+                            MovieId = 1115,
                             Price = 13.49m
                         });
                 });
