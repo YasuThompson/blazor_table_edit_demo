@@ -5,6 +5,7 @@ namespace MovieTableEdit.Models;
 
 public class MockMovieFact
 {
+    [Key]
     public int Id { get; set; }
 
     public int MovieId { get; set; }
@@ -18,7 +19,8 @@ public class MockMovieFact
 
 
 public class MockMovieDim
-{
+{   
+    [Key]
     public int MovieId { get; set; }
     public string Title { get; set; }
     public int? GenreId { get; set;}
@@ -26,6 +28,7 @@ public class MockMovieDim
 
 public class MockGenreDim
 {
+    [Key]
     public int GenreId { get; set; }
     public string Genre { get; set; }
 }
