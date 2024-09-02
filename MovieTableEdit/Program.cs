@@ -10,8 +10,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddDbContextFactory<MovieTableEditContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("BlazorWebAppMoviesContext") ?? 
-        throw new InvalidOperationException("Connection string 'BlazorWebAppMoviesContext' not found.")));
+        builder.Configuration.GetConnectionString("MovieTableEditContext") ?? 
+        throw new InvalidOperationException("Connection string 'MovieTableEditContext' not found.")));
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 
