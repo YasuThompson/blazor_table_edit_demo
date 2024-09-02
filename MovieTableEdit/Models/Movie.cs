@@ -5,9 +5,9 @@ namespace MovieTableEdit.Models;
 
 public class MockMovieFact
 {
-    [Key]
-    public int Id { get; set; }
+    // public int Id { get; set; }
 
+    [Key]
     public int MovieId { get; set; }
 
     public DateOnly Date { get; set; }
