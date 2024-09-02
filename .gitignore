@@ -1,4 +1,5 @@
 MovieTableEdit.sln
 /.vscode
 MovieTableEdit/bin
-MovieTableEdit/obj
+MovieTableEdit/
+MovieTableEdit/Data/MockMovie.db*
