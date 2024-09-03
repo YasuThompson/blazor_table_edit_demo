@@ -1,7 +1,56 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<select id="condition" @onclick="@FilterOption" @bind="@SelectedOpt" >
+    <option value="genre">Movie Genre</option>
+    <option value="title">Movie Title</option>
+    <option value="price">Movie Price</option>
+</select>
+<br>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+@if (if_show_genre_filter)
+{
+    <h1>Genre filter</h1>
+}
+
+@if (if_show_column_filter)
+{
+    <h1>Column filter</h1>
+}
+
+<button type="submit"  disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
+
+@code {
+
+    private bool if_show_genre_filter = false;
+    private bool if_show_column_filter = false;
+
+    private bool if_ready_to_edit_table = false;
+
+
+    public string SelectedOpt { get; set; } = "";
+
+    private void FilterOption()
+    {
+        if (SelectedOpt=="genre")
+        {
+            if_show_genre_filter = false;
+            if_show_column_filter = false;
+            if_ready_to_edit_table = true;
+
+        }
+        else if(SelectedOpt=="title")
+        {
+            if_show_genre_filter = true;
+            if_show_column_filter = false;
+            if_ready_to_edit_table = true;
+        }
+        else if(SelectedOpt=="price")
+        {
+            if_show_genre_filter = false;
+            if_show_column_filter = true;
+            if_ready_to_edit_table = true;
+        }
+    }
+}
