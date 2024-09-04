@@ -1,6 +1,8 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@using System
 
+<h2>Select a table type to edit</h2>
 <select id="condition" @onclick="@FilterOption" @bind="@SelectedOpt" >
     <option value="genre">Movie Genre</option>
     <option value="title">Movie Title</option>
@@ -11,21 +13,44 @@
 
 @if (if_show_genre_filter)
 {
+    <h2>Select genres</h2>
     @foreach (var genre in GenreList())
     {
-        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(genre, eventArgs.Value); }" />@genre<br />
+        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(genre, eventArgs.Value, ClubMemberGenre); }" />@genre<br />
+    }
+
+    @foreach (var temp in ClubMemberGenre)
+    {
+        <div>@temp</div>
     }
 }
 
 @if (if_show_column_filter)
-{
+{   
+
+
+    <h5>Select a market</h5>
+    <select id="condition" @onclick="@FilterOption" @bind="@SelectedMarket" >
+        <option value="DE">Germany</option>
+        <option value="FR">France</option>
+    </select>
+    <br>
+    <h2>Select columns to edit</h2>
     @foreach (var column in FactColumnList())
     {
-        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(column, eventArgs.Value); }" />@column
+        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(column, eventArgs.Value, ClubMemberFactColumn); }" />@column
+    }
+
+    @foreach (var temp in ClubMemberFactColumn)
+    {
+        <div>@temp</div>
     }
 }
 
-<button type="submit"  disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
+<br>
+<NavLink href="movies">
+    <button type="submit" disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
+</NavLink>
 
 @code {
 
@@ -34,6 +59,9 @@
     private bool if_ready_to_edit_table = false;
 
     public string SelectedOpt { get; set; } = "";
+    public string SelectedMarket { get; set; } = "";
+
+    public string TableEditLink = "";
 
     private void FilterOption()
     {
@@ -42,25 +70,28 @@
             if_show_genre_filter = false;
             if_show_column_filter = false;
             if_ready_to_edit_table = true;
-
+            TableEditLink = "movie_genre_dim";
         }
         else if(SelectedOpt=="title")
         {
             if_show_genre_filter = true;
             if_show_column_filter = false;
             if_ready_to_edit_table = true;
+            TableEditLink = "movie_title_dim";
         }
         else if(SelectedOpt=="price")
         {
             if_show_genre_filter = false;
             if_show_column_filter = true;
             if_ready_to_edit_table = true;
+            TableEditLink = "movies";
         }
     }
 
+    public List<string> ClubMemberGenre { get; set; } = new List<string>();
+    public List<string> ClubMemberFactColumn { get; set; } = new List<string>();
 
-    public List<string> ClubMember { get; set; } = new List<string>();
-    void CheckboxClicked(string clubID, object checkedValue)
+    void CheckboxClicked(string clubID, object checkedValue, List<string> ClubMember)
     {
         if ((bool)checkedValue)
         {
