@@ -1,6 +1,6 @@
-MovieId,Timestamp,Price,RatingFR
-1111,2023-04-12,2.51,French-G
-1112,2023-12-24,2.78,French-G
-1113,2023-07-10,3.55,French-G
-1114,2023-05-15,8.43,French-G
-1115,2023-05-24,13.49,French-G
+Id,MovieId,Timestamp,Price,RatingFR
+1,1111,2023-04-12,2.51,French-G
+2,1112,2023-12-24,2.78,French-G
+3,1113,2023-07-10,3.55,French-G
+4,1114,2023-05-15,8.43,French-G
+5,1115,2023-05-24,13.49,French-G
