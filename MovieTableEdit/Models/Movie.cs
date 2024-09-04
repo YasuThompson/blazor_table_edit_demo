@@ -21,7 +21,7 @@ public class MockMovieFactFR
     public int Id { get; set;}
     public int MovieId { get; set; }
 
-    public DateOnly Date { get; set; }
+    public DateOnly Timestamp { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -35,7 +35,7 @@ public class MockMovieFactDE
     public int Id { get; set;}
     public int MovieId { get; set; }
 
-    public DateOnly Date { get; set; }
+    public DateOnly Timestamp { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -53,6 +53,9 @@ public class MockMovieDim
     public int? GenreId { get; set;}
     public string? TitleDE { get; set; }
     public string? TitleFR { get; set; }
+    public string? TitleES { get; set; }
+    public string? TitleIT { get; set; }
+    public string? TitleJP { get; set; }
 
 }
 

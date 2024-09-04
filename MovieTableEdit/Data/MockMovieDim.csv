@@ -1,4 +1,4 @@
-MovieId,Title,Genre,ReleaseDate,TitleDE,TitleFR,TitleES,TitleIT,TitleJP
+MovieId,Title,GenreId,ReleaseDate,TitleDE,TitleFR,TitleES,TitleIT,TitleJP
 1111,Mad Max,1,1979-04-12,,,,,
 1112,The Road Warrior,1,1981-12-24,,,,,
 1113,Mad Max: Beyond Thunderdome,2,1985-07-10,Mad Max: Jeneseits der Donnerkuppel,,,,

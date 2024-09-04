@@ -1,5 +1,9 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using CsvHelper;
+using System.Globalization;
+
 using MovieTableEdit.Models;
 
 namespace MovieTableEdit.Data
@@ -22,6 +26,7 @@ namespace MovieTableEdit.Data
         public DbSet<MockMovieFactFR> MockMovieFactFR { get; set; }
         public DbSet<MockMovieDim> MockMovieDim { get; set; }
         public DbSet<MockGenreDim> MockGenreDim { get; set; }
+
 
         List<MockMovieFact> mock_movie_facts = new List<MockMovieFact>{
             new MockMovieFact
@@ -62,148 +67,21 @@ namespace MovieTableEdit.Data
             }
         };
 
-        List<MockMovieFactDE> mock_movie_facts_de = new List<MockMovieFactDE>{
-            new MockMovieFactDE
-            {   
-                Id = 1, 
-                MovieId = 1111, 
-                Date = new DateOnly(1979, 4, 12),
-                Price = 2.51M,
-                RatingDE = "German-G"
-                
-            },
-            new MockMovieFactDE
-            {   
-                Id = 2, 
-                MovieId = 1112, 
-                Date = new DateOnly(1981, 12, 24),
-                Price = 2.78M,
-                RatingDE = "German-G"
-            },
-            new MockMovieFactDE
-            {   
-                Id = 3, 
-                MovieId = 1113,
-                Date = new DateOnly(1985, 7, 10),
-                Price = 3.55M,
-                RatingDE = "German-G"
-            },
-            new MockMovieFactDE
-            {
-                Id = 4, 
-                MovieId = 1114, 
-                Date = new DateOnly(2015, 5, 15),
-                Price = 8.43M,
-                RatingDE = "German-G"
-            },
-            new MockMovieFactDE
-            {
-                Id = 5, 
-                MovieId = 1115, 
-                Date = new DateOnly(2024, 5, 24),
-                Price = 13.49M,
-                RatingDE = "German-G"
-            }
-        };
-
-        List<MockMovieFactFR> mock_movie_facts_fr= new List<MockMovieFactFR>{
-            new MockMovieFactFR
-            {   
-                Id = 1, 
-                MovieId = 1111, 
-                Date = new DateOnly(1979, 4, 12),
-                Price = 2.51M,
-                RatingFR = "French-R"
-                
-            },
-            new MockMovieFactFR
-            {   
-                Id = 2, 
-                MovieId = 1112, 
-                Date = new DateOnly(1981, 12, 24),
-                Price = 2.78M,
-                RatingFR = "French-R"
-            },
-            new MockMovieFactFR
-            {   
-                Id = 3, 
-                MovieId = 1113,
-                Date = new DateOnly(1985, 7, 10),
-                Price = 3.55M,
-                RatingFR = "French-R"
-            },
-            new MockMovieFactFR
-            {
-                Id = 4, 
-                MovieId = 1114, 
-                Date = new DateOnly(2015, 5, 15),
-                Price = 8.43M,
-                RatingFR = "French-R"
-            },
-            new MockMovieFactFR
-            {
-                Id = 5, 
-                MovieId = 1115, 
-                Date = new DateOnly(2024, 5, 24),
-                Price = 13.49M,
-                RatingFR = "French-R"
-            }
-        };
-
-        List<MockMovieDim> mock_movie_dims = new List<MockMovieDim>{
-            new MockMovieDim
-            {   
-                MovieId = 1111, 
-                Title = "Mad Max",
-                GenreId = 1,
-            },
-            new MockMovieDim
-            {   
-                MovieId = 1112, 
-                Title = "The Road Warrior",
-                GenreId = 1,
-            },
-            new MockMovieDim
-            {
-                Title = "Mad Max: Beyond Thunderdome",
-                MovieId = 1113,
-                GenreId = 2,
-                TitleDE = "Mad Max: Jeneseits der Donnerkuppel"
-
-            },
-            new MockMovieDim
-            {
-                Title = "Mad Max: Fury Road",
-                MovieId = 1114, 
-                GenreId = 1,
-            },
-            new MockMovieDim
-            {
-                Title = "Furiosa: A Mad Max Saga",
-                MovieId = 1115, 
-                GenreId = 1,
-                TitleFR = "Furiosa: Une saga Mad Max"
-            }
-        };
-
-
-        List<MockGenreDim> mock_genre_dims = new List<MockGenreDim>
-        {
-            new MockGenreDim
-            {   
-                GenreId = 1, 
-                Genre = "SciFi",
-            },
-            new MockGenreDim
-            {   
-                GenreId = 2, 
-                Genre = "Action",
-            },
-        };
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {   
+
+            string mock_de_csv_path = "Data/MockMovieFactDE.csv";
+            List<MockMovieFactDE> mock_movie_facts_de = ReadCsvAsClassList<MockMovieFactDE>(mock_de_csv_path);
+
+            string mock_fr_csv_path = "Data/MockMovieFactFR.csv";
+            List<MockMovieFactFR> mock_movie_facts_fr = ReadCsvAsClassList<MockMovieFactFR>(mock_fr_csv_path);
+
+            string mock_movie_dim_csv_path = "Data/MockMovieDim.csv";
+            List<MockMovieDim> mock_movie_dims = ReadCsvAsClassList<MockMovieDim>(mock_movie_dim_csv_path);
+
+            string mock_genre_dim_csv_path = "Data/MockGenreDim.csv";
+            List<MockGenreDim> mock_genre_dims = ReadCsvAsClassList<MockGenreDim>(mock_genre_dim_csv_path);
+
             modelBuilder.Entity<MockMovieFact>().ToTable("MockMovieFact");
             modelBuilder.Entity<MockMovieFact>().HasData(mock_movie_facts);
 
@@ -220,6 +98,22 @@ namespace MovieTableEdit.Data
             modelBuilder.Entity<MockGenreDim>().HasData(mock_genre_dims);
         }
 
-        
+
+        static List<T> ReadCsvAsClassList<T>(string filePath)
+        {
+            var RecordList = new List<T>();
+            
+            using (var reader = new StreamReader(filePath))
+            {
+                // string headerLine = reader.ReadLine();
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {   
+                    RecordList = csv.GetRecords<T>().ToList();
+                }
+
+            }
+            return RecordList;
+        }
+
     }
 }
