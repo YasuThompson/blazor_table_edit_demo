@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieTableEdit.Data;
 
@@ -10,9 +11,11 @@ using MovieTableEdit.Data;
 namespace MovieTableEdit.Migrations
 {
     [DbContext(typeof(MovieTableEditContext))]
-    partial class MovieTableEditContextModelSnapshot : ModelSnapshot
+    [Migration("20240903202837_MoreMockFactTables")]
+    partial class MoreMockFactTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
@@ -84,8 +87,7 @@ namespace MovieTableEdit.Migrations
                         {
                             MovieId = 1113,
                             GenreId = 2,
-                            Title = "Mad Max: Beyond Thunderdome",
-                            TitleDE = "Mad Max: Jeneseits der Donnerkuppel"
+                            Title = "Mad Max: Beyond Thunderdome"
                         },
                         new
                         {
@@ -97,8 +99,7 @@ namespace MovieTableEdit.Migrations
                         {
                             MovieId = 1115,
                             GenreId = 1,
-                            Title = "Furiosa: A Mad Max Saga",
-                            TitleFR = "Furiosa: Une saga Mad Max"
+                            Title = "Furiosa: A Mad Max Saga"
                         });
                 });
 
@@ -156,136 +157,6 @@ namespace MovieTableEdit.Migrations
                             Date = new DateOnly(2024, 5, 24),
                             MovieId = 1115,
                             Price = 13.49m
-                        });
-                });
-
-            modelBuilder.Entity("MovieTableEdit.Models.MockMovieFactDE", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("RatingDE")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MockMovieFactDE", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Date = new DateOnly(1979, 4, 12),
-                            MovieId = 1111,
-                            Price = 2.51m,
-                            RatingDE = "German-G"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Date = new DateOnly(1981, 12, 24),
-                            MovieId = 1112,
-                            Price = 2.78m,
-                            RatingDE = "German-G"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Date = new DateOnly(1985, 7, 10),
-                            MovieId = 1113,
-                            Price = 3.55m,
-                            RatingDE = "German-G"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Date = new DateOnly(2015, 5, 15),
-                            MovieId = 1114,
-                            Price = 8.43m,
-                            RatingDE = "German-G"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Date = new DateOnly(2024, 5, 24),
-                            MovieId = 1115,
-                            Price = 13.49m,
-                            RatingDE = "German-G"
-                        });
-                });
-
-            modelBuilder.Entity("MovieTableEdit.Models.MockMovieFactFR", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("RatingFR")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MockMovieFactFR", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Date = new DateOnly(1979, 4, 12),
-                            MovieId = 1111,
-                            Price = 2.51m,
-                            RatingFR = "French-R"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Date = new DateOnly(1981, 12, 24),
-                            MovieId = 1112,
-                            Price = 2.78m,
-                            RatingFR = "French-R"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Date = new DateOnly(1985, 7, 10),
-                            MovieId = 1113,
-                            Price = 3.55m,
-                            RatingFR = "French-R"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Date = new DateOnly(2015, 5, 15),
-                            MovieId = 1114,
-                            Price = 8.43m,
-                            RatingFR = "French-R"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Date = new DateOnly(2024, 5, 24),
-                            MovieId = 1115,
-                            Price = 13.49m,
-                            RatingFR = "French-R"
                         });
                 });
 #pragma warning restore 612, 618

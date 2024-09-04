@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieTableEdit.Data;
 
@@ -10,9 +11,11 @@ using MovieTableEdit.Data;
 namespace MovieTableEdit.Migrations
 {
     [DbContext(typeof(MovieTableEditContext))]
-    partial class MovieTableEditContextModelSnapshot : ModelSnapshot
+    [Migration("20240904065905_MoreMockFactTables2")]
+    partial class MoreMockFactTables2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
