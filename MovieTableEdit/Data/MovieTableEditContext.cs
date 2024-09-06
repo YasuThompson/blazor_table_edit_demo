@@ -105,7 +105,6 @@ namespace MovieTableEdit.Data
             
             using (var reader = new StreamReader(filePath))
             {
-                // string headerLine = reader.ReadLine();
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {   
                     RecordList = csv.GetRecords<T>().ToList();
