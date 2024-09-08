@@ -1,38 +1,65 @@
 @page "/movies"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
-@using Radzen
-@using Radzen.Blazor
-
+@using Microsoft.AspNetCore.Components.QuickGrid
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
 @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
+@implements IAsyncDisposable
 
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-    Data="@movie_facts" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selected_movie_facts>
-    <Columns>
-        <RadzenDataGridColumn Property="@nameof(MockMovieFact.MovieId)" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="@nameof(MockMovieFact.Date)" Filterable="false"  Title="Date" Frozen="true" Width="160px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="@nameof(MockMovieFact.Price)"  Filterable="false"  Title="Price" Frozen="false" Width="160px" TextAlign="TextAlign.Center" />
-    </Columns>
-</RadzenDataGrid>
+
+<PageTitle>Index</PageTitle>
+
+<p>
+    <a href="movies/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.MockMovieFact">
+    <PropertyColumn Property="movie => GetDictionaryValue(movie.MovieId)" />
+
+    @* <TemplateColumn Context="movie">
+        <a href="@($"movies/edit?id={movie.Id}")">Edit</a> |
+        <a href="@($"movies/details?id={movie.Id}")">Details</a> |
+        <a href="@($"movies/delete?id={movie.Id}")">Delete</a>
+    </TemplateColumn> *@
+
+    <TemplateColumn Title="Date">
+        <div>
+            <label>
+                <input type="date" @bind="@context.Date" />
+            </label>
+        </div>
+    </TemplateColumn>
+
+    <TemplateColumn Title="Price">
+        <div>
+            <label>
+                <input type="decimal" @bind="@context.Price" />
+            </label>
+        </div>
+    </TemplateColumn>
+</QuickGrid>
 
 @code {
-    IEnumerable<MockMovieFact> movie_facts;
-    IList<MockMovieFact> selected_movie_facts;
-
     private MovieTableEditContext context = default!;
 
-    protected override void OnInitialized()
-    {
-        context = DbFactory.CreateDbContext();
-    }
+    private Dictionary<int, string> dimensionDictionary;
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
- 
-        movie_facts = context.MockMovieFact;
-
-        selected_movie_facts = new List<MockMovieFact>(){ movie_facts.FirstOrDefault() };
+        context = DbFactory.CreateDbContext();
+        dimensionDictionary = context.MockMovieDim.Select(p => new {p.MovieId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.MovieId, kvp => kvp.Title);
     }
+
+    // Helper method to safely get the value from the dictionary
+    private string GetDictionaryValue(int key)
+    {
+        if (dimensionDictionary != null && dimensionDictionary.ContainsKey(key))
+        {
+            return dimensionDictionary[key];
+        }
+        return "Key not found";
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
