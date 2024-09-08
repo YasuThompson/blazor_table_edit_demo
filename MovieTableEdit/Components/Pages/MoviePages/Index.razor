@@ -27,6 +27,9 @@
 </QuickGrid>
 
 @code {
+    IEnumerable<MockMovieFact> movie_facts;
+    IList<MockMovieFact> selected_movie_facts;
+
     private MovieTableEditContext context = default!;
 
     protected override void OnInitialized()
