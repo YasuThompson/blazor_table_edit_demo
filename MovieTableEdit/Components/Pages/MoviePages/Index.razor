@@ -1,30 +1,20 @@
 @page "/movies"
-@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
+@using Radzen
+@using Radzen.Blazor
+
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
 @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
-@implements IAsyncDisposable
 
-
-<PageTitle>Index</PageTitle>
-
-<p>
-    <a href="movies/create">Create New</a>
-</p>
-
-<QuickGrid Class="table" Items="context.MockMovieFact">
-    <PropertyColumn Property="movie => movie.MovieId" />
-    <PropertyColumn Property="movie => movie.Date" />
-    <PropertyColumn Property="movie => movie.Price" />
-
-    <TemplateColumn Context="movie">
-        <a href="@($"movies/edit?id={movie.Id}")">Edit</a> |
-        <a href="@($"movies/details?id={movie.Id}")">Details</a> |
-        <a href="@($"movies/delete?id={movie.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+    Data="@movie_facts" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selected_movie_facts>
+    <Columns>
+        <RadzenDataGridColumn Property="@nameof(MockMovieFact.MovieId)" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="@nameof(MockMovieFact.Date)" Filterable="false"  Title="Date" Frozen="true" Width="160px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="@nameof(MockMovieFact.Price)"  Filterable="false"  Title="Price" Frozen="false" Width="160px" TextAlign="TextAlign.Center" />
+    </Columns>
+</RadzenDataGrid>
 
 @code {
     IEnumerable<MockMovieFact> movie_facts;
@@ -37,5 +27,12 @@
         context = DbFactory.CreateDbContext();
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+ 
+        movie_facts = context.MockMovieFact;
+
+        selected_movie_facts = new List<MockMovieFact>(){ movie_facts.FirstOrDefault() };
+    }
 }
