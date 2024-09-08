@@ -23,10 +23,10 @@
             </label>
         </div>
     </TemplateColumn>
-    <TemplateColumn Context="genre">
+    @* <TemplateColumn Context="genre">
         <a href="@($"movies/edit?id={genre.GenreId}")">Edit</a> |
         <a href="@($"movies/details?id={genre.GenreId}")">Details</a> |
-    </TemplateColumn>
+    </TemplateColumn> *@
 </QuickGrid>
 
 @code {
