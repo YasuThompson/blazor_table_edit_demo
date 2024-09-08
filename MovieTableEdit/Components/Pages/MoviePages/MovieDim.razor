@@ -1,0 +1,96 @@
+@page "/movie-dim"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using MovieTableEdit.Models
+@using MovieTableEdit.Data
+@inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
+@implements IAsyncDisposable
+
+
+<PageTitle>Movie Price</PageTitle>
+
+<p>
+    <a href="movies/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.MockMovieDim">
+    <PropertyColumn Title="Movie ID" Property = "movie => movie.MovieId" />
+    
+    <PropertyColumn Title="Genre" Property="movie => GetGenre(movie.GenreId)" />
+
+    <TemplateColumn Title="Title">
+        <div>
+            <label>
+                <input type="string" @bind="@context.Title" />
+            </label>
+        </div>
+    </TemplateColumn>
+
+    <TemplateColumn Title="German Title">
+        <div>
+            <label>
+                <input type="string" @bind="@context.TitleDE" />
+            </label>
+        </div>
+    </TemplateColumn>
+
+    <TemplateColumn Title="French Title">
+        <div>
+            <label>
+                <input type="string" @bind="@context.TitleFR" />
+            </label>
+        </div>
+    </TemplateColumn>
+
+    <TemplateColumn Title="Spanish Title">
+        <div>
+            <label>
+                <input type="string" @bind="@context.TitleES" />
+            </label>
+        </div>
+    </TemplateColumn>
+
+    <TemplateColumn Title="Italian Title">
+        <div>
+            <label>
+                <input type="string" @bind="@context.TitleIT" />
+            </label>
+        </div>
+    </TemplateColumn>
+
+    <TemplateColumn Title="Japanese Title">
+        <div>
+            <label>
+                <input type="string" @bind="@context.TitleJP" />
+            </label>
+        </div>
+    </TemplateColumn>
+
+
+</QuickGrid>
+
+
+@code {
+    private MovieTableEditContext context = default!;
+
+    private Dictionary<int, string> dimensionDictionary;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+        dimensionDictionary = context.MockGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
+    }
+
+    // Helper method to safely get the value from the dictionary
+    private string GetGenre(int key)
+    {
+        if (dimensionDictionary != null && dimensionDictionary.ContainsKey(key))
+        {
+            return dimensionDictionary[key];
+        }
+        return "Key not found";
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
