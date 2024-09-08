@@ -50,7 +50,7 @@ public class MockMovieDim
     [Key]
     public int MovieId { get; set; }
     public string Title { get; set; }
-    public int? GenreId { get; set;}
+    public int GenreId { get; set;}
     public string? TitleDE { get; set; }
     public string? TitleFR { get; set; }
     public string? TitleES { get; set; }
