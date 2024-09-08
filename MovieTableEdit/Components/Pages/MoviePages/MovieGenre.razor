@@ -1,0 +1,42 @@
+@page "/movie-genre"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using MovieTableEdit.Models
+@using MovieTableEdit.Data
+@inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
+@implements IAsyncDisposable
+
+
+<PageTitle>Movie Genre</PageTitle>
+
+<p>
+    <a href="movies/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.MockGenreDim">
+    <PropertyColumn Property="genre => genre.GenreId" />
+    <TemplateColumn Title="Genre">
+        <div>
+            <label>
+                <input type="string" @bind="@context.Genre" />
+            </label>
+        </div>
+    </TemplateColumn>
+    <TemplateColumn Context="genre">
+        <a href="@($"movies/edit?id={genre.GenreId}")">Edit</a> |
+        <a href="@($"movies/details?id={genre.GenreId}")">Details</a> |
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private MovieTableEditContext context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
