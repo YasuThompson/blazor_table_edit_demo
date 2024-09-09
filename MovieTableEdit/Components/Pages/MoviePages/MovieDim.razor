@@ -26,6 +26,13 @@
 
 <QuickGrid Class="table" Items="@context.MockMovieDim">
     <PropertyColumn Title="Movie ID" Property = "movie => movie.MovieId" />
+
+    <TemplateColumn Title="Poster">
+            <div class="flex items-center" style="max-width: 200px; width: 100%;">
+                <img class="w-8 h-6 mr-4" src="@GetPosterImgPath(context.MovieId)" style="width: 100%; height: auto;" />
+            </div>
+    </TemplateColumn>
+
     <PropertyColumn Title="Genre" Property = "movie => movie.GenreId" />
     <TemplateColumn Title="Genre">
         <div>
@@ -154,6 +161,11 @@
         return "Key not found";
     }
 
+    private string GetPosterImgPath(int movie_id)
+    {
+        string img_path = $"images/{movie_id}.jpg";
+        return img_path;
+    }
 
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
