@@ -14,7 +14,17 @@
     <a href="movies/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="context.MockMovieDim">
+<p>
+    Display:
+    @foreach (var option in displayOptions)
+    {
+        <label style="margin-right: 10px;">
+            <input type="checkbox" @bind="displayOptions[option.Key]" /> @option.Key
+        </label>
+    }
+</p>
+
+<QuickGrid Class="table" Items="@context.MockMovieDim">
     <PropertyColumn Title="Movie ID" Property = "movie => movie.MovieId" />
     <PropertyColumn Title="Genre" Property = "movie => movie.GenreId" />
     <TemplateColumn Title="Genre">
@@ -28,6 +38,24 @@
         </div>
     </TemplateColumn>
 
+
+
+    @* @foreach(var kvp in displayOptions)
+    {
+        @if(kvp.Value)
+        {
+            <TemplateColumn Title=@kvp.Key>
+                <div>
+                    <label>
+                        <input type="string" @bind="@GetPropertyValue(kvp.Key)" />
+                    </label>
+                </div>
+            </TemplateColumn>
+        }
+    } *@
+
+    
+    
     <TemplateColumn Title="Title">
         <div>
             <label>
@@ -36,45 +64,61 @@
         </div>
     </TemplateColumn>
 
-    <TemplateColumn Title="German Title">
-        <div>
-            <label>
-                <input type="string" @bind="@context.TitleDE" />
-            </label>
-        </div>
-    </TemplateColumn>
 
-    <TemplateColumn Title="French Title">
-        <div>
-            <label>
-                <input type="string" @bind="@context.TitleFR" />
-            </label>
-        </div>
-    </TemplateColumn>
+    @if(displayOptions["TitleDE"])
+    {
+        <TemplateColumn Title="German Title">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.TitleDE" />
+                </label>
+            </div>
+        </TemplateColumn>
+    }
 
-    <TemplateColumn Title="Spanish Title">
-        <div>
-            <label>
-                <input type="string" @bind="@context.TitleES" />
-            </label>
-        </div>
-    </TemplateColumn>
+    @if(displayOptions["TitleFR"])
+    {
+        <TemplateColumn Title="French Title">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.TitleFR" />
+                </label>
+            </div>
+        </TemplateColumn>
+    }
 
-    <TemplateColumn Title="Italian Title">
-        <div>
-            <label>
-                <input type="string" @bind="@context.TitleIT" />
-            </label>
-        </div>
-    </TemplateColumn>
+    @if(displayOptions["TitleES"])
+    {
+        <TemplateColumn Title="Spanish Title">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.TitleES" />
+                </label>
+            </div>
+        </TemplateColumn>
+    }
 
-    <TemplateColumn Title="Japanese Title">
-        <div>
-            <label>
-                <input type="string" @bind="@context.TitleJP" />
-            </label>
-        </div>
-    </TemplateColumn>
+    @if(displayOptions["TitleIT"])
+    {
+        <TemplateColumn Title="Italian Title">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.TitleIT" />
+                </label>
+            </div>
+        </TemplateColumn>
+    }
+
+    @if(displayOptions["TitleJP"])
+    {    
+        <TemplateColumn Title="Japanese Title">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.TitleJP" />
+                </label>
+            </div>
+        </TemplateColumn>
+    }
 
 
 </QuickGrid>
@@ -84,6 +128,15 @@
     private MovieTableEditContext context = default!;
 
     private Dictionary<int, string> dimensionDictionary;
+
+    Dictionary<string, bool> displayOptions = new Dictionary<string, bool>
+    {
+        { "TitleDE", true },
+        { "TitleFR", true },
+        { "TitleES", false },
+        { "TitleIT", false },
+        { "TitleJP", false },
+    };
 
     protected override async Task OnInitializedAsync()
     {
@@ -100,6 +153,8 @@
         }
         return "Key not found";
     }
+
+
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
