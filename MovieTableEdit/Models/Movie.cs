@@ -63,7 +63,7 @@ public class MockComicPriceFR
 public class MockMoviePriceDE
 {
     public int Id { get; set;}
-    public int MovieId { get; set; }
+    public int ProductId { get; set; }
 
     public DateOnly Timestamp { get; set; }
 
