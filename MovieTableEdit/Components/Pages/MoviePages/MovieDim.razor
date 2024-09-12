@@ -24,12 +24,22 @@
     }
 </p>
 
-<QuickGrid Class="table" Items="@context.MockMovieDim">
-    <PropertyColumn Title="Movie ID" Property = "movie => movie.MovieId" />
+
+
+<QuickGrid Class="table" Items="@context.MockProductDim">
+    <PropertyColumn Title="Movie ID" Property = "movie => movie.ProductId" />
+
+    <TemplateColumn Title="Title">
+        <div>
+            <label>
+                <input type="string" @bind="@context.Title" />
+            </label>
+        </div>
+    </TemplateColumn>
 
     <TemplateColumn Title="Poster">
             <div class="flex items-center" style="max-width: 200px; width: 100%;">
-                <img class="w-8 h-6 mr-4" src="@GetPosterImgPath(context.MovieId)" style="width: 100%; height: auto;" />
+                <img class="w-8 h-6 mr-4" src="@GetPosterImgPath(context.ProductId)" style="width: 100%; height: auto;" />
             </div>
     </TemplateColumn>
 
@@ -60,16 +70,6 @@
             </TemplateColumn>
         }
     } *@
-
-    
-    
-    <TemplateColumn Title="Title">
-        <div>
-            <label>
-                <input type="string" @bind="@context.Title" />
-            </label>
-        </div>
-    </TemplateColumn>
 
 
     @if(displayOptions["TitleDE"])

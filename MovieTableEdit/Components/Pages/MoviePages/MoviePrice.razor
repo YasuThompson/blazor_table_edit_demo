@@ -4,7 +4,8 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
-@inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
+@* @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory *@
+@inject MovieTableEdit.Data.MovieTableEditContext DbContext
 @implements IAsyncDisposable
 
 
@@ -14,8 +15,9 @@
     <a href="movies/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="context.MockMovieFact">
+<QuickGrid Class="table" Items="_currentData">
     <PropertyColumn Property="movie => GetDictionaryValue(movie.MovieId)" />
+    @* <PropertyColumn Property="movie => movie.MovieId" /> *@
 
     @* <TemplateColumn Context="movie">
         <a href="@($"movies/edit?id={movie.Id}")">Edit</a> |
@@ -23,10 +25,10 @@
         <a href="@($"movies/delete?id={movie.Id}")">Delete</a>
     </TemplateColumn> *@
 
-    <TemplateColumn Title="Date">
+    @* <TemplateColumn Title="Date">
         <div>
             <label>
-                <input type="date" @bind="@context.Date" />
+                <input type="date" @bind="@DbContext.MockMovieFact.Date" />
             </label>
         </div>
     </TemplateColumn>
@@ -34,21 +36,28 @@
     <TemplateColumn Title="Price">
         <div>
             <label>
-                <input type="decimal" @bind="@context.Price" />
+                <input type="decimal" @bind="@DbContext.Price" />
             </label>
         </div>
     </TemplateColumn>
+     *@
 </QuickGrid>
 
 @code {
-    private MovieTableEditContext context = default!;
+    @* private MovieTableEditContext context = default!; *@
 
     private Dictionary<int, string> dimensionDictionary;
-
+    private IQueryable<MockMoviePriceDE> _currentData;
+    
     protected override async Task OnInitializedAsync()
+
     {
-        context = DbFactory.CreateDbContext();
-        dimensionDictionary = context.MockMovieDim.Select(p => new {p.MovieId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.MovieId, kvp => kvp.Title);
+        @* context = DbFactory.CreateDbContext(); *@
+        @* var prices = await DbContext.MockMovieFact.ToListAsync(); *@
+
+        _currentData = DbContext.MockMoviePriceDE;
+
+        dimensionDictionary = DbContext.MockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
     }
 
     // Helper method to safely get the value from the dictionary
@@ -61,5 +70,10 @@
         return "Key not found";
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync() => await DbContext.DisposeAsync();
+
+
+
+
+    
 }
