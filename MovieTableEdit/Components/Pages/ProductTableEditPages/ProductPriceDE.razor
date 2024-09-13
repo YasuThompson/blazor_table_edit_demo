@@ -17,30 +17,15 @@
 
 <QuickGrid Class="table" Items="_currentData">
     <PropertyColumn Property="movie => GetDictionaryValue(movie.ProductId)" />
-    @* <PropertyColumn Property="movie => movie.MovieId" /> *@
-
-    @* <TemplateColumn Context="movie">
-        <a href="@($"movies/edit?id={movie.Id}")">Edit</a> |
-        <a href="@($"movies/details?id={movie.Id}")">Details</a> |
-        <a href="@($"movies/delete?id={movie.Id}")">Delete</a>
-    </TemplateColumn> *@
-
-    @* <TemplateColumn Title="Date">
-        <div>
-            <label>
-                <input type="date" @bind="@DbContext.MockMovieFact.Date" />
-            </label>
-        </div>
-    </TemplateColumn>
 
     <TemplateColumn Title="Price">
         <div>
             <label>
-                <input type="decimal" @bind="@DbContext.Price" />
+                <input type="decimal" @bind="@context.Price" />
             </label>
         </div>
     </TemplateColumn>
-     *@
+     
 </QuickGrid>
 
 @code {
