@@ -9,7 +9,7 @@ public class MockMoviePriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
+    // [Column(TypeName = "decimal(5, 2)")]
     public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
@@ -24,7 +24,7 @@ public class MockTVPriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
+    // [Column(TypeName = "decimal(5, 2)")]
     public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
@@ -39,7 +39,7 @@ public class MockAnimePriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
+    // [Column(TypeName = "decimal(5, 2)")]
     public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
@@ -54,7 +54,7 @@ public class MockComicPriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
+    // [Column(TypeName = "decimal(5, 2)")]
     public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
@@ -69,7 +69,7 @@ public class MockMoviePriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
+    // [Column(TypeName = "decimal(5, 2)")]
     public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
@@ -85,7 +85,7 @@ public class MockTVPriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
+    // [Column(TypeName = "decimal(5, 2)")]
     public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
@@ -100,7 +100,7 @@ public class MockAnimePriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
+    // [Column(TypeName = "decimal(5, 2)")]
     public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
@@ -115,7 +115,7 @@ public class MockComicPriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    [Column(TypeName = "decimal(5, 2)")]
+    // [Column(TypeName = "decimal(5, 2)")]
     public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
