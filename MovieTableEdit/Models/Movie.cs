@@ -9,7 +9,8 @@ public class MockMoviePriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    public DateOnly Timestamp { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -23,7 +24,8 @@ public class MockTVPriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    public DateOnly Timestamp { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -37,7 +39,8 @@ public class MockAnimePriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    public DateOnly Timestamp { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -51,7 +54,8 @@ public class MockComicPriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    public DateOnly Timestamp { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -65,7 +69,8 @@ public class MockMoviePriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    public DateOnly Timestamp { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -80,7 +85,8 @@ public class MockTVPriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    public DateOnly Timestamp { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -94,7 +100,8 @@ public class MockAnimePriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    public DateOnly Timestamp { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -108,7 +115,8 @@ public class MockComicPriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
 
-    public DateOnly Timestamp { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
