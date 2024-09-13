@@ -7,6 +7,8 @@
 @* @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory *@
 @inject MovieTableEdit.Data.MovieTableEditContext DbContext
 @implements IAsyncDisposable
+@inject NavigationManager NavigationManager
+
 
 
 <PageTitle>Product Price</PageTitle>
@@ -39,26 +41,27 @@
      
 </QuickGrid>
 
+<button @onclick="PublishChanges">Publish Changes</button>
+
+
 @code {
     @* private MovieTableEditContext context = default!; *@
 
     private Dictionary<int, string> dimensionDictionary;
     private Dictionary<int, string> dim_dict_rating_de;
-
     private IQueryable<MockMoviePriceDE> _currentData;
 
     private double latest_version;
     private double new_version;
+    private int largest_id_num;
     
     protected override async Task OnInitializedAsync()
 
-    {
-        @* context = DbFactory.CreateDbContext(); *@
-        @* var prices = await DbContext.MockMovieFact.ToListAsync(); *@
-        // Assuming _context is your instance of DbContext (injected through DI or created in the code)
+    {   
         latest_version = DbContext.MockMoviePriceDE.Max(x => (double)x.Version);
+        largest_id_num = DbContext.MockMoviePriceDE.Max(x => x.Id);
 
-        new_version = new_version + 0.01
+        new_version = latest_version + 0.01;
 
         _currentData = DbContext.MockMoviePriceDE.Where(x => (double)x.Version == latest_version);
 
@@ -73,13 +76,30 @@
         {
             return dimensionDictionary[key];
         }
-        return "Key not found";
+        return "Value not found from the dimension table";
     }
 
     public async ValueTask DisposeAsync() => await DbContext.DisposeAsync();
 
 
+    private async Task PublishChanges()
+    {   
 
+        int cnt = 0;
 
+        foreach (var edited_row in _currentData) 
+        {
+            edited_row.Version = (decimal)new_version;
+            edited_row.Id = largest_id_num + cnt + 1;
+            cnt += 1;
+        }
+
+        DbContext.MockMoviePriceDE.AddRangeAsync(_currentData);
+
+        await DbContext.SaveChangesAsync();
+
+        NavigationManager.NavigateTo("/");
+
+    }
     
 }
