@@ -25,6 +25,17 @@
             </label>
         </div>
     </TemplateColumn>
+
+    <TemplateColumn Title="German Rating">
+        <div>
+            <select type="int" @bind="@context.RatingDE">
+                @foreach(var kvp in dim_dict_rating_de)
+                {
+                    <option value=@kvp.Key>@kvp.Value</option>
+                }
+            </select>
+        </div>
+    </TemplateColumn>
      
 </QuickGrid>
 
@@ -32,18 +43,28 @@
     @* private MovieTableEditContext context = default!; *@
 
     private Dictionary<int, string> dimensionDictionary;
+    private Dictionary<int, string> dim_dict_rating_de;
+
     private IQueryable<MockMoviePriceDE> _currentData;
+
+    private double latest_version;
+    private double new_version;
     
     protected override async Task OnInitializedAsync()
 
     {
         @* context = DbFactory.CreateDbContext(); *@
         @* var prices = await DbContext.MockMovieFact.ToListAsync(); *@
+        // Assuming _context is your instance of DbContext (injected through DI or created in the code)
+        latest_version = DbContext.MockMoviePriceDE.Max(x => (double)x.Version);
 
-        _currentData = DbContext.MockMoviePriceDE;
+        new_version = new_version + 0.01
+
+        _currentData = DbContext.MockMoviePriceDE.Where(x => (double)x.Version == latest_version);
 
         dimensionDictionary = DbContext.MockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
-    }
+        dim_dict_rating_de = DbContext.MockRatingDEDim.Select(p => new {p.RatingDEId, p.RatingDE}).AsEnumerable().ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
+    }   
 
     // Helper method to safely get the value from the dictionary
     private string GetDictionaryValue(int key)
