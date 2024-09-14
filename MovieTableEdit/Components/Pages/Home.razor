@@ -3,14 +3,24 @@
 @using System
 
 <h2>Select a table type to edit</h2>
-<select id="condition" @onclick="@FilterOption" @bind="@SelectedOpt" >
-    <option value="genre">Movie Genre</option>
-    <option value="title">Movie Title</option>
-    <option value="price">Movie Price</option>
+<select id="condition" @onclick="@FilterOption" @bind="@selected_cat_dim" >
+    <option value="category_dimension">Dimension table for categories</option>
+    <option value="product_dimension">Dimension table for products</option>
+    <option value="product_price">Product price</option>
 </select>
 <br>
 
-
+@if (if_show_category_filter)
+{
+    <h5>Select a dimension table to edit</h5>
+    <select id="condition" @onclick="@FilterOption" @bind="@SelectedMarket" >
+        <option value="product_type">Product type</option>
+        <option value="product_genre">Product genre</option>
+        <option value="rating_de">German rating</option>
+        <option value="rating_fr">French rating</option>
+    </select>
+    <br>
+}
 @if (if_show_genre_filter)
 {
     <h2>Select genres</h2>
@@ -27,8 +37,6 @@
 
 @if (if_show_column_filter)
 {   
-
-
     <h5>Select a market</h5>
     <select id="condition" @onclick="@FilterOption" @bind="@SelectedMarket" >
         <option value="DE">Germany</option>
@@ -54,33 +62,38 @@
 
 @code {
 
+    private bool if_show_category_filter = false;
     private bool if_show_genre_filter = false;
     private bool if_show_column_filter = false;
     private bool if_ready_to_edit_table = false;
 
     public string SelectedOpt { get; set; } = "";
     public string SelectedMarket { get; set; } = "";
+    public string selected_cat_dim { get; set; } = "";
 
     public string TableEditLink = "";
 
     private void FilterOption()
     {
-        if (SelectedOpt=="genre")
-        {
+        if (SelectedOpt=="category_dimension")
+        {   
+            if_show_category_filter = true;
             if_show_genre_filter = false;
             if_show_column_filter = false;
             if_ready_to_edit_table = true;
             TableEditLink = "movie_genre_dim";
         }
-        else if(SelectedOpt=="title")
-        {
+        else if(SelectedOpt=="product_dimension")
+        {   
+            if_show_category_filter = false;
             if_show_genre_filter = true;
             if_show_column_filter = false;
             if_ready_to_edit_table = true;
             TableEditLink = "movie_title_dim";
         }
-        else if(SelectedOpt=="price")
-        {
+        else if(SelectedOpt=="product_price")
+        {   
+            if_show_category_filter = false;
             if_show_genre_filter = false;
             if_show_column_filter = true;
             if_ready_to_edit_table = true;
