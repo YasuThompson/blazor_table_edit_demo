@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @using System
 
-<h2>Select a table type to edit</h2>
+<h5>Select a table type to edit</h5>
 <select id="condition" @onclick="@FilterOption" @bind="@selected_table_type" >
     <option value="category_dimension">Dimension table for categories</option>
     <option value="product_dimension">Dimension table for products</option>
@@ -23,18 +23,38 @@
 }
 @if (if_show_product_filters)
 {
-    <h2>Select genres</h2>
+    <h5>Select types of products</h5>
+    <p>
+    @foreach (var option in product_type_option_dict)
+    {
+        <label style="margin-right: 10px;">
+            <input type="checkbox" @bind="product_type_option_dict[option.Key]" /> @option.Key
+        </label>
+    }
+    </p>
 }
 
 @if (if_show_price_table_filters)
 {   
-    <h5>Select a market</h5>
-    <select id="condition" @onclick="@FilterOption" @bind="@selected_country" >
-        <option value="DE">Germany</option>
-        <option value="FR">France</option>
-    </select>
-    <br>
-    <h2>Select columns to edit</h2>
+    <div style="display: flex; align-items: center;">
+    <div style="margin-right: 20px;">
+        <h5>Select a market</h5>
+        <select id="condition" @onclick="@FilterOption" @bind="@selected_country">
+            <option value="DE">Germany</option>
+            <option value="FR">France</option>
+        </select>
+    </div>
+    
+    <div>
+        <h5>Select a product type</h5>
+        <select id="condition" @onclick="@FilterOption" @bind="@selected_product">
+            <option value="Movie">Movie</option>
+            <option value="TV">TV Show</option>
+            <option value="Anime">Anime</option>
+            <option value="Comic">Comic</option>
+        </select>
+    </div>
+</div>
 }
 
 <br>
@@ -50,9 +70,19 @@
 
     public string selected_table_type { get; set; } = "";
     public string selected_country { get; set; } = "";
+    public string selected_product { get; set; } = "";
     public string selected_cat_dim { get; set; } = "";
 
     public string table_edit_link = "";
+
+    // A dictionary for storing product type selections
+    Dictionary<string, bool> product_type_option_dict = new Dictionary<string, bool>
+    {
+        { "Movie", true },
+        { "TV", false },
+        { "Anime", false },
+        { "Comic", false },
+    };
 
     private void FilterOption()
     {   
