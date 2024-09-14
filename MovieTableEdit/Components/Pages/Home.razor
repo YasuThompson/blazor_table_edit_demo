@@ -3,17 +3,17 @@
 @using System
 
 <h2>Select a table type to edit</h2>
-<select id="condition" @onclick="@FilterOption" @bind="@selected_cat_dim" >
+<select id="condition" @onclick="@FilterOption" @bind="@selected_table_type" >
     <option value="category_dimension">Dimension table for categories</option>
     <option value="product_dimension">Dimension table for products</option>
     <option value="product_price">Product price</option>
 </select>
 <br>
 
-@if (if_show_category_filter)
+@if (if_show_cat_dim_filter)
 {
     <h5>Select a dimension table to edit</h5>
-    <select id="condition" @onclick="@FilterOption" @bind="@SelectedMarket" >
+    <select id="condition" @onclick="@FilterOption" @bind="@selected_country" >
         <option value="product_type">Product type</option>
         <option value="product_genre">Product genre</option>
         <option value="rating_de">German rating</option>
@@ -21,15 +21,15 @@
     </select>
     <br>
 }
-@if (if_show_genre_filter)
+@if (if_show_product_filters)
 {
     <h2>Select genres</h2>
 }
 
-@if (if_show_column_filter)
+@if (if_show_price_table_filters)
 {   
     <h5>Select a market</h5>
-    <select id="condition" @onclick="@FilterOption" @bind="@SelectedMarket" >
+    <select id="condition" @onclick="@FilterOption" @bind="@selected_country" >
         <option value="DE">Germany</option>
         <option value="FR">France</option>
     </select>
@@ -43,43 +43,42 @@
 </NavLink>
 
 @code {
-
-    private bool if_show_category_filter = false;
-    private bool if_show_genre_filter = false;
-    private bool if_show_column_filter = false;
+    private bool if_show_cat_dim_filter = false;
+    private bool if_show_product_filters = false;
+    private bool if_show_price_table_filters = false;
     private bool if_ready_to_edit_table = false;
 
-    public string SelectedOpt { get; set; } = "";
-    public string SelectedMarket { get; set; } = "";
+    public string selected_table_type { get; set; } = "";
+    public string selected_country { get; set; } = "";
     public string selected_cat_dim { get; set; } = "";
 
-    public string TableEditLink = "";
+    public string table_edit_link = "";
 
     private void FilterOption()
-    {
-        if (SelectedOpt=="category_dimension")
+    {   
+        if (selected_table_type=="category_dimension")
         {   
-            if_show_category_filter = true;
-            if_show_genre_filter = false;
-            if_show_column_filter = false;
+            if_show_cat_dim_filter = true;
+            if_show_product_filters = false;
+            if_show_price_table_filters = false;
             if_ready_to_edit_table = true;
-            TableEditLink = "movie_genre_dim";
+            table_edit_link = "movie_genre_dim";
         }
-        else if(SelectedOpt=="product_dimension")
+        else if(selected_table_type=="product_dimension")
         {   
-            if_show_category_filter = false;
-            if_show_genre_filter = true;
-            if_show_column_filter = false;
+            if_show_cat_dim_filter = false;
+            if_show_product_filters = true;
+            if_show_price_table_filters = false;
             if_ready_to_edit_table = true;
-            TableEditLink = "movie_title_dim";
+            table_edit_link = "movie_title_dim";
         }
-        else if(SelectedOpt=="product_price")
+        else if(selected_table_type=="product_price")
         {   
-            if_show_category_filter = false;
-            if_show_genre_filter = false;
-            if_show_column_filter = true;
+            if_show_cat_dim_filter = false;
+            if_show_product_filters = false;
+            if_show_price_table_filters = true;
             if_ready_to_edit_table = true;
-            TableEditLink = "movies";
+            table_edit_link = "movies";
         }
     }
 
