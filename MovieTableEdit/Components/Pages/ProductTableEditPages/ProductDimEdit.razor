@@ -1,4 +1,4 @@
-@page "/product-dim"
+@page "/product-dim/{selected_product_types}"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -132,6 +132,12 @@
 
 
 @code {
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "selected_producty_types")]
+    public string selected_product_types { get; set; }
+
+    
     private MovieTableEditContext context = default!;
 
     private Dictionary<int, string> dimensionDictionary;

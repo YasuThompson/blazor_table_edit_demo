@@ -1,26 +1,28 @@
 ﻿@page "/"
 @rendermode InteractiveServer
-@using System
+@inject NavigationManager NavigationManager
+
 
 <h5>Select a table type to edit</h5>
 <select id="condition" @onclick="@FilterOption" @bind="@selected_table_type" >
-    <option value="category_dimension">Dimension table for categories</option>
-    <option value="product_dimension">Dimension table for products</option>
-    <option value="product_price">Product price</option>
+    <option value="category-dimension">Dimension table for categories</option>
+    <option value="product-dimension">Dimension table for products</option>
+    <option value="product-price">Product price table</option>
 </select>
 <br>
 
 @if (if_show_cat_dim_filter)
 {
     <h5>Select a dimension table to edit</h5>
-    <select id="condition" @onclick="@FilterOption" @bind="@selected_country" >
-        <option value="product_type">Product type</option>
-        <option value="product_genre">Product genre</option>
-        <option value="rating_de">German rating</option>
-        <option value="rating_fr">French rating</option>
+    <select id="condition" @onclick="@FilterOption" @bind="@selected_cat_dim" >
+        <option value="product-type">Product type</option>
+        <option value="product-genre">Product genre</option>
+        <option value="rating-de">German rating</option>
+        <option value="rating-fr">French rating</option>
     </select>
     <br>
 }
+
 @if (if_show_product_filters)
 {
     <h5>Select types of products</h5>
@@ -47,7 +49,7 @@
     
     <div>
         <h5>Select a product type</h5>
-        <select id="condition" @onclick="@FilterOption" @bind="@selected_product">
+        <select id="condition" @onclick="@FilterOption" @bind="@selected_product_type">
             <option value="Movie">Movie</option>
             <option value="TV">TV Show</option>
             <option value="Anime">Anime</option>
@@ -59,7 +61,7 @@
 
 <br>
 <NavLink href="movies">
-    <button type="submit" disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
+    <button @onclick="NavigateToTableEditPage" disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
 </NavLink>
 
 @code {
@@ -70,10 +72,9 @@
 
     public string selected_table_type { get; set; } = "";
     public string selected_country { get; set; } = "";
-    public string selected_product { get; set; } = "";
+    public string selected_product_type { get; set; } = "";
     public string selected_cat_dim { get; set; } = "";
 
-    public string table_edit_link = "";
 
     // A dictionary for storing product type selections
     Dictionary<string, bool> product_type_option_dict = new Dictionary<string, bool>
@@ -86,30 +87,47 @@
 
     private void FilterOption()
     {   
-        if (selected_table_type=="category_dimension")
+        if (selected_table_type=="category-dimension")
         {   
             if_show_cat_dim_filter = true;
             if_show_product_filters = false;
             if_show_price_table_filters = false;
             if_ready_to_edit_table = true;
-            table_edit_link = "movie_genre_dim";
         }
-        else if(selected_table_type=="product_dimension")
+        else if(selected_table_type=="product-dimension")
         {   
             if_show_cat_dim_filter = false;
             if_show_product_filters = true;
             if_show_price_table_filters = false;
             if_ready_to_edit_table = true;
-            table_edit_link = "movie_title_dim";
         }
-        else if(selected_table_type=="product_price")
+        else if(selected_table_type=="product-price")
         {   
             if_show_cat_dim_filter = false;
             if_show_product_filters = false;
             if_show_price_table_filters = true;
             if_ready_to_edit_table = true;
-            table_edit_link = "movies";
         }
+    }
+
+
+    private async Task NavigateToTableEditPage()
+    {      
+        if(selected_table_type=="category-dimension")
+        {
+            NavigationManager.NavigateTo($"/category-dim/{selected_cat_dim}");
+        }
+        else if(selected_table_type=="product-dimension")
+        {   
+            string selected_product_types = string.Join("-", product_type_option_dict.Where(kvp => kvp.Value).Select(kvp => kvp.Key));
+            NavigationManager.NavigateTo($"/product-dim/{selected_product_types}");
+        }
+        else if(selected_table_type=="product-price")
+        {   
+            NavigationManager.NavigateTo($"/product-price/{selected_country}/{selected_product_type}");
+        }
+        
+
     }
 
 }

@@ -1,4 +1,4 @@
-@page "/general-dim"
+@page "/category-dim/{selected_cat_dim}"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -13,10 +13,6 @@
 
 
 <PageTitle>Dimension Table</PageTitle>
-
-<p>
-    <a href="movies/create">Create New</a>
-</p>
 
 <QuickGrid Class="table" Items="_currentData">
     <PropertyColumn Property="genre => genre.GenreId" />
@@ -34,13 +30,21 @@
 
 @code {
 
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "selected_cat_dim")]
+    public string selected_cat_dim { get; set; }
+
     // TODO: what does this line do?
     private MovieTableEditContext context = default!;
+
+
+    string selected_dim_table = "genre";
     
     private IQueryable<MockGenreDim> _currentData;
 
     protected override async Task OnInitializedAsync()
     {   
+
         //TODO: what is the best way to get a dbcontext?
 
         @* context = DbFactory.CreateDbContext(); *@

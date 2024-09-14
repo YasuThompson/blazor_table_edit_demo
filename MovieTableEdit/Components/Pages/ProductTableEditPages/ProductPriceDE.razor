@@ -1,13 +1,14 @@
-@page "/product-price-de"
+@page "/product-price/Germany/{selected_product_type}"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
-@* @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory *@
+
 @inject MovieTableEdit.Data.MovieTableEditContext DbContext
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
+@using System
 
 
 
@@ -43,9 +44,17 @@
 
 <button @onclick="PublishChanges">Publish Changes</button>
 
-
 @code {
     @* private MovieTableEditContext context = default!; *@
+
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "selected_product_type")]
+    public string selected_product_type { get; set; }
+
+    
+
+
 
     private Dictionary<int, string> dimensionDictionary;
     private Dictionary<int, string> dim_dict_rating_de;
