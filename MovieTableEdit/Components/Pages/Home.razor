@@ -24,15 +24,6 @@
 @if (if_show_genre_filter)
 {
     <h2>Select genres</h2>
-    @foreach (var genre in GenreList())
-    {
-        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(genre, eventArgs.Value, ClubMemberGenre); }" />@genre<br />
-    }
-
-    @foreach (var temp in ClubMemberGenre)
-    {
-        <div>@temp</div>
-    }
 }
 
 @if (if_show_column_filter)
@@ -44,15 +35,6 @@
     </select>
     <br>
     <h2>Select columns to edit</h2>
-    @foreach (var column in FactColumnList())
-    {
-        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(column, eventArgs.Value, ClubMemberFactColumn); }" />@column
-    }
-
-    @foreach (var temp in ClubMemberFactColumn)
-    {
-        <div>@temp</div>
-    }
 }
 
 <br>
@@ -100,50 +82,5 @@
             TableEditLink = "movies";
         }
     }
-
-    public List<string> ClubMemberGenre { get; set; } = new List<string>();
-    public List<string> ClubMemberFactColumn { get; set; } = new List<string>();
-
-    void CheckboxClicked(string clubID, object checkedValue, List<string> ClubMember)
-    {
-        if ((bool)checkedValue)
-        {
-            if (!ClubMember.Contains(clubID))
-            {
-                ClubMember.Add(clubID);
-            }
-        }
-        else
-        {
-            if (ClubMember.Contains(clubID))
-            {
-                ClubMember.Remove(clubID);
-            }
-        }
-    }
-
-
-    public List<String> GenreList()
-    {
-        // fetch from API or...
-        List<String> c = new List<String>();
-        c.Add("Sci-fi");
-        c.Add("Action");
-        c.Add("Esoteric");
-        return c;
-    }
-
-    public List<String> FactColumnList()
-    {
-        // fetch from API or...
-        List<String> c = new List<String>();
-        c.Add("Date");
-        c.Add("MovieId");
-        c.Add("Price");
-        return c;
-    }
-
-
-
 
 }
