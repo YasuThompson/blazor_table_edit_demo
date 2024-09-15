@@ -21,7 +21,7 @@
 </p>
 
 
-<QuickGrid Class="table" Items="@context.MockProductDim">
+<QuickGrid Class="table" Items="queried_data">
     <PropertyColumn Title="Movie ID" Property = "movie => movie.ProductId" />
 
     <TemplateColumn Title="Title">
@@ -126,6 +126,22 @@
     [SupplyParameterFromQuery(Name = "selected_producty_types")]
     public string selected_product_types { get; set; }
 
+
+    private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
+    {
+        { "Movie", 1},
+        { "TV", 2 },
+        { "Anime", 3 },
+        { "Comic", 4 },
+    };
+
+    @* private string[] partsArray  = selected_product_types.Split('-');
+    private List<string> selected_product_type_list = new List<string>(partsArray);
+    private List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_dict[type]).ToList(); *@
+    
+
+    private IQueryable<MockProductDim> queried_data;
+
     private MovieTableEditContext context = default!;
 
     private Dictionary<int, string> product_type_dict;
@@ -143,13 +159,21 @@
     protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
+
+
+        string[] partsArray  = selected_product_types.Split('-');
+        List<string> selected_product_type_list = new List<string>(partsArray);
+        List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_id_dict[type]).ToList();
+
+        queried_data = context.MockProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
+
         product_type_dict = context.MockProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
         genre_dict = context.MockGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
 
     }
 
     private string GetPosterImgPath(int movie_id)
-    {
+    {   
         string img_path = $"images/{movie_id}.jpg";
         return img_path;
     }
