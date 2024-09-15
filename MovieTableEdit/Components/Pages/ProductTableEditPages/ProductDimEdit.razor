@@ -21,7 +21,6 @@
 </p>
 
 
-
 <QuickGrid Class="table" Items="@context.MockProductDim">
     <PropertyColumn Title="Movie ID" Property = "movie => movie.ProductId" />
 
@@ -39,11 +38,11 @@
             </div>
     </TemplateColumn>
 
-    <PropertyColumn Title="Genre" Property = "movie => movie.GenreId" />
-    <TemplateColumn Title="Genre">
+
+    <TemplateColumn Title="Product Type">
         <div>
-            <select type="int" @bind="@context.GenreId">
-                @foreach(var kvp in dimensionDictionary)
+            <select type="int" @bind="@context.ProductTypeId">
+                @foreach(var kvp in product_type_dict)
                 {
                     <option value=@kvp.Key>@kvp.Value</option>
                 }
@@ -51,22 +50,16 @@
         </div>
     </TemplateColumn>
 
-
-
-    @* @foreach(var kvp in displayOptions)
-    {
-        @if(kvp.Value)
-        {
-            <TemplateColumn Title=@kvp.Key>
-                <div>
-                    <label>
-                        <input type="string" @bind="@GetPropertyValue(kvp.Key)" />
-                    </label>
-                </div>
-            </TemplateColumn>
-        }
-    } *@
-
+    <TemplateColumn Title="Genre">
+        <div>
+            <select type="int" @bind="@context.GenreId">
+                @foreach(var kvp in genre_dict)
+                {
+                    <option value=@kvp.Key>@kvp.Value</option>
+                }
+            </select>
+        </div>
+    </TemplateColumn>
 
     @if(displayOptions["TitleDE"])
     {
@@ -133,10 +126,10 @@
     [SupplyParameterFromQuery(Name = "selected_producty_types")]
     public string selected_product_types { get; set; }
 
-    
     private MovieTableEditContext context = default!;
 
-    private Dictionary<int, string> dimensionDictionary;
+    private Dictionary<int, string> product_type_dict;
+    private Dictionary<int, string> genre_dict;
 
     Dictionary<string, bool> displayOptions = new Dictionary<string, bool>
     {
@@ -150,17 +143,9 @@
     protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
-        dimensionDictionary = context.MockGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
-    }
+        product_type_dict = context.MockProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
+        genre_dict = context.MockGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
 
-    // Helper method to safely get the value from the dictionary
-    private string GetGenre(int key)
-    {
-        if (dimensionDictionary != null && dimensionDictionary.ContainsKey(key))
-        {
-            return dimensionDictionary[key];
-        }
-        return "Key not found";
     }
 
     private string GetPosterImgPath(int movie_id)
