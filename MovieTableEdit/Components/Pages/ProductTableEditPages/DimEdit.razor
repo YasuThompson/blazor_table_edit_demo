@@ -5,26 +5,68 @@
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
 @inject MovieTableEdit.Data.MovieTableEditContext DbContext
-
 @* @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory *@
 @implements IAsyncDisposable
-
 @inject NavigationManager NavigationManager
-
 
 <PageTitle>Dimension Table</PageTitle>
 
-<QuickGrid Class="table" Items="_currentData">
-    <PropertyColumn Property="genre => genre.GenreId" />
-    <TemplateColumn Title="Genre">
-        <div>
-            <label>
-                <input type="string" @bind="@context.Genre" />
-            </label>
-        </div>
 
-    </TemplateColumn>
-</QuickGrid>
+@if(selected_cat_dim=="product-type")
+{
+    <QuickGrid Class="table" Items="product_type_data">
+        <PropertyColumn Property="genre => genre.ProductTypeId" />
+        <TemplateColumn Title="Genre">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.ProductType" />
+                </label>
+            </div>
+        </TemplateColumn>
+    </QuickGrid>
+}
+
+@if(selected_cat_dim=="product-genre")
+{
+    <QuickGrid Class="table" Items="genre_data">
+        <PropertyColumn Property="genre => genre.GenreId" />
+        <TemplateColumn Title="Genre">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.Genre" />
+                </label>
+            </div>
+        </TemplateColumn>
+    </QuickGrid>
+}
+
+@if(selected_cat_dim=="rating-de")
+{
+    <QuickGrid Class="table" Items="rating_de_data">
+        <PropertyColumn Property="genre => genre.RatingDEId" />
+        <TemplateColumn Title="German Rating">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.RatingDE" />
+                </label>
+            </div>
+        </TemplateColumn>
+    </QuickGrid>
+}
+
+@if(selected_cat_dim=="rating-fr")
+{
+    <QuickGrid Class="table" Items="rating_fr_data">
+        <PropertyColumn Property="genre => genre.RatingFRId" />
+        <TemplateColumn Title="Genre">
+            <div>
+                <label>
+                    <input type="string" @bind="@context.RatingFR" />
+                </label>
+            </div>
+        </TemplateColumn>
+    </QuickGrid>
+}
 
 <button @onclick="SaveChanges">Save Changes</button>
 
@@ -40,36 +82,40 @@
 
     string selected_dim_table = "genre";
     
-    private IQueryable<MockGenreDim> _currentData;
+    private IQueryable<MockProductTypeDim> product_type_data;
+    private IQueryable<MockGenreDim> genre_data;
+    private IQueryable<MockRatingDEDim> rating_de_data;
+    private IQueryable<MockRatingFRDim> rating_fr_data;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync() 
     {   
-
-        //TODO: what is the best way to get a dbcontext?
-
-        @* context = DbFactory.CreateDbContext(); *@
         context = DbContext;
-        @* _currentData = await context.MockGenreDim.ToListAsync(); *@
-        _currentData = DbContext.MockGenreDim;
+        if (selected_cat_dim == "product-type")
+        {   
+            product_type_data = context.MockProductTypeDim;
+        }
+        else if (selected_cat_dim == "product-genre")
+        {
+            genre_data = context.MockGenreDim;
+        }
+        else if (selected_cat_dim == "rating-de")
+        {
+            rating_de_data = context.MockRatingDEDim;
+        }
+        else if (selected_cat_dim == "rating-fr")
+        {
+            rating_fr_data = context.MockRatingFRDim;
+        }
     }
-
 
     // TODO: what does this line do?
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 
     // A function for debug
-    private async Task PrintClassList()
-    {
-        foreach (var item in _currentData)
-        {
-            Console.WriteLine(item.Genre);
-        }
-        Console.WriteLine();
-    }
 
     private async Task SaveChanges()
     {
-        context.SaveChangesAsync();
+        DbContext.SaveChangesAsync();
     }
 
 }
