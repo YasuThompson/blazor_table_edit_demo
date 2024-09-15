@@ -50,19 +50,17 @@
     <div>
         <h5>Select a product type</h5>
         <select id="condition" @onclick="@FilterOption" @bind="@selected_product_type">
-            <option value="Movie">Movie</option>
-            <option value="TV">TV Show</option>
-            <option value="Anime">Anime</option>
-            <option value="Comic">Comic</option>
+            <option value="movie">Movie</option>
+            <option value="tv">TV Show</option>
+            <option value="anime">Anime</option>
+            <option value="comic">Comic</option>
         </select>
     </div>
 </div>
 }
 
 <br>
-<NavLink href="movies">
-    <button @onclick="NavigateToTableEditPage" disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
-</NavLink>
+<button @onclick="NavigateToTableEditPage" disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
 
 @code {
     private bool if_show_cat_dim_filter = false;
