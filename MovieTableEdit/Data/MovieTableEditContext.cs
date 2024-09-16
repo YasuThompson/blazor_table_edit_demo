@@ -21,22 +21,24 @@ namespace MovieTableEdit.Data
             optionsBuilder.UseSqlite(Configuration.GetConnectionString("MovieTableEditContext"));
         }
 
-        public DbSet<MockMoviePriceDE> MockMoviePriceDE { get; set; }
-        public DbSet<MockTVPriceDE> MockTVPriceDE { get; set; }
-        public DbSet<MockAnimePriceDE> MockAnimePriceDE { get; set; }
-        public DbSet<MockComicPriceDE> MockComicPriceDE { get; set; }
+        public DbSet<MockMoviePriceDE> DbSetMockMoviePriceDE { get; set; }
+        public DbSet<MockTVPriceDE> DbSetMockTVPriceDE { get; set; }
+        public DbSet<MockAnimePriceDE> DbSetMockAnimePriceDE { get; set; }
+        public DbSet<MockComicPriceDE> DbSetMockComicPriceDE { get; set; }
 
-        public DbSet<MockMoviePriceFR> MockMoviePriceFR { get; set; }
-        public DbSet<MockTVPriceFR> MockTVPriceFR { get; set; }
-        public DbSet<MockAnimePriceFR> MockAnimePriceFR { get; set; }
-        public DbSet<MockComicPriceFR> MockComicPriceFR { get; set; }
+        public DbSet<MockMoviePriceFR> DbSetMockMoviePriceFR { get; set; }
+        public DbSet<MockTVPriceFR> DbSetMockTVPriceFR { get; set; }
+        public DbSet<MockAnimePriceFR> DbSetMockAnimePriceFR { get; set; }
+        public DbSet<MockComicPriceFR> DbSetMockComicPriceFR { get; set; }
 
-        public DbSet<MockProductDim> MockProductDim { get; set; }
-        public DbSet<MockGenreDim> MockGenreDim { get; set; }
-        public DbSet<MockProductTypeDim> MockProductTypeDim { get; set; }
-        public DbSet<MockRatingDEDim> MockRatingDEDim { get; set; }
-        public DbSet<MockRatingFRDim> MockRatingFRDim { get; set; }
+        public DbSet<MockProductDim> DbSetMockProductDim { get; set; }
+        public DbSet<MockGenreDim> DbSetMockGenreDim { get; set; }
+        public DbSet<MockProductTypeDim> DbSetMockProductTypeDim { get; set; }
+        public DbSet<MockRatingDEDim> DbSetMockRatingDEDim { get; set; }
+        public DbSet<MockRatingFRDim> DbSetMockRatingFRDim { get; set; }
 
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {   
