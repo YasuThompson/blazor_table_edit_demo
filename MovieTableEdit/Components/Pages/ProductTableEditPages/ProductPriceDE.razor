@@ -1,4 +1,4 @@
-@page "/product-price/Germany/{selected_product_type}"
+@page "/product-price/DE/{selected_product_type}"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -9,8 +9,6 @@
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 @using System
-
-
 
 <PageTitle>Product Price</PageTitle>
 
@@ -48,23 +46,35 @@
     [SupplyParameterFromQuery(Name = "selected_product_type")]
     public string selected_product_type { get; set; }
 
+    private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
+    {
+        { "movie", 1 },
+        { "tv", 2 },
+        { "anime", 3 },
+        { "comic", 4 },
+    };
+
+    private int selected_product_type_id;
+
     private Dictionary<int, string> dimensionDictionary;
     private Dictionary<int, string> dim_dict_rating_de;
     private IQueryable<MockProductPriceDE> queried_data;
 
-    private float latest_version;
-    private float new_version;
+    private double latest_version;
+    private double new_version;
     private int largest_id_num;
     
     protected override async Task OnInitializedAsync()
-
     {   
-        latest_version = db_context.DbSetMockProductPriceDE.Max(x => x.Version);
-        largest_id_num = db_context.DbSetMockProductPriceDE.Max(x => x.Id);
+        db_context = DbContext;
+        selected_product_type_id = product_type_id_dict[selected_product_type];
 
-        new_version = latest_version + 0.01;
+        latest_version = db_context.DbSetMockProductPriceDE.Where(x => x.ProductTypeId == selected_product_type_id).Max(x => x.Version);
+        largest_id_num = db_context.DbSetMockProductPriceDE.Where(x => x.ProductTypeId == selected_product_type_id).Max(x => x.Id);
 
-        queried_data = db_context.DbSetMockProductPriceDE.Where(x => x.Version == latest_version);
+        new_version = latest_version +  0.01;
+
+        queried_data = db_context.DbSetMockProductPriceDE.Where(x => x.Version==latest_version && x.ProductTypeId==selected_product_type_id);
 
         dimensionDictionary = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
         dim_dict_rating_de = db_context.DbSetMockRatingDEDim.Select(p => new {p.RatingDEId, p.RatingDE}).AsEnumerable().ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
