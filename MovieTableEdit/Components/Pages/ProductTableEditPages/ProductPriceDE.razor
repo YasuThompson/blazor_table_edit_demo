@@ -12,7 +12,10 @@
 
 <PageTitle>Product Price</PageTitle>
 
-<QuickGrid Class="table" Items="queried_data">
+
+
+
+<QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
     <PropertyColumn Property="product => GetDictionaryValue(product.ProductId)" />
 
     <TemplateColumn Title="Price">
@@ -33,8 +36,39 @@
             </select>
         </div>
     </TemplateColumn>
-     
+
+    <TemplateColumn Context="row">
+        <button @onclick="() => CopyColumn(row.Id)">Copy</button>
+        <button @onclick="() => RemoveColumn(row.Id)">Remove</button>
+    </TemplateColumn>
+
 </QuickGrid>
+
+
+<h3>Product List</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Id</th>
+            <th>German Rating</th>
+            <th>Product Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (MockProductPriceDE _row in added_rows)
+        {
+            <tr>
+                <td>@_row.ProductId</td>
+                <td>@_row.RatingDE</td>
+                <td>
+                    <input type="decimal" @bind="_row.Price" class="form-control" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 
 <button @onclick="PublishChanges">Publish Changes</button>
 
@@ -58,7 +92,11 @@
 
     private Dictionary<int, string> dimensionDictionary;
     private Dictionary<int, string> dim_dict_rating_de;
-    private IQueryable<MockProductPriceDE> queried_data;
+    private IQueryable<MockProductPriceDE> queried_rows;
+    @* private List<MockProductPriceDE> added_rows; *@
+    private List<MockProductPriceDE> added_rows = new List<MockProductPriceDE>();
+
+    
 
     private double latest_version;
     private double new_version;
@@ -74,7 +112,7 @@
 
         new_version = latest_version +  0.01;
 
-        queried_data = db_context.DbSetMockProductPriceDE.Where(x => x.Version==latest_version && x.ProductTypeId==selected_product_type_id);
+        queried_rows = db_context.DbSetMockProductPriceDE.Where(x => x.Version==latest_version && x.ProductTypeId==selected_product_type_id);
 
         dimensionDictionary = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
         dim_dict_rating_de = db_context.DbSetMockRatingDEDim.Select(p => new {p.RatingDEId, p.RatingDE}).AsEnumerable().ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
@@ -92,20 +130,31 @@
 
     public async ValueTask DisposeAsync() => await db_context.DisposeAsync();
 
+    private async Task CopyColumn(int clicked_row_id)
+    {
+        MockProductPriceDE clicked_row = queried_rows.FirstOrDefault(x => x.Id == clicked_row_id);
+        added_rows.Add(clicked_row);
+    }
+
+    private void RemoveColumn(int clicked_row_id)
+    {
+        Console.WriteLine($"Remove row {clicked_row_id}");
+        var clicked_row = queried_rows.FirstOrDefault(x => x.Id == clicked_row_id);
+    }
 
     private async Task PublishChanges()
     {   
 
         int cnt = 0;
 
-        foreach (var edited_row in queried_data) 
+        foreach (var edited_row in queried_rows) 
         {
             edited_row.Version = new_version;
             edited_row.Id = largest_id_num + cnt + 1;
             cnt += 1;
         }
 
-        db_context.DbSetMockProductPriceDE.AddRangeAsync(queried_data);
+        db_context.DbSetMockProductPriceDE.AddRangeAsync(queried_rows);
 
         await db_context.SaveChangesAsync();
 
