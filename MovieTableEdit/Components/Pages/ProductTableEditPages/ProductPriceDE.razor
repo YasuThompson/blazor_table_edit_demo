@@ -70,7 +70,7 @@
         selected_product_type_id = product_type_id_dict[selected_product_type];
 
         latest_version = db_context.DbSetMockProductPriceDE.Where(x => x.ProductTypeId == selected_product_type_id).Max(x => x.Version);
-        largest_id_num = db_context.DbSetMockProductPriceDE.Where(x => x.ProductTypeId == selected_product_type_id).Max(x => x.Id);
+        largest_id_num = db_context.DbSetMockProductPriceDE.Max(x => x.Id);
 
         new_version = latest_version +  0.01;
 
