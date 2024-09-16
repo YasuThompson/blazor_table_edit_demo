@@ -14,8 +14,8 @@
 
 <PageTitle>Product Price</PageTitle>
 
-<QuickGrid Class="table" Items="_currentData">
-    <PropertyColumn Property="movie => GetDictionaryValue(movie.ProductId)" />
+<QuickGrid Class="table" Items="queried_data">
+    <PropertyColumn Property="product => GetDictionaryValue(product.ProductId)" />
 
     <TemplateColumn Title="Price">
         <div>
@@ -50,21 +50,21 @@
 
     private Dictionary<int, string> dimensionDictionary;
     private Dictionary<int, string> dim_dict_rating_de;
-    private IQueryable<MockMoviePriceDE> _currentData;
+    private IQueryable<MockProductPriceDE> queried_data;
 
-    private double latest_version;
-    private double new_version;
+    private float latest_version;
+    private float new_version;
     private int largest_id_num;
     
     protected override async Task OnInitializedAsync()
 
     {   
-        latest_version = db_context.DbSetMockMoviePriceDE.Max(x => (double)x.Version);
-        largest_id_num = db_context.DbSetMockMoviePriceDE.Max(x => x.Id);
+        latest_version = db_context.DbSetMockProductPriceDE.Max(x => x.Version);
+        largest_id_num = db_context.DbSetMockProductPriceDE.Max(x => x.Id);
 
         new_version = latest_version + 0.01;
 
-        _currentData = db_context.DbSetMockMoviePriceDE.Where(x => (double)x.Version == latest_version);
+        queried_data = db_context.DbSetMockProductPriceDE.Where(x => x.Version == latest_version);
 
         dimensionDictionary = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
         dim_dict_rating_de = db_context.DbSetMockRatingDEDim.Select(p => new {p.RatingDEId, p.RatingDE}).AsEnumerable().ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
@@ -88,14 +88,14 @@
 
         int cnt = 0;
 
-        foreach (var edited_row in _currentData) 
+        foreach (var edited_row in queried_data) 
         {
-            edited_row.Version = (decimal)new_version;
+            edited_row.Version = new_version;
             edited_row.Id = largest_id_num + cnt + 1;
             cnt += 1;
         }
 
-        db_context.DbSetMockMoviePriceDE.AddRangeAsync(_currentData);
+        db_context.DbSetMockProductPriceDE.AddRangeAsync(queried_data);
 
         await db_context.SaveChangesAsync();
 
