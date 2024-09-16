@@ -10,7 +10,7 @@ public class MockProductPriceDE
     public int Id { get; set;}
     public int ProductId { get; set; }
     public int ProductTypeId {get; set;}
-    public float Version { get; set; }
+    public double Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -24,7 +24,7 @@ public class MockProductPriceFR
     public int Id { get; set;}
     public int ProductId { get; set; }
     public int ProductTypeId {get; set;}
-    public float Version { get; set; }
+    public double Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
