@@ -21,15 +21,8 @@ namespace MovieTableEdit.Data
             optionsBuilder.UseSqlite(Configuration.GetConnectionString("MovieTableEditContext"));
         }
 
-        public DbSet<MockMoviePriceDE> DbSetMockMoviePriceDE { get; set; }
-        public DbSet<MockTVPriceDE> DbSetMockTVPriceDE { get; set; }
-        public DbSet<MockAnimePriceDE> DbSetMockAnimePriceDE { get; set; }
-        public DbSet<MockComicPriceDE> DbSetMockComicPriceDE { get; set; }
-
-        public DbSet<MockMoviePriceFR> DbSetMockMoviePriceFR { get; set; }
-        public DbSet<MockTVPriceFR> DbSetMockTVPriceFR { get; set; }
-        public DbSet<MockAnimePriceFR> DbSetMockAnimePriceFR { get; set; }
-        public DbSet<MockComicPriceFR> DbSetMockComicPriceFR { get; set; }
+        public DbSet<MockProductPriceDE> DbSetMockProductPriceDE { get; set; }
+        public DbSet<MockProductPriceFR> DbSetMockProductPriceFR { get; set; }
 
         public DbSet<MockProductDim> DbSetMockProductDim { get; set; }
         public DbSet<MockGenreDim> DbSetMockGenreDim { get; set; }
@@ -45,30 +38,11 @@ namespace MovieTableEdit.Data
             // TODO: should the processes below generalised and written in a for loop?
             // TODO: Naming rules might not be coherent
 
-            string mock_movie_price_de_csv_path = "Data/MockMoviePriceDE.csv";
-            List<MockMoviePriceDE> mock_movie_price_de = ReadCsvAsClassList<MockMoviePriceDE>(mock_movie_price_de_csv_path);
+            string mock_product_price_de_csv_path = "Data/MockProductPriceDE.csv";
+            List<MockProductPriceDE> mock_product_price_de = ReadCsvAsClassList<MockProductPriceDE>(mock_product_price_de_csv_path);
 
-            string mock_tv_price_de_csv_path = "Data/MockTVPriceDE.csv";
-            List<MockTVPriceDE> mock_tv_price_de = ReadCsvAsClassList<MockTVPriceDE>(mock_tv_price_de_csv_path);
-
-            string mock_anime_price_de_csv_path = "Data/MockAnimePriceDE.csv";
-            List<MockAnimePriceDE> mock_anime_price_de = ReadCsvAsClassList<MockAnimePriceDE>(mock_anime_price_de_csv_path);
-
-            string mock_comic_price_de_csv_path = "Data/MockComicPriceDE.csv";
-            List<MockComicPriceDE> mock_comic_price_de = ReadCsvAsClassList<MockComicPriceDE>(mock_comic_price_de_csv_path);
-
-
-            string mock_movie_price_fr_csv_path = "Data/MockMoviePriceFR.csv";
-            List<MockMoviePriceFR> mock_movie_price_fr = ReadCsvAsClassList<MockMoviePriceFR>(mock_movie_price_fr_csv_path);
-
-            string mock_tv_price_fr_csv_path = "Data/MockTVPriceFR.csv";
-            List<MockTVPriceFR> mock_tv_price_fr = ReadCsvAsClassList<MockTVPriceFR>(mock_tv_price_fr_csv_path);
-
-            string mock_anime_price_fr_csv_path = "Data/MockAnimePriceFR.csv";
-            List<MockAnimePriceFR> mock_anime_price_fr = ReadCsvAsClassList<MockAnimePriceFR>(mock_anime_price_fr_csv_path);
-
-            string mock_comic_price_fr_csv_path = "Data/MockComicPriceFR.csv";
-            List<MockComicPriceFR> mock_comic_price_fr = ReadCsvAsClassList<MockComicPriceFR>(mock_comic_price_fr_csv_path);
+            string mock_product_price_fr_csv_path = "Data/MockProductPriceFR.csv";
+            List<MockProductPriceFR> mock_product_price_fr = ReadCsvAsClassList<MockProductPriceFR>(mock_product_price_fr_csv_path);
 
 
             string mock_product_dim_csv_path = "Data/MockProductDim.csv";
@@ -87,30 +61,11 @@ namespace MovieTableEdit.Data
             List<MockRatingFRDim> mock_rating_fr_dims = ReadCsvAsClassList<MockRatingFRDim>(mock_rating_fr_dim_csv_path);
 
 
-            modelBuilder.Entity<MockMoviePriceDE>().ToTable("MockMoviePriceDE");
-            modelBuilder.Entity<MockMoviePriceDE>().HasData(mock_movie_price_de);
+            modelBuilder.Entity<MockProductPriceDE>().ToTable("MockProductPriceDE");
+            modelBuilder.Entity<MockProductPriceDE>().HasData(mock_product_price_de);
 
-            modelBuilder.Entity<MockTVPriceDE>().ToTable("MockTVPriceDE");
-            modelBuilder.Entity<MockTVPriceDE>().HasData(mock_tv_price_de);
-
-            modelBuilder.Entity<MockAnimePriceDE>().ToTable("MockAnimePriceDE");
-            modelBuilder.Entity<MockAnimePriceDE>().HasData(mock_anime_price_de);
-
-            modelBuilder.Entity<MockComicPriceDE>().ToTable("MockComicPriceDE");
-            modelBuilder.Entity<MockComicPriceDE>().HasData(mock_comic_price_de);
-
-
-            modelBuilder.Entity<MockMoviePriceFR>().ToTable("MockMoviePriceFR");
-            modelBuilder.Entity<MockMoviePriceFR>().HasData(mock_movie_price_fr);
-
-            modelBuilder.Entity<MockTVPriceFR>().ToTable("MockTVPriceFR");
-            modelBuilder.Entity<MockTVPriceFR>().HasData(mock_tv_price_fr);
-
-            modelBuilder.Entity<MockAnimePriceFR>().ToTable("MockAnimePriceFR");
-            modelBuilder.Entity<MockAnimePriceFR>().HasData(mock_anime_price_fr);
-
-            modelBuilder.Entity<MockComicPriceFR>().ToTable("MockComicPriceFR");
-            modelBuilder.Entity<MockComicPriceFR>().HasData(mock_comic_price_fr);
+            modelBuilder.Entity<MockProductPriceFR>().ToTable("MockProductPriceFR");
+            modelBuilder.Entity<MockProductPriceFR>().HasData(mock_product_price_fr);
 
 
             modelBuilder.Entity<MockProductDim>().ToTable("MockProductDim");

@@ -4,89 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MovieTableEdit.Models;
 
 
-public class MockMoviePriceFR
+
+public class MockProductPriceDE
 {
     public int Id { get; set;}
     public int ProductId { get; set; }
-
-    // [Column(TypeName = "decimal(5, 2)")]
-    public decimal Version { get; set; }
-
-    [DataType(DataType.Currency)]
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Price { get; set; }
-
-    public int? RatingFR {get; set; }
-}
-
-public class MockTVPriceFR
-{
-    public int Id { get; set;}
-    public int ProductId { get; set; }
-
-    // [Column(TypeName = "decimal(5, 2)")]
-    public decimal Version { get; set; }
-
-    [DataType(DataType.Currency)]
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Price { get; set; }
-
-    public int? RatingFR {get; set; }
-}
-
-public class MockAnimePriceFR
-{
-    public int Id { get; set;}
-    public int ProductId { get; set; }
-
-    // [Column(TypeName = "decimal(5, 2)")]
-    public decimal Version { get; set; }
-
-    [DataType(DataType.Currency)]
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Price { get; set; }
-
-    public int? RatingFR {get; set; }
-}
-
-public class MockComicPriceFR
-{
-    public int Id { get; set;}
-    public int ProductId { get; set; }
-
-    // [Column(TypeName = "decimal(5, 2)")]
-    public decimal Version { get; set; }
-
-    [DataType(DataType.Currency)]
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Price { get; set; }
-
-    public int? RatingFR {get; set; }
-}
-
-public class MockMoviePriceDE
-{
-    public int Id { get; set;}
-    public int ProductId { get; set; }
-
-    // [Column(TypeName = "decimal(5, 2)")]
-    public decimal Version { get; set; }
-
-    [DataType(DataType.Currency)]
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Price { get; set; }
-
-    public int? RatingDE {get; set; }
-
-}
-
-public class MockTVPriceDE
-{
-    public int Id { get; set;}
-    public int ProductId { get; set; }
-
-    // [Column(TypeName = "decimal(5, 2)")]
-    public decimal Version { get; set; }
+    public int ProductTypeId {get; set;}
+    public float Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
@@ -95,34 +19,18 @@ public class MockTVPriceDE
     public int? RatingDE {get; set; }
 }
 
-public class MockAnimePriceDE
+public class MockProductPriceFR
 {
     public int Id { get; set;}
     public int ProductId { get; set; }
-
-    // [Column(TypeName = "decimal(5, 2)")]
-    public decimal Version { get; set; }
+    public int ProductTypeId {get; set;}
+    public float Version { get; set; }
 
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Price { get; set; }
 
-    public int? RatingDE {get; set; }
-}
-
-public class MockComicPriceDE
-{
-    public int Id { get; set;}
-    public int ProductId { get; set; }
-
-    // [Column(TypeName = "decimal(5, 2)")]
-    public decimal Version { get; set; }
-
-    [DataType(DataType.Currency)]
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Price { get; set; }
-
-    public int? RatingDE {get; set; }
+    public int? RatingFR {get; set; }
 }
 
 public class MockProductDim
