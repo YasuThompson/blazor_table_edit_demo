@@ -77,7 +77,7 @@
     public string selected_cat_dim { get; set; }
 
     // TODO: what does this line do?
-    private MovieTableEditContext context = default!;
+    private MovieTableEditContext db_context = default!;
 
 
     string selected_dim_table = "genre";
@@ -89,33 +89,33 @@
 
     protected override async Task OnInitializedAsync() 
     {   
-        context = DbContext;
+        db_context = DbContext;
         if (selected_cat_dim == "product-type")
         {   
-            product_type_data = context.MockProductTypeDim;
+            product_type_data = db_context.DbSetMockProductTypeDim;
         }
         else if (selected_cat_dim == "product-genre")
         {
-            genre_data = context.MockGenreDim;
+            genre_data = db_context.DbSetMockGenreDim;
         }
         else if (selected_cat_dim == "rating-de")
         {
-            rating_de_data = context.MockRatingDEDim;
+            rating_de_data = db_context.DbSetMockRatingDEDim;
         }
         else if (selected_cat_dim == "rating-fr")
         {
-            rating_fr_data = context.MockRatingFRDim;
+            rating_fr_data = db_context.DbSetMockRatingFRDim;
         }
     }
 
     // TODO: what does this line do?
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync() => await db_context.DisposeAsync();
 
     // A function for debug
 
     private async Task SaveChanges()
     {
-        DbContext.SaveChangesAsync();
+        db_context.SaveChangesAsync();
     }
 
 }

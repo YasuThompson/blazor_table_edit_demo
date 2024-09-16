@@ -135,11 +135,6 @@
         { "Comic", 4 },
     };
 
-    @* private string[] partsArray  = selected_product_types.Split('-');
-    private List<string> selected_product_type_list = new List<string>(partsArray);
-    private List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_dict[type]).ToList(); *@
-    
-
     private IQueryable<MockProductDim> queried_data;
 
     private MovieTableEditContext context = default!;
@@ -165,10 +160,10 @@
         List<string> selected_product_type_list = new List<string>(partsArray);
         List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_id_dict[type]).ToList();
 
-        queried_data = context.MockProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
+        queried_data = context.DbSetMockProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
 
-        product_type_dict = context.MockProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
-        genre_dict = context.MockGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
+        product_type_dict = context.DbSetMockProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
+        genre_dict = context.DbSetMockGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
 
     }
 
