@@ -14,19 +14,20 @@
 <PageTitle>Product Price</PageTitle>
 
 <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
-    <PropertyColumn Property="product => GetDictionaryValue(product.ProductId)" />
+    @* <PropertyColumn Property="product => GetDictionaryValue(product.ProductId)" class="product => IfDeleteCell(product.Id)" /> *@
+    <PropertyColumn Property="product => GetDictionaryValue(product.ProductId)" class="selected-row" />
 
     <TemplateColumn Title="Price">
         <div>
             <label>
-                <input type="int" class="@(context.Price > 0 ? "selected-row" : "")" @bind="@context.Price" />
+                <input type="int" class="@IfDeleteCell(context.Id)" @bind="@context.Price" />
             </label>
         </div>
     </TemplateColumn>
 
     <TemplateColumn Title="German Rating">
         <div>
-            <select type="int" @bind="@context.RatingDE">
+            <select type="int" class="@IfDeleteCell(context.Id)"  @bind="@context.RatingDE">
                 @foreach(var kvp in dim_dict_rating_de)
                 {
                     <option value=@kvp.Key>@kvp.Value</option>
@@ -141,9 +142,20 @@
     private void RemoveColumn(int clicked_row_id)
     {
         @* MockProductPriceDE clicked_row = queried_rows.FirstOrDefault(x => x.Id == clicked_row_id); *@
-
         delete_index_manager.AddIndex(clicked_row_id);
-        te
+    }
+
+    private string IfDeleteCell(int _row_id)
+    {   
+
+        if(delete_index_manager.ContainsIndex(_row_id)==true)
+        {
+            return "selected-row";
+        }
+        else
+        {
+            return "";
+        }
     }
 
     private async Task PublishChanges()
