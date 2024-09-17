@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
+@using MovieTableEdit.Shared.TableManager
 
 @inject MovieTableEdit.Data.MovieTableEditContext DbContext
 @implements IAsyncDisposable
@@ -12,16 +13,13 @@
 
 <PageTitle>Product Price</PageTitle>
 
-
-
-
 <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
     <PropertyColumn Property="product => GetDictionaryValue(product.ProductId)" />
 
     <TemplateColumn Title="Price">
         <div>
             <label>
-                <input type="decimal" @bind="@context.Price" />
+                <input type="int" class="@(context.Price > 0 ? "selected-row" : "")" @bind="@context.Price" />
             </label>
         </div>
     </TemplateColumn>
@@ -44,6 +42,12 @@
 
 </QuickGrid>
 
+<style>
+    .selected-row {
+        @* background-color: tomato; *@
+        text-decoration: line-through;
+    }
+</style>
 
 <h3>Product List</h3>
 
@@ -93,11 +97,9 @@
     private Dictionary<int, string> dimensionDictionary;
     private Dictionary<int, string> dim_dict_rating_de;
     private IQueryable<MockProductPriceDE> queried_rows;
-    @* private List<MockProductPriceDE> added_rows; *@
     private List<MockProductPriceDE> added_rows = new List<MockProductPriceDE>();
-
+    private TableIndexManager delete_index_manager = new TableIndexManager();
     
-
     private double latest_version;
     private double new_version;
     private int largest_id_num;
@@ -138,8 +140,10 @@
 
     private void RemoveColumn(int clicked_row_id)
     {
-        Console.WriteLine($"Remove row {clicked_row_id}");
-        var clicked_row = queried_rows.FirstOrDefault(x => x.Id == clicked_row_id);
+        @* MockProductPriceDE clicked_row = queried_rows.FirstOrDefault(x => x.Id == clicked_row_id); *@
+
+        delete_index_manager.AddIndex(clicked_row_id);
+        te
     }
 
     private async Task PublishChanges()
