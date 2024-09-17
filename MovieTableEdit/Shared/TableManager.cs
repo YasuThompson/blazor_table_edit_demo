@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace MovieTableEdit.TableManager
+namespace MovieTableEdit.Shared.TableManager
 {
     public class TableIndexManager
     {
