@@ -37,20 +37,10 @@
         <button @onclick="() => CopyColumn(context.Id)">Copy</button>
         @* <button @onclick="() => RemoveColumn(context.Id)">Remove</button> *@
     </TemplateColumn>
-@* 
-    <TemplateColumn>
-        <input type="checkbox" id="switch" class="checkbox" />
-               
-        <label for="switch" class="toggle">
-            <p>
-                  &nbsp;&nbsp; 
-            </p>
-        </label>
-    </TemplateColumn> *@
 
     <TemplateColumn>
         <label class="switch">
-            <input type="checkbox" checked>
+            <input type="checkbox" @onclick="() => ToggleRow(context.Id)" checked>
             <span class="slider round"></span>
         </label>
     </TemplateColumn>
@@ -214,9 +204,16 @@
         added_rows.Add(clicked_row);
     }
 
-    private void RemoveColumn(int clicked_row_id)
-    {
-        delete_index_manager.AddIndex(clicked_row_id);
+    private void ToggleRow(int clicked_row_id)
+    {   
+        if(delete_index_manager.ContainsIndex(clicked_row_id))
+        {
+            delete_index_manager.RemoveIndex(clicked_row_id);
+        }
+        else
+        {
+            delete_index_manager.AddIndex(clicked_row_id);
+        }
     }
 
     private string IfDeleteCell(int _row_id)
