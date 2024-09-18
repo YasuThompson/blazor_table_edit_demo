@@ -35,7 +35,7 @@ namespace MovieTableEdit.Shared.TableManager
 
     public static class SharedFunctions
     {
-         public static string GetDimDictValue(int key, Dictionary<int, string> dim_dict)
+        public static string GetDimDictValue(int key, Dictionary<int, string> dim_dict)
         {
             if (dim_dict != null && dim_dict.ContainsKey(key))
             {
@@ -43,7 +43,21 @@ namespace MovieTableEdit.Shared.TableManager
             }
             return "Value not found from the dimension table";
         }
+
+        public static void ToggleRowIndex(int clicked_row_id, TableIndexManager _index_manager)
+        {   
+            if(_index_manager.ContainsIndex(clicked_row_id))
+            {
+                _index_manager.RemoveIndex(clicked_row_id);
+            }
+            else
+            {
+                _index_manager.AddIndex(clicked_row_id);
+            }
+        }
     }
+
+    
    
 
 
