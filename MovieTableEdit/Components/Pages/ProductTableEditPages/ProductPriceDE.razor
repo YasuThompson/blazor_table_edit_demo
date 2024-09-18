@@ -17,9 +17,12 @@
 
 <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
     <TemplateColumn Title="Title">
-        <span class="@IfDeleteCell(context.Id)"> @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_title) </span>              
+        <div class="@IfDeleteCell(context.Id)"> @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_title) 
+            <span class="tooltip-text" id="top"> 
+                @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_explanation) 
+            </span>           
+        </div>   
     </TemplateColumn>
-
 
     <TemplateColumn Title="Price">
         <label>
@@ -53,6 +56,10 @@
 <style>
     .selected-row {
         text-decoration: line-through;
+    }
+
+    .dummy {
+
     }
 
     .switch {
@@ -115,6 +122,62 @@
         border-radius: 50%;
     }
 
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 999; /* Increase z-index to ensure tooltip appears above other elements */
+  width: 100px;
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px 15px 10px 15px;
+}
+
+.selected-row:hover .tooltip-text {
+  visibility: visible;
+}
+
+.dummy:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+@* #top {
+  top: -40px;
+  left: 50%; /* Position relative to the center of the parent */
+  transform: translateX(-50%); /* Center the tooltip horizontally */
+}
+
+#bottom {
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#left {
+  top: -8px;
+  right: 120%;
+}
+
+#right {
+  top: -8px;
+  left: 120%;
+} *@
+
+.hover-text {
+  position: relative;
+  display: inline-block;
+  @* margin: 40px; *@
+  font-family: Arial;
+  @* text-align: center; *@
+  overflow: visible; /* Make sure overflow is visible */
+}
+
 </style>
 
 <br/>
@@ -165,6 +228,7 @@
 
     private Dictionary<int, string> dim_dict_product_title;
     private Dictionary<int, string> dim_dict_rating_de;
+    private Dictionary<int, string> dim_dict_product_explanation;
     private IQueryable<MockProductPriceDE> queried_rows;
     private List<MockProductPriceDE> added_rows = new List<MockProductPriceDE>();
     private TableIndexManager delete_index_manager = new TableIndexManager();
@@ -187,8 +251,9 @@
 
         dim_dict_product_title = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
         dim_dict_rating_de = db_context.DbSetMockRatingDEDim.Select(p => new {p.RatingDEId, p.RatingDE}).AsEnumerable().ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
+        dim_dict_product_explanation = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Note}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Note);
     }   
-    
+
 
     public async ValueTask DisposeAsync() => await db_context.DisposeAsync();
 
@@ -219,7 +284,7 @@
         }
         else
         {
-            return "";
+            return "dummy";
         }
     }
 
