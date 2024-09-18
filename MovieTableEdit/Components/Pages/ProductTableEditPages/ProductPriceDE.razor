@@ -13,10 +13,13 @@
 
 <PageTitle>Product Price</PageTitle>
 
+<h3>Queried rows</h3>
+
 <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
-    <TemplateColumn Title="Product Id">
-        <span class="@IfDeleteCell(context.Id)"> @GetDictionaryValue(context.ProductId) </span>              
+    <TemplateColumn Title="Title">
+        <span class="@IfDeleteCell(context.Id)"> @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_title) </span>              
     </TemplateColumn>
+
 
     <TemplateColumn Title="Price">
         <label>
@@ -114,8 +117,8 @@
 
 </style>
 
-
-<h3>Product List</h3>
+<br/>
+<h3>Added rows</h3>
 
 <table class="table">
     <thead>
@@ -160,7 +163,7 @@
 
     private int selected_product_type_id;
 
-    private Dictionary<int, string> dimensionDictionary;
+    private Dictionary<int, string> dim_dict_product_title;
     private Dictionary<int, string> dim_dict_rating_de;
     private IQueryable<MockProductPriceDE> queried_rows;
     private List<MockProductPriceDE> added_rows = new List<MockProductPriceDE>();
@@ -182,19 +185,10 @@
 
         queried_rows = db_context.DbSetMockProductPriceDE.Where(x => x.Version==latest_version && x.ProductTypeId==selected_product_type_id);
 
-        dimensionDictionary = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
+        dim_dict_product_title = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
         dim_dict_rating_de = db_context.DbSetMockRatingDEDim.Select(p => new {p.RatingDEId, p.RatingDE}).AsEnumerable().ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
     }   
-
-    // Helper method to safely get the value from the dictionary
-    private string GetDictionaryValue(int key)
-    {
-        if (dimensionDictionary != null && dimensionDictionary.ContainsKey(key))
-        {
-            return dimensionDictionary[key];
-        }
-        return "Value not found from the dimension table";
-    }
+    
 
     public async ValueTask DisposeAsync() => await db_context.DisposeAsync();
 
