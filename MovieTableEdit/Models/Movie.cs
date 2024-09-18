@@ -45,7 +45,7 @@ public class MockProductDim
     public string? TitleES { get; set; }
     public string? TitleIT { get; set; }
     public string? TitleJP { get; set; }
-
+    public string? Note {get; set;}
 }
 
 public class MockGenreDim
