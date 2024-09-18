@@ -14,26 +14,23 @@
 <PageTitle>Product Price</PageTitle>
 
 <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
-    @* <PropertyColumn Property="product => GetDictionaryValue(product.ProductId)" class="product => IfDeleteCell(product.Id)" /> *@
-    <PropertyColumn Property="product => GetDictionaryValue(product.ProductId)" class="selected-row" />
+    <TemplateColumn Title="Product Id">
+        <span class="@IfDeleteCell(context.Id)"> @GetDictionaryValue(context.ProductId) </span>              
+    </TemplateColumn>
 
     <TemplateColumn Title="Price">
-        <div>
-            <label>
-                <input type="int" class="@IfDeleteCell(context.Id)" @bind="@context.Price" />
-            </label>
-        </div>
+        <label>
+            <input type="int" class="@IfDeleteCell(context.Id)" @bind="@context.Price" />
+        </label>
     </TemplateColumn>
 
     <TemplateColumn Title="German Rating">
-        <div>
-            <select type="int" class="@IfDeleteCell(context.Id)"  @bind="@context.RatingDE">
-                @foreach(var kvp in dim_dict_rating_de)
-                {
-                    <option value=@kvp.Key>@kvp.Value</option>
-                }
-            </select>
-        </div>
+        <select type="int" class="@IfDeleteCell(context.Id)"  @bind="@context.RatingDE">
+            @foreach(var kvp in dim_dict_rating_de)
+            {
+                <option value=@kvp.Key>@kvp.Value</option>
+            }
+        </select>
     </TemplateColumn>
 
     <TemplateColumn Context="row">
@@ -141,7 +138,6 @@
 
     private void RemoveColumn(int clicked_row_id)
     {
-        @* MockProductPriceDE clicked_row = queried_rows.FirstOrDefault(x => x.Id == clicked_row_id); *@
         delete_index_manager.AddIndex(clicked_row_id);
     }
 
