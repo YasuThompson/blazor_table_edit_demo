@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieTableEdit.Data;
 
@@ -10,9 +11,11 @@ using MovieTableEdit.Data;
 namespace MovieTableEdit.Migrations
 {
     [DbContext(typeof(MovieTableEditContext))]
-    partial class MovieTableEditContextModelSnapshot : ModelSnapshot
+    [Migration("20240918122929_AddedGermanTitles")]
+    partial class AddedGermanTitles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
