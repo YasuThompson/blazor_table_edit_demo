@@ -33,5 +33,18 @@ namespace MovieTableEdit.Shared.TableManager
         }
     }
 
+    public static class SharedFunctions
+    {
+         public static string GetDimDictValue(int key, Dictionary<int, string> dim_dict)
+        {
+            if (dim_dict != null && dim_dict.ContainsKey(key))
+            {
+                return dim_dict[key];
+            }
+            return "Value not found from the dimension table";
+        }
+    }
+   
+
 
 }
