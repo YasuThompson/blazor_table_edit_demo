@@ -42,10 +42,10 @@
                 </select>
             </TemplateColumn>
 
-            <TemplateColumn>
+            @* <TemplateColumn>
                 <button @onclick="() => CopyColumn(context.Id, added_rows, queried_rows)">Copy</button>
-                @* <button @onclick="() => RemoveColumn(context.Id)">Remove</button> *@
-            </TemplateColumn>
+                <button @onclick="() => RemoveColumn(context.Id)">Remove</button> 
+            </TemplateColumn>  *@
 
             <TemplateColumn>
                 <label class="switch">
@@ -58,11 +58,12 @@
 
         <br/>
         <h3>Added rows</h3>
+        <button @onclick="AddRow">Add a row</button>
 
         <table class="table">
             <thead>
                 <tr>
-                    <th>Product Id</th>
+                    <th>Product</th>
                     <th>German Rating</th>
                     <th>Product Price</th>
                 </tr>
@@ -71,7 +72,15 @@
                 @foreach (MockProductPriceDE _row in added_rows)
                 {
                     <tr>
-                        <td>@_row.ProductId</td>
+                        <td>@SharedFunctions.GetDimDictValue(_row.ProductId, dim_dict_product_title)</td>
+                        <td>
+                            <select type="int"  @bind="@_row.ProductId">
+                                @foreach(var kvp in dim_dict_product_title)
+                                {
+                                    <option value=@kvp.Key>@kvp.Value</option>
+                                }
+                            </select>
+                        </td>
                         <td>@_row.RatingDE</td>
                         <td>
                             <input type="decimal" @bind="_row.Price" class="form-control" />
@@ -116,7 +125,7 @@
         { "comic", 4 },
     };
 
-    private bool if_show_panel = true;
+    private bool if_show_panel = false;
 
     private int selected_product_type_id;
 
@@ -143,20 +152,38 @@
 
         queried_rows = db_context.DbSetMockProductPriceDE.Where(x => x.Version==latest_version && x.ProductTypeId==selected_product_type_id);
 
-        dim_dict_product_title = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
-        dim_dict_rating_de = db_context.DbSetMockRatingDEDim.Select(p => new {p.RatingDEId, p.RatingDE}).AsEnumerable().ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
-        dim_dict_product_explanation = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Note}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Note);
+        dim_dict_product_title = db_context.DbSetMockProductDim
+            .Where(p => p.ProductTypeId == selected_product_type_id)
+            .Select(p => new {p.ProductId, p.Title})
+            .AsEnumerable()
+            .ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
+
+        dim_dict_rating_de = db_context.DbSetMockRatingDEDim
+            .Select(p => new {p.RatingDEId, p.RatingDE})
+            .AsEnumerable()
+            .ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
+        
+        dim_dict_product_explanation = db_context.DbSetMockProductDim
+            .Where(p => p.ProductTypeId == selected_product_type_id)
+            .Select(p => new {p.ProductId, p.Note})
+            .AsEnumerable()
+            .ToDictionary(kvp => kvp.ProductId, kvp => kvp.Note);
     }   
 
     public async ValueTask DisposeAsync() => await db_context.DisposeAsync();
 
-    private async Task CopyColumn(int _row_id, List<MockProductPriceDE> _added_rows, IQueryable<MockProductPriceDE> _queried_rows)
+    @* private async Task CopyColumn(int _row_id, List<MockProductPriceDE> _added_rows, IQueryable<MockProductPriceDE> _queried_rows)
     {
         MockProductPriceDE clicked_row = _queried_rows.FirstOrDefault(x => x.Id == _row_id);
         _added_rows.Add(clicked_row);
     }
+ *@
 
 
+    private async Task AddRow()
+    {
+        added_rows.Add(new MockProductPriceDE());
+    }
 
     private async Task PublishChanges()
     {   
