@@ -177,3 +177,30 @@ transform: translateX(-50%); /* Center the tooltip horizontally */
     font-family: Arial;
     overflow: visible; /* Make sure overflow is visible */
 }
+
+
+
+
+    .main-container {
+        display: flex;
+        position: relative;
+    }
+
+    .content {
+        flex: 1;
+    }
+
+    .edit-panel {
+        position: fixed;
+        top: 7.5%;
+        right: 300px;
+        width: 300px; /* Adjust width as needed */
+        height: 100%;
+        background-color: #f4f4f4;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+        transition: transform 0.3s ease;
+    }
+
+    .edit-panel:not(.visible) {
+        transform: translateX(100%);
+    }

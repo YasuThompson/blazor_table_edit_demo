@@ -7,83 +7,103 @@
 @using MovieTableEdit.Shared.TableManager
 
 @inject MovieTableEdit.Data.MovieTableEditContext DbContext
+@* @inject MovieTableEdit.Models.MockProductPriceDE T *@
+
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 @using System
 
 <PageTitle>Product Price</PageTitle>
 
-<h3>Queried rows</h3>
+<div class="main-container">
+    <div class="content">
+        <h3>Queried rows</h3>
+        <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
+            <TemplateColumn Title="Title">
+                <div class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"> @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_title) 
+                    <span class="tooltip-text" id="top"> 
+                        @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_explanation) 
+                    </span>           
+                </div>   
+            </TemplateColumn>
 
-<QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
-    <TemplateColumn Title="Title">
-        <div class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"> @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_title) 
-            <span class="tooltip-text" id="top"> 
-                @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_explanation) 
-            </span>           
-        </div>   
-    </TemplateColumn>
+            <TemplateColumn Title="Price">
+                <label>
+                    <input type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)" @bind="@context.Price" />
+                </label>
+            </TemplateColumn>
 
-    <TemplateColumn Title="Price">
-        <label>
-            <input type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)" @bind="@context.Price" />
-        </label>
-    </TemplateColumn>
+            <TemplateColumn Title="German Rating">
+                <select type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDE">
+                    @foreach(var kvp in dim_dict_rating_de)
+                    {
+                        <option value=@kvp.Key>@kvp.Value</option>
+                    }
+                </select>
+            </TemplateColumn>
 
-    <TemplateColumn Title="German Rating">
-        <select type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDE">
-            @foreach(var kvp in dim_dict_rating_de)
-            {
-                <option value=@kvp.Key>@kvp.Value</option>
-            }
-        </select>
-    </TemplateColumn>
+            <TemplateColumn>
+                <button @onclick="() => CopyColumn(context.Id, added_rows, queried_rows)">Copy</button>
+                @* <button @onclick="() => RemoveColumn(context.Id)">Remove</button> *@
+            </TemplateColumn>
 
-    <TemplateColumn>
-        <button @onclick="() => CopyColumn(context.Id)">Copy</button>
-        @* <button @onclick="() => RemoveColumn(context.Id)">Remove</button> *@
-    </TemplateColumn>
-
-    <TemplateColumn>
-        <label class="switch">
-            <input type="checkbox" @onclick="() => SharedFunctions.ToggleRowIndex(context.Id, delete_index_manager)" checked>
-            <span class="slider round"></span>
-        </label>
-    </TemplateColumn>
-</QuickGrid>
-
-<br/>
-<h3>Added rows</h3>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product Id</th>
-            <th>German Rating</th>
-            <th>Product Price</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (MockProductPriceDE _row in added_rows)
-        {
-            <tr>
-                <td>@_row.ProductId</td>
-                <td>@_row.RatingDE</td>
-                <td>
-                    <input type="decimal" @bind="_row.Price" class="form-control" />
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <TemplateColumn>
+                <label class="switch">
+                    <input type="checkbox" @onclick="() => SharedFunctions.ToggleRowIndex(context.Id, delete_index_manager)" checked>
+                    <span class="slider round"></span>
+                </label>
+            </TemplateColumn>
+        </QuickGrid>
 
 
-<button @onclick="PublishChanges">Publish Changes</button>
+        <br/>
+        <h3>Added rows</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product Id</th>
+                    <th>German Rating</th>
+                    <th>Product Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (MockProductPriceDE _row in added_rows)
+                {
+                    <tr>
+                        <td>@_row.ProductId</td>
+                        <td>@_row.RatingDE</td>
+                        <td>
+                            <input type="decimal" @bind="_row.Price" class="form-control" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button @onclick="PublishChanges">Publish Changes</button>
+    </div>
+
+    @if (if_show_panel)
+    {
+        <div class="edit-panel">
+
+            <div>
+                <label>Name:</label>
+            </div>
+
+
+            <button >Save</button>
+            <button >Close</button>
+        </div>
+    }
+    
+</div>
+
 
 @code {
     private MovieTableEditContext db_context = default!;
 
-
+    
     [Parameter]
     [SupplyParameterFromQuery(Name = "selected_product_type")]
     public string selected_product_type { get; set; }
@@ -95,6 +115,8 @@
         { "anime", 3 },
         { "comic", 4 },
     };
+
+    private bool if_show_panel = true;
 
     private int selected_product_type_id;
 
@@ -126,14 +148,15 @@
         dim_dict_product_explanation = db_context.DbSetMockProductDim.Select(p => new {p.ProductId, p.Note}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Note);
     }   
 
-
     public async ValueTask DisposeAsync() => await db_context.DisposeAsync();
 
-    private async Task CopyColumn(int clicked_row_id)
+    private async Task CopyColumn(int _row_id, List<MockProductPriceDE> _added_rows, IQueryable<MockProductPriceDE> _queried_rows)
     {
-        MockProductPriceDE clicked_row = queried_rows.FirstOrDefault(x => x.Id == clicked_row_id);
-        added_rows.Add(clicked_row);
+        MockProductPriceDE clicked_row = _queried_rows.FirstOrDefault(x => x.Id == _row_id);
+        _added_rows.Add(clicked_row);
     }
+
+
 
     private async Task PublishChanges()
     {   
