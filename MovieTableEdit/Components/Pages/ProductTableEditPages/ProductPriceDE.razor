@@ -14,8 +14,7 @@
 
 <PageTitle>Product Price</PageTitle>
 
-<div class="main-container">
-    <div class="content">
+
         <h3>Queried rows</h3>
         <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
             <TemplateColumn Title="Title">
@@ -92,25 +91,8 @@
                 }
             </tbody>
         </table>
+        <br/>
         <button @onclick="PublishChanges">Publish Changes</button>
-    </div>
-
-    @if (if_show_panel)
-    {
-        <div class="edit-panel">
-
-            <div>
-                <label>Name:</label>
-            </div>
-
-
-            <button >Save</button>
-            <button >Close</button>
-        </div>
-    }
-    
-</div>
-
 
 @code {
     private MovieTableEditContext db_context = default!;
@@ -131,10 +113,6 @@
         { "anime", 3 },
         { "comic", 4 },
     };
-
-    // A parameter to control the panel to add the row
-    // TODO: might not need the panel anymore
-    private bool if_show_panel = false;
 
     // The index of the selected product type in the table selection page
     private int selected_product_type_id; 
