@@ -5,6 +5,7 @@
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
 @using MovieTableEdit.Shared.TableManager
+@using static MovieTableEdit.Shared.TableManager.SharedFunctions
 
 @inject MovieTableEdit.Data.MovieTableEditContext DbContext
 
@@ -18,21 +19,33 @@
         <h3>Queried rows</h3>
         <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
             <TemplateColumn Title="Title">
-                <div class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"> @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_title) 
+                <div class="@IfDeleteCell(context.Id, delete_index_manager)"> @GetDimDictValue(context.ProductId, dim_dict_product_title) 
                     <span class="tooltip-text" id="top"> 
-                        @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_explanation) 
+                        @GetDimDictValue(context.ProductId, dim_dict_product_explanation) 
                     </span>           
                 </div>   
             </TemplateColumn>
 
+
+
+            @* <PropertyColumn Property="@(c => c.Status)">
+                <ColumnOptions>
+                    <label>
+                        <input type="checkbox" @bind="onlyOngoing" @onclick="FilterChangedAsync" /> Ongoing only
+                    </label>
+                </ColumnOptions>
+            </PropertyColumn> *@
+
+
+
             <TemplateColumn Title="Price">
                 <label>
-                    <input type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)" @bind="@context.Price" />
+                    <input type="int" class="@IfDeleteCell(context.Id, delete_index_manager)" @bind="@context.Price" />
                 </label>
             </TemplateColumn>
 
             <TemplateColumn Title="German Rating">
-                <select type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDEId">
+                <select type="int" class="@IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDEId">
                     @foreach(var kvp in dim_dict_rating_de)
                     {
                         <option value=@kvp.Key>@kvp.Value</option>
@@ -42,7 +55,7 @@
 
             <TemplateColumn>
                 <label class="switch">
-                    <input type="checkbox" @onclick="() => SharedFunctions.ToggleRowIndex(context.Id, delete_index_manager)" checked>
+                    <input type="checkbox" @onclick="() => ToggleRowIndex(context.Id, delete_index_manager)" checked>
                     <span class="slider round"></span>
                 </label>
             </TemplateColumn>
@@ -97,7 +110,6 @@
 @code {
     private MovieTableEditContext db_context = default!;
 
-    
     // The paramter routed from the table selection page
     // TODO: it might be better to route integer indexes instead of string as the parameter
     [Parameter]
@@ -119,6 +131,7 @@
 
     // Dictionaries to map indexes of dimension tables
     private Dictionary<int, string> dim_dict_product_title;
+    private Dictionary<int, string> dim_dict_product_genre;    
     private Dictionary<int, string> dim_dict_rating_de;
     private Dictionary<int, string> dim_dict_product_explanation;
     
