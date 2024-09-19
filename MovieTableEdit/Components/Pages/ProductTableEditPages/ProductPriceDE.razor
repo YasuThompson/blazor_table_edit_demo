@@ -147,7 +147,7 @@
     // Rows queried from the database
     private IQueryable<MockProductPriceDE> queried_rows;
 
-    // New rows to add 
+    // Lists used to preare the final table to be published with a new version 
     private List<MockProductPriceDE> reduced_queried_rows = new List<MockProductPriceDE>();
     private List<MockProductPriceDE> added_rows = new List<MockProductPriceDE>();
     private List<MockProductPriceDE> published_rows = new List<MockProductPriceDE>();
@@ -235,14 +235,18 @@
                 reduced_queried_rows.Add(_row);
             }
         }
-
+        
+        // Combining the reduced rows and added rows
         published_rows = reduced_queried_rows.Concat(added_rows).ToList();
 
         // Give new indexes without duplicates with the older records
         foreach (var _row in published_rows) 
         {   
+            // Set a proper product type id
             _row.ProductTypeId = selected_product_type_id;
+            // Set the new version
             _row.Version = new_version;
+            // Set unique and sequential indexes
             _row.Id = largest_id_num + cnt + 1;
             cnt += 1;
         }
@@ -250,8 +254,10 @@
         // Adding the edited rows
         db_context.DbSetMockProductPriceDE.AddRangeAsync(published_rows);
 
+        // Uploading the rows with a new version to the database
         await db_context.SaveChangesAsync();
 
+        // Going back to the table selection page
         NavigationManager.NavigateTo("/");
 
     }
