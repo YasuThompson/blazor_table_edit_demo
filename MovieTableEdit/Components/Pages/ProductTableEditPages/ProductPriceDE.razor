@@ -19,15 +19,14 @@
         <h3>Queried rows</h3>
         <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
             <TemplateColumn Title="Title">
-                <div class="@IfDeleteCell(context.Id, delete_index_manager)"> @GetDimDictValue(context.ProductId, dim_dict_product_title) 
+                <div class="@IfDeleteCell(context.Id, delete_index_manager)"> @GetDimDictValue(context.ProductId, dim_dict_id_product_title) 
                     <span class="tooltip-text" id="top"> 
-                        @GetDimDictValue(context.ProductId, dim_dict_product_explanation) 
+                        @GetDimDictValue(context.ProductId, dim_dict_product_id_note) 
                     </span>           
                 </div>   
             </TemplateColumn>
 
-
-
+            <PropertyColumn Property="@(c => c.ProductId)"></PropertyColumn>
             @* <PropertyColumn Property="@(c => c.Status)">
                 <ColumnOptions>
                     <label>
@@ -35,8 +34,6 @@
                     </label>
                 </ColumnOptions>
             </PropertyColumn> *@
-
-
 
             <TemplateColumn Title="Price">
                 <label>
@@ -46,7 +43,7 @@
 
             <TemplateColumn Title="German Rating">
                 <select type="int" class="@IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDEId">
-                    @foreach(var kvp in dim_dict_rating_de)
+                    @foreach(var kvp in dim_dict_id_rating_de)
                     {
                         <option value=@kvp.Key>@kvp.Value</option>
                     }
@@ -80,7 +77,7 @@
                     <tr>
                         <td>
                             <select type="int"  @bind="@_row.ProductId">
-                                @foreach(var kvp in dim_dict_product_title)
+                                @foreach(var kvp in dim_dict_id_product_title)
                                 {
                                     <option value=@kvp.Key>@kvp.Value</option>
                                 }
@@ -91,7 +88,7 @@
                         </td>
                         <td>
                             <select type="int"  @bind="@_row.RatingDEId">
-                                @foreach(var kvp in dim_dict_rating_de)
+                                @foreach(var kvp in dim_dict_id_rating_de)
                                 {
                                     <option value=@kvp.Key>@kvp.Value</option>
                                 }
@@ -130,10 +127,12 @@
     private int selected_product_type_id; 
 
     // Dictionaries to map indexes of dimension tables
-    private Dictionary<int, string> dim_dict_product_title;
-    private Dictionary<int, string> dim_dict_product_genre;    
-    private Dictionary<int, string> dim_dict_rating_de;
-    private Dictionary<int, string> dim_dict_product_explanation;
+    private Dictionary<int, string> dim_dict_id_product_title; // product id to product tile
+    private Dictionary<int, string> dim_dict_product_id_genre; // product id to its genre
+    private Dictionary<int, string> dim_dict_id_rating_de; // RatingDEId to RatingDE
+    private Dictionary<int, string> dim_dict_product_id_note; // ProductId to its Note
+    private Dictionary<int, string> dim_dict_id_genre; // GenreId to Genre
+    
     
     // Rows queried from the database
     private IQueryable<MockProductPriceDE> queried_rows;
@@ -173,18 +172,18 @@
             .Where(x => x.Version==latest_version && x.ProductTypeId==selected_product_type_id);
 
         // Make dictionaries mapping from an id to its values from dimension tables
-        dim_dict_product_title = db_context.DbSetMockProductDim
+        dim_dict_id_product_title = db_context.DbSetMockProductDim
             .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
             .Select(p => new {p.ProductId, p.Title})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
 
-        dim_dict_rating_de = db_context.DbSetMockRatingDEDim
+        dim_dict_id_rating_de = db_context.DbSetMockRatingDEDim
             .Select(p => new {p.RatingDEId, p.RatingDE})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
         
-        dim_dict_product_explanation = db_context.DbSetMockProductDim
+        dim_dict_product_id_note = db_context.DbSetMockProductDim
             .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
             .Select(p => new {p.ProductId, p.Note})
             .AsEnumerable()
