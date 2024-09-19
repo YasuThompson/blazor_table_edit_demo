@@ -55,6 +55,21 @@ namespace MovieTableEdit.Shared.TableManager
                 _index_manager.AddIndex(clicked_row_id);
             }
         }
+
+
+        public static string IfDeleteCell(int _row_id, TableIndexManager _index_manager)
+        {   
+
+            if(_index_manager.ContainsIndex(_row_id)==true)
+            {
+                return "selected-row";
+            }
+            else
+            {
+                return "dummy";
+            }
+        }
+
     }
 
     

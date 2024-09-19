@@ -17,7 +17,7 @@
 
 <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
     <TemplateColumn Title="Title">
-        <div class="@IfDeleteCell(context.Id)"> @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_title) 
+        <div class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"> @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_title) 
             <span class="tooltip-text" id="top"> 
                 @SharedFunctions.GetDimDictValue(context.ProductId, dim_dict_product_explanation) 
             </span>           
@@ -26,12 +26,12 @@
 
     <TemplateColumn Title="Price">
         <label>
-            <input type="int" class="@IfDeleteCell(context.Id)" @bind="@context.Price" />
+            <input type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)" @bind="@context.Price" />
         </label>
     </TemplateColumn>
 
     <TemplateColumn Title="German Rating">
-        <select type="int" class="@IfDeleteCell(context.Id)"  @bind="@context.RatingDE">
+        <select type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDE">
             @foreach(var kvp in dim_dict_rating_de)
             {
                 <option value=@kvp.Key>@kvp.Value</option>
@@ -133,19 +133,6 @@
     {
         MockProductPriceDE clicked_row = queried_rows.FirstOrDefault(x => x.Id == clicked_row_id);
         added_rows.Add(clicked_row);
-    }
-
-    private string IfDeleteCell(int _row_id)
-    {   
-
-        if(delete_index_manager.ContainsIndex(_row_id)==true)
-        {
-            return "selected-row";
-        }
-        else
-        {
-            return "dummy";
-        }
     }
 
     private async Task PublishChanges()
