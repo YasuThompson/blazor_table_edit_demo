@@ -16,7 +16,7 @@ public class MockProductPriceDE
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Price { get; set; }
 
-    public int? RatingDE {get; set; }
+    public int? RatingDEId {get; set; }
 }
 
 public class MockProductPriceFR
@@ -30,7 +30,7 @@ public class MockProductPriceFR
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Price { get; set; }
 
-    public int? RatingFR {get; set; }
+    public int? RatingFRId {get; set; }
 }
 
 public class MockProductDim
