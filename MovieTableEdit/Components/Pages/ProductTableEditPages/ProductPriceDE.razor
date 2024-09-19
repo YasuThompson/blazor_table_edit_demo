@@ -88,6 +88,9 @@
                                 }
                             </select>
                         </td>
+                        <td>
+                            <button @onclick="() => DelAddedRow(_row)">Remove</button>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -204,6 +207,12 @@
     private async Task AddRow()
     {
         added_rows.Add(new MockProductPriceDE());
+    }
+
+    // Delete the clicked row from the added rows
+    private async Task DelAddedRow(MockProductPriceDE _del_elem)
+    {
+        added_rows.Remove(_del_elem);
     }
 
     // Upload the edited table
