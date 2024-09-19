@@ -151,6 +151,7 @@
     private IQueryable<MockProductPriceDE> queried_rows;
     // New rows to add 
     private List<MockProductPriceDE> added_rows = new List<MockProductPriceDE>();
+    private List<MockProductPriceDE> published_rows = new List<MockProductPriceDE>();
 
     // Hashset of table row indexes to manage rows to delte or edited rows
     private TableIndexManager delete_index_manager = new TableIndexManager();
@@ -221,16 +222,19 @@
     {   
         int cnt = 0;
 
+        published_rows = queried_rows.ToList().Concat(added_rows).ToList();
+
         // Give new indexes without duplicates with the older records
-        foreach (var edited_row in queried_rows) 
-        {
-            edited_row.Version = new_version;
-            edited_row.Id = largest_id_num + cnt + 1;
+        foreach (var _row in published_rows) 
+        {   
+            _row.ProductTypeId = selected_product_type_id;
+            _row.Version = new_version;
+            _row.Id = largest_id_num + cnt + 1;
             cnt += 1;
         }
 
         // Adding the edited rows
-        db_context.DbSetMockProductPriceDE.AddRangeAsync(queried_rows);
+        db_context.DbSetMockProductPriceDE.AddRangeAsync(published_rows);
 
         await db_context.SaveChangesAsync();
 
