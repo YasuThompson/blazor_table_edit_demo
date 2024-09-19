@@ -41,8 +41,6 @@
                 </select>
             </TemplateColumn>
 
-
-
             <TemplateColumn>
                 <label class="switch">
                     <input type="checkbox" @onclick="() => SharedFunctions.ToggleRowIndex(context.Id, delete_index_manager)" checked>
@@ -50,7 +48,6 @@
                 </label>
             </TemplateColumn>
         </QuickGrid>
-
 
         <br/>
         <h3>Added rows</h3>
@@ -149,7 +146,9 @@
     
     // Rows queried from the database
     private IQueryable<MockProductPriceDE> queried_rows;
+
     // New rows to add 
+    private List<MockProductPriceDE> reduced_queried_rows = new List<MockProductPriceDE>();
     private List<MockProductPriceDE> added_rows = new List<MockProductPriceDE>();
     private List<MockProductPriceDE> published_rows = new List<MockProductPriceDE>();
 
@@ -217,12 +216,27 @@
     }
 
     // Upload the edited table
-    // TODO: to add added rows
+    // TODO: this part might not be memory efficient
     private async Task PublishChanges()
     {   
         int cnt = 0;
 
-        published_rows = queried_rows.ToList().Concat(added_rows).ToList();
+        @* published_rows = queried_rows.ToList().Concat(added_rows).ToList(); *@
+
+        // Remove rows to delete
+        foreach(var _row in queried_rows)
+        {
+            if(delete_index_manager.ContainsIndex(_row.Id))
+            {
+                ;
+            }
+            else 
+            {
+                reduced_queried_rows.Add(_row);
+            }
+        }
+
+        published_rows = reduced_queried_rows.Concat(added_rows).ToList();
 
         // Give new indexes without duplicates with the older records
         foreach (var _row in published_rows) 
