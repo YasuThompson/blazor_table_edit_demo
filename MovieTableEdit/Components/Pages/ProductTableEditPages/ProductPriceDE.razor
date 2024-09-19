@@ -7,7 +7,6 @@
 @using MovieTableEdit.Shared.TableManager
 
 @inject MovieTableEdit.Data.MovieTableEditContext DbContext
-@* @inject MovieTableEdit.Models.MockProductPriceDE T *@
 
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
@@ -34,7 +33,7 @@
             </TemplateColumn>
 
             <TemplateColumn Title="German Rating">
-                <select type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDE">
+                <select type="int" class="@SharedFunctions.IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDEId">
                     @foreach(var kvp in dim_dict_rating_de)
                     {
                         <option value=@kvp.Key>@kvp.Value</option>
@@ -42,10 +41,7 @@
                 </select>
             </TemplateColumn>
 
-            @* <TemplateColumn>
-                <button @onclick="() => CopyColumn(context.Id, added_rows, queried_rows)">Copy</button>
-                <button @onclick="() => RemoveColumn(context.Id)">Remove</button> 
-            </TemplateColumn>  *@
+
 
             <TemplateColumn>
                 <label class="switch">
@@ -63,16 +59,16 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Product</th>
-                    <th>German Rating</th>
+                    <th>Title</th>
                     <th>Product Price</th>
+                    <th>German Rating</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 @foreach (MockProductPriceDE _row in added_rows)
                 {
                     <tr>
-                        <td>@SharedFunctions.GetDimDictValue(_row.ProductId, dim_dict_product_title)</td>
                         <td>
                             <select type="int"  @bind="@_row.ProductId">
                                 @foreach(var kvp in dim_dict_product_title)
@@ -81,9 +77,16 @@
                                 }
                             </select>
                         </td>
-                        <td>@_row.RatingDE</td>
                         <td>
                             <input type="decimal" @bind="_row.Price" class="form-control" />
+                        </td>
+                        <td>
+                            <select type="int"  @bind="@_row.RatingDEId">
+                                @foreach(var kvp in dim_dict_rating_de)
+                                {
+                                    <option value=@kvp.Key>@kvp.Value</option>
+                                }
+                            </select>
                         </td>
                     </tr>
                 }
