@@ -32,17 +32,33 @@
             </TemplateColumn>
 
             <TemplateColumn Title="Genre">
-                <div class="@IfDeleteCell(context.Id, delete_index_manager)"> 
-                     <!-- TODO: instead of using GetDimDictValueNested(), 
-                    should I join the join the dimension table in advance? -->
-                    @GetDimDictValueNested(context.ProductId, dim_dict_product_id_genre_id, dim_dict_id_genre)  
-                </div>   
+                <ChildContent>
+                    <div class="@IfDeleteCell(context.Id, delete_index_manager)"> 
+                        <!-- TODO: instead of using GetDimDictValueNested(), 
+                        should I join the join the dimension table in advance? -->
+                        @GetDimDictValueNested(context.ProductId, dim_dict_product_id_genre_id, dim_dict_id_genre)  
+                    </div>   
+                </ChildContent>
+                <ColumnOptions>
+                    <select type="int"  @bind="genre_filter">
+                        @foreach(var kvp in dim_dict_id_genre)
+                        {
+                            <option value=@kvp.Key>@kvp.Value</option>
+                        }
+                    </select>
+                </ColumnOptions>
             </TemplateColumn>
 
             <TemplateColumn Title="Price">
-                <label>
-                    <input type="int" class="@IfDeleteCell(context.Id, delete_index_manager)" @bind="@context.Price" />
-                </label>
+                <ChildContent>
+                    <label>
+                        <input type="int" class="@IfDeleteCell(context.Id, delete_index_manager)" @bind="@context.Price" />
+                    </label>
+                </ChildContent>
+                <ColumnOptions>
+                    <p>Min: <input type="range" @bind="minMedals" @bind:event="oninput" min="0" max="150" /> <span class="inline-block w-10">@minMedals</span></p>
+                    <p>Max: <input type="range" @bind="maxMedals" @bind:event="oninput" min="0" max="120" /> <span class="inline-block w-10">@maxMedals</span></p>
+                </ColumnOptions>
             </TemplateColumn>
 
             <TemplateColumn Title="German Rating">
@@ -168,6 +184,9 @@
 
     private string? nameFilter;
     private int? rating_de_filter;
+    private int? genre_filter;
+    int minMedals;
+    int maxMedals = 120;
 
     IQueryable<MockProductPriceDE> filetered_rows
     {
@@ -185,6 +204,18 @@
             if (rating_de_filter.HasValue)
             {
                 result = result.Where(c => c.RatingDEId==rating_de_filter);
+            }
+
+            if (genre_filter.HasValue)
+            {
+                @* result = result.Where(c => c.GenreId==genre_filter); *@
+                @* result = result.Where(c => c.Genre=="Drama"); *@
+                ;
+            }
+
+            if (minMedals > 0)
+            {
+                result = result.Where(c => c.Price >= minMedals);
             }
 
             return result;
