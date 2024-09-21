@@ -198,10 +198,9 @@
             if (!string.IsNullOrEmpty(nameFilter))
             {   
                 // TODO: is the following a redundant approach?
-                // TODO: should make filtered_product_id_list from a dictionary rather than db context
-                List<int> filtered_product_id_list = db_context.DbSetMockProductDim.
-                    Where(c => c.ProductTypeId == selected_product_type_id && c.Title.ToLower().Contains(nameFilter.ToLower()))
-                    .Select(p => p.ProductId)
+                List<int> filtered_product_id_list = dim_dict_id_product_title
+                    .Where(kv => kv.Value.ToLower().Contains(nameFilter.ToLower()) )
+                    .Select(kv => kv.Key)
                     .ToList();
                 
                 result = result.Where(r => filtered_product_id_list.Contains(r.ProductId));
