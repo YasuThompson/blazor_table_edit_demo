@@ -44,6 +44,18 @@ namespace MovieTableEdit.Shared.TableManager
             return "Value not found from the dimension table";
         }
 
+        public static string GetDimDictValueNested(int key, Dictionary<int, int> inner_dim_dict, Dictionary<int, string> outer_dim_dict)
+        {
+            try
+            {
+                return outer_dim_dict[inner_dim_dict[key]];
+            }
+            catch (Exception ex)
+            {
+                return "Value not found from the dimension tables"; 
+            }
+        }
+
         public static void ToggleRowIndex(int clicked_row_id, TableIndexManager _index_manager)
         {   
             if(_index_manager.ContainsIndex(clicked_row_id))

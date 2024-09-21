@@ -26,7 +26,13 @@
                 </div>   
             </TemplateColumn>
 
-            <PropertyColumn Property="@(c => c.ProductId)"></PropertyColumn>
+            <TemplateColumn Title="Genre">
+                <div class="@IfDeleteCell(context.Id, delete_index_manager)"> 
+                     <!-- TODO: instead of using GetDimDictValueNested(), should I join the join the dimension table in advance? -->
+                    @GetDimDictValueNested(context.ProductId, dim_dict_product_id_genre_id, dim_dict_id_genre)  
+                </div>   
+            </TemplateColumn>
+
             @* <PropertyColumn Property="@(c => c.Status)">
                 <ColumnOptions>
                     <label>
@@ -66,9 +72,9 @@
             <thead>
                 <tr>
                     <th>Title</th>
+                    <th>Genre</th>
                     <th>Product Price</th>
                     <th>German Rating</th>
-                    
                 </tr>
             </thead>
             <tbody>
@@ -82,6 +88,9 @@
                                     <option value=@kvp.Key>@kvp.Value</option>
                                 }
                             </select>
+                        </td>
+                        <td>
+                            @GetDimDictValueNested(_row.ProductId, dim_dict_product_id_genre_id, dim_dict_id_genre)
                         </td>
                         <td>
                             <input type="decimal" @bind="_row.Price" class="form-control" />
@@ -128,7 +137,7 @@
 
     // Dictionaries to map indexes of dimension tables
     private Dictionary<int, string> dim_dict_id_product_title; // product id to product tile
-    private Dictionary<int, string> dim_dict_product_id_genre; // product id to its genre
+    private Dictionary<int, int> dim_dict_product_id_genre_id; // product id to its genre
     private Dictionary<int, string> dim_dict_id_rating_de; // RatingDEId to RatingDE
     private Dictionary<int, string> dim_dict_product_id_note; // ProductId to its Note
     private Dictionary<int, string> dim_dict_id_genre; // GenreId to Genre
@@ -188,6 +197,18 @@
             .Select(p => new {p.ProductId, p.Note})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductId, kvp => kvp.Note);
+
+        dim_dict_product_id_genre_id = db_context.DbSetMockProductDim
+            .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
+            .Select(p => new {p.ProductId, p.GenreId})
+            .AsEnumerable()
+            .ToDictionary(kvp => kvp.ProductId, kvp => kvp.GenreId);
+
+        dim_dict_id_genre = db_context.DbSetMockGenreDim
+            .Select(p => new {p.GenreId, p.Genre})
+            .AsEnumerable()
+            .ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
+        
     }   
     
     // TODO: should this come here? 
