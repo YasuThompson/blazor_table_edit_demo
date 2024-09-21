@@ -46,12 +46,22 @@
             </TemplateColumn>
 
             <TemplateColumn Title="German Rating">
-                <select type="int" class="@IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDEId">
-                    @foreach(var kvp in dim_dict_id_rating_de)
-                    {
-                        <option value=@kvp.Key>@kvp.Value</option>
-                    }
-                </select>
+                <ChildContent>
+                    <select type="int" class="@IfDeleteCell(context.Id, delete_index_manager)"  @bind="@context.RatingDEId">
+                        @foreach(var kvp in dim_dict_id_rating_de)
+                        {
+                            <option value=@kvp.Key>@kvp.Value</option>
+                        }
+                    </select>
+                </ChildContent>
+                <ColumnOptions>
+                    <select type="int"  @bind="rating_de_filter">
+                        @foreach(var kvp in dim_dict_id_rating_de)
+                        {
+                            <option value=@kvp.Key>@kvp.Value</option>
+                        }
+                    </select>
+                </ColumnOptions>
             </TemplateColumn>
 
             <TemplateColumn>
@@ -156,7 +166,8 @@
     private double new_version;
     private int largest_id_num;
 
-    string nameFilter;
+    private string? nameFilter;
+    private int? rating_de_filter;
 
     IQueryable<MockProductPriceDE> filetered_rows
     {
@@ -169,6 +180,11 @@
             {
                 @* result = result.Where(c => GetDimDictValue(c.ProductId, dim_dict_id_product_title)=="Il Divo"); *@
                 result = result.Where(c => c.ProductId==6669);
+            }
+
+            if (rating_de_filter.HasValue)
+            {
+                result = result.Where(c => c.RatingDEId==rating_de_filter);
             }
 
             return result;
