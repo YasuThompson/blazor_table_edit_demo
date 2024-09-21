@@ -303,6 +303,7 @@
         @* published_rows = queried_rows.ToList().Concat(added_rows).ToList(); *@
 
         // Remove rows to delete
+        // TODO: the following process might be redundant
         foreach(var _row in queried_rows)
         {
             if(delete_index_manager.ContainsIndex(_row.Id))
