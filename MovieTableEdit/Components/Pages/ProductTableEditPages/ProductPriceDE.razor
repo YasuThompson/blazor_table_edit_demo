@@ -14,32 +14,30 @@
 @using System
 
 <PageTitle>Product Price</PageTitle>
-
-
         <h3>Queried rows</h3>
-        <QuickGrid Class="table" Items="queried_rows" TGridItem="MockProductPriceDE">
+        <QuickGrid Class="table" Items="filetered_rows" TGridItem="MockProductPriceDE">
             <TemplateColumn Title="Title">
-                <div class="@IfDeleteCell(context.Id, delete_index_manager)"> @GetDimDictValue(context.ProductId, dim_dict_id_product_title) 
-                    <span class="tooltip-text" id="top"> 
-                        @GetDimDictValue(context.ProductId, dim_dict_product_id_note) 
-                    </span>           
-                </div>   
+                <ChildContent>
+                    <div class="@IfDeleteCell(context.Id, delete_index_manager)"> @GetDimDictValue(context.ProductId, dim_dict_id_product_title) 
+                        <span class="tooltip-text" id="top"> 
+                            @GetDimDictValue(context.ProductId, dim_dict_product_id_note) 
+                        </span>           
+                    </div>  
+                </ChildContent>
+                <ColumnOptions>
+                    <div class="search-box">
+                        <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="Country name..." />
+                    </div> 
+                </ColumnOptions>
             </TemplateColumn>
 
             <TemplateColumn Title="Genre">
                 <div class="@IfDeleteCell(context.Id, delete_index_manager)"> 
-                     <!-- TODO: instead of using GetDimDictValueNested(), should I join the join the dimension table in advance? -->
+                     <!-- TODO: instead of using GetDimDictValueNested(), 
+                    should I join the join the dimension table in advance? -->
                     @GetDimDictValueNested(context.ProductId, dim_dict_product_id_genre_id, dim_dict_id_genre)  
                 </div>   
             </TemplateColumn>
-
-            @* <PropertyColumn Property="@(c => c.Status)">
-                <ColumnOptions>
-                    <label>
-                        <input type="checkbox" @bind="onlyOngoing" @onclick="FilterChangedAsync" /> Ongoing only
-                    </label>
-                </ColumnOptions>
-            </PropertyColumn> *@
 
             <TemplateColumn Title="Price">
                 <label>
@@ -142,7 +140,6 @@
     private Dictionary<int, string> dim_dict_product_id_note; // ProductId to its Note
     private Dictionary<int, string> dim_dict_id_genre; // GenreId to Genre
     
-    
     // Rows queried from the database
     private IQueryable<MockProductPriceDE> queried_rows;
 
@@ -153,11 +150,30 @@
 
     // Hashset of table row indexes to manage rows to delte or edited rows
     private TableIndexManager delete_index_manager = new TableIndexManager();
-    private TableIndexManager edited_index_manager = new TableIndexManager(); // Currently not used
+    @* private TableIndexManager edited_index_manager = new TableIndexManager(); // Currently not used *@
     
     private double latest_version;
     private double new_version;
     private int largest_id_num;
+
+    string nameFilter;
+
+    IQueryable<MockProductPriceDE> filetered_rows
+    {
+        get
+        {
+            IQueryable<MockProductPriceDE> result = queried_rows;
+            
+
+            if (!string.IsNullOrEmpty(nameFilter))
+            {
+                @* result = result.Where(c => GetDimDictValue(c.ProductId, dim_dict_id_product_title)=="Il Divo"); *@
+                result = result.Where(c => c.ProductId==6669);
+            }
+
+            return result;
+        }  
+    }
     
     protected override async Task OnInitializedAsync()
     {   
