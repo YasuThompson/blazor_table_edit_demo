@@ -182,7 +182,7 @@
     private double new_version;
     private int largest_id_num;
 
-    private string? nameFilter;
+    private string nameFilter;
     private int? rating_de_filter;
     private int? genre_filter;
     int minMedals;
@@ -196,9 +196,15 @@
             
 
             if (!string.IsNullOrEmpty(nameFilter))
-            {
-                @* result = result.Where(c => GetDimDictValue(c.ProductId, dim_dict_id_product_title)=="Il Divo"); *@
-                result = result.Where(c => c.ProductId==6669);
+            {   
+                // TODO: is the following a redundant approach?
+                // TODO: should make filtered_product_id_list from a dictionary rather than db context
+                List<int> filtered_product_id_list = db_context.DbSetMockProductDim.
+                    Where(c => c.ProductTypeId == selected_product_type_id && c.Title.ToLower().Contains(nameFilter.ToLower()))
+                    .Select(p => p.ProductId)
+                    .ToList();
+                
+                result = result.Where(r => filtered_product_id_list.Contains(r.ProductId));
             }
 
             if (rating_de_filter.HasValue)
