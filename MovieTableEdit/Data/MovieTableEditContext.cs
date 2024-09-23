@@ -32,6 +32,12 @@ namespace MovieTableEdit.Data
         public DbSet<RatingDEDim> DbSetRatingDEDim { get; set; }
         public DbSet<RatingFRDim> DbSetRatingFRDim { get; set; }
 
+        public DbSet<TempProductDim> DbSetTempProductDim { get; set; }
+        public DbSet<TempGenreDim> DbSetTempGenreDim { get; set; }
+        public DbSet<TempProductTypeDim> DbSetTempProductTypeDim { get; set; }
+        public DbSet<TempRatingDEDim> DbSetTempRatingDEDim { get; set; }
+        public DbSet<TempRatingFRDim> DbSetTempRatingFRDim { get; set; }
+
 
         
 
@@ -106,6 +112,7 @@ namespace MovieTableEdit.Data
             }
             return RecordList;
         }
+
 
     }
 }
