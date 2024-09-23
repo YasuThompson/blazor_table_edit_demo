@@ -6,6 +6,8 @@
 @using MovieTableEdit.Data
 @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
 @implements IAsyncDisposable
+@inject NavigationManager NavigationManager
+
 
 
 <PageTitle>Product Information</PageTitle>
@@ -119,6 +121,8 @@
 
 </QuickGrid>
 
+<button @onclick="PublishChanges">Publish Changes</button>
+
 
 @code {
 
@@ -172,6 +176,15 @@
         return img_path;
     }
 
+
+    private async Task PublishChanges()
+    {
+        // Uploading the rows with a new version to the database
+        await db_context.SaveChangesAsync();
+
+        // Going back to the table selection page
+        NavigationManager.NavigateTo("/");;
+    }
 
     public async ValueTask DisposeAsync() => await db_context.DisposeAsync();
 }
