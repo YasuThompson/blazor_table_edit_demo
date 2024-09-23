@@ -74,21 +74,18 @@
 
     [Parameter]
     [SupplyParameterFromQuery(Name = "selected_cat_dim")]
-    public string selected_cat_dim { get; set; }
+    public required string selected_cat_dim { get; set; }
 
     // TODO: what does this line do?
     private MovieTableEditContext db_context = default!;
-
-
-    string selected_dim_table = "genre";
     
-    private IQueryable<MockProductTypeDim> product_type_data;
-    private IQueryable<MockGenreDim> genre_data;
-    private IQueryable<MockRatingDEDim> rating_de_data;
-    private IQueryable<MockRatingFRDim> rating_fr_data;
+    private IQueryable<MockProductTypeDim>? product_type_data;
+    private IQueryable<MockGenreDim>? genre_data;
+    private IQueryable<MockRatingDEDim>? rating_de_data;
+    private IQueryable<MockRatingFRDim>? rating_fr_data;
 
-    protected override async Task OnInitializedAsync() 
-    {   
+    protected override void OnInitialized() 
+    {           
         db_context = DbContext;
         if (selected_cat_dim == "product-type")
         {   
@@ -115,7 +112,10 @@
 
     private async Task SaveChanges()
     {
-        db_context.SaveChangesAsync();
+        await db_context.SaveChangesAsync();
+
+        // Going back to the table selection page
+        NavigationManager.NavigateTo("/");
     }
 
 }

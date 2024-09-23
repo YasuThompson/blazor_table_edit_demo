@@ -124,8 +124,7 @@
 
     [Parameter]
     [SupplyParameterFromQuery(Name = "selected_producty_types")]
-    public string selected_product_types { get; set; }
-
+    public required string selected_product_types { get; set; }
 
     private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
     {
@@ -135,12 +134,12 @@
         { "Comic", 4 },
     };
 
-    private IQueryable<MockProductDim> queried_data;
+    private IQueryable<MockProductDim>? queried_data;
 
     private MovieTableEditContext context = default!;
 
-    private Dictionary<int, string> product_type_dict;
-    private Dictionary<int, string> genre_dict;
+    private Dictionary<int, string> product_type_dict = new Dictionary<int, string>();
+    private Dictionary<int, string> genre_dict = new Dictionary<int, string>();
 
     Dictionary<string, bool> displayOptions = new Dictionary<string, bool>
     {
@@ -151,7 +150,7 @@
         { "TitleJP", false },
     };
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
 

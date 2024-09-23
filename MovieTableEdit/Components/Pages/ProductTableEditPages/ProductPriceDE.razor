@@ -15,15 +15,25 @@
 
 <PageTitle>Product Price</PageTitle>
         <h3>Queried rows</h3>
+
+        <!-- The queried price table based on parameters from the table selection page.  -->
         <QuickGrid Class="table" Items="filetered_rows" TGridItem="MockProductPriceDE">
+            <!-- Column of ProductIds -->
             <TemplateColumn Title="Title">
+                <!-- Contents of each cell -->
                 <ChildContent>
-                    <div class="@IfDeleteCell(context.Id, delete_index_manager)"> @GetDimDictValue(context.ProductId, dim_dict_id_product_title) 
+                    <!-- Control strikethrough with this class -->
+                    <div class="@IfDeleteCell(context.Id, delete_index_manager)"> 
+                        <!-- Maps each ProductId to its product title -->
+                        @GetDimDictValue(context.ProductId, dim_dict_id_product_title) 
+                        <!-- Hover text on each product tile -->
                         <span class="tooltip-text" id="top"> 
+                            <!-- Get product note from each ProductId -->
                             @GetDimDictValue(context.ProductId, dim_dict_product_id_note) 
                         </span>           
                     </div>  
                 </ChildContent>
+                <!-- Search funciton of the column -->
                 <ColumnOptions>
                     <div class="search-box">
                         <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="Country name..." />
@@ -144,7 +154,7 @@
     // TODO: it might be better to route integer indexes instead of string as the parameter
     [Parameter]
     [SupplyParameterFromQuery(Name = "selected_product_type")]
-    public string selected_product_type { get; set; }
+    public required string selected_product_type { get; set; }
 
     // A dictionary mapping from the route parameter to its corresponding index
     // TODO: it might be better to route integer indexes or pass parameters in a different way
@@ -160,11 +170,11 @@
     private int selected_product_type_id; 
 
     // Dictionaries to map indexes of dimension tables
-    private Dictionary<int, string> dim_dict_id_product_title; // product id to product tile
-    private Dictionary<int, int> dim_dict_product_id_genre_id; // product id to its genre
-    private Dictionary<int, string> dim_dict_id_rating_de; // RatingDEId to RatingDE
-    private Dictionary<int, string> dim_dict_product_id_note; // ProductId to its Note
-    private Dictionary<int, string> dim_dict_id_genre; // GenreId to Genre
+    private Dictionary<int, string> dim_dict_id_product_title = new Dictionary<int, string>(); // product id to product tile
+    private Dictionary<int, int> dim_dict_product_id_genre_id = new Dictionary<int, int>(); // product id to its genre
+    private Dictionary<int, string> dim_dict_id_rating_de = new Dictionary<int, string>(); // RatingDEId to RatingDE
+    private Dictionary<int, string> dim_dict_product_id_note = new Dictionary<int, string>(); // ProductId to its Note
+    private Dictionary<int, string> dim_dict_id_genre = new Dictionary<int, string>(); // GenreId to Genre
     
     // Rows queried from the database
     private IQueryable<MockProductPriceDE> queried_rows;
@@ -182,7 +192,7 @@
     private double new_version;
     private int largest_id_num;
 
-    private string nameFilter;
+    private string nameFilter = "";
     private int? rating_de_filter;
     private int? genre_filter;
     int minMedals;
@@ -227,7 +237,7 @@
         }  
     }
     
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {   
         db_context = DbContext;
 
@@ -283,13 +293,13 @@
     public async ValueTask DisposeAsync() => await db_context.DisposeAsync();
 
     // Add an empty row to the list of added rows
-    private async Task AddRow()
+    private void AddRow()
     {
         added_rows.Add(new MockProductPriceDE());
     }
 
     // Delete the clicked row from the added rows
-    private async Task DelAddedRow(MockProductPriceDE _del_elem)
+    private void DelAddedRow(MockProductPriceDE _del_elem)
     {
         added_rows.Remove(_del_elem);
     }
@@ -332,7 +342,7 @@
         }
 
         // Adding the edited rows
-        db_context.DbSetMockProductPriceDE.AddRangeAsync(published_rows);
+        await db_context.DbSetMockProductPriceDE.AddRangeAsync(published_rows);
 
         // Uploading the rows with a new version to the database
         await db_context.SaveChangesAsync();

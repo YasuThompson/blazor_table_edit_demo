@@ -36,42 +36,43 @@ public class MockProductPriceFR
 public class MockProductDim
 {   
     [Key]
-    public int ProductId { get; set; }
-    public string Title { get; set; }
-    public int ProductTypeId { get; set;}
-    public int GenreId { get; set;}
-    public string? TitleDE { get; set; }
-    public string? TitleFR { get; set; }
-    public string? TitleES { get; set; }
-    public string? TitleIT { get; set; }
-    public string? TitleJP { get; set; }
-    public string? Note {get; set;}
+    public required int ProductId { get; set; }
+    public required string Title { get; set; }
+    public required int ProductTypeId { get; set;}
+    public required int GenreId { get; set;}
+    public required string TitleDE { get; set; }
+    public required string TitleFR { get; set; }
+    public required string TitleES { get; set; }
+    public required string TitleIT { get; set; }
+    public required string TitleJP { get; set; }
+    public required string Note {get; set;}
 }
 
 public class MockGenreDim
 {
     [Key]
-    public int GenreId { get; set; }
-    public string Genre { get; set; }
+    public required int GenreId { get; set; }
+    public required string Genre { get; set; }
+    public string? Explanation { get; set; }
 }
 
 public class MockProductTypeDim
 {
     [Key]
-    public int ProductTypeId { get; set; }
-    public string ProductType { get; set; }
+    public required int ProductTypeId { get; set; }
+    public required string ProductType { get; set; }
 }
 
 public class MockRatingDEDim
 {
     [Key]
-    public int RatingDEId { get; set; }
-    public string RatingDE { get; set; }
+    public required int RatingDEId { get; set; }
+    public required string RatingDE { get; set; }
 }
 
 public class MockRatingFRDim
 {
     [Key]
-    public int RatingFRId { get; set; }
-    public string RatingFR { get; set; }
+    public required int RatingFRId { get; set; }
+    public required string RatingFR { get; set; }
 }

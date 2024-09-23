@@ -45,12 +45,12 @@ namespace MovieTableEdit.Shared.TableManager
         }
 
         public static string GetDimDictValueNested(int key, Dictionary<int, int> inner_dim_dict, Dictionary<int, string> outer_dim_dict)
-        {
-            try
+        {   
+            if (inner_dim_dict != null && outer_dim_dict != null && inner_dim_dict.ContainsKey(key))
             {
                 return outer_dim_dict[inner_dim_dict[key]];
             }
-            catch (Exception ex)
+            else
             {
                 return "Value not found from the dimension tables"; 
             }
