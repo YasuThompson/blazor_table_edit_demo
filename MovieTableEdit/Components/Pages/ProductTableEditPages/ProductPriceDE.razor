@@ -7,7 +7,7 @@
 @using MovieTableEdit.Shared.TableManager
 @using static MovieTableEdit.Shared.TableManager.SharedFunctions
 
-@inject MovieTableEdit.Data.MovieTableEditContext DbContext
+@inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
 
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
@@ -216,6 +216,7 @@
                 result = result.Where(r => filtered_product_id_list.Contains(r.ProductId));
             }
 
+
             if (rating_de_filter.HasValue)
             {
                 result = result.Where(c => c.RatingDEId==rating_de_filter);
@@ -239,7 +240,8 @@
     
     protected override void OnInitialized()
     {   
-        db_context = DbContext;
+
+        db_context = DbFactory.CreateDbContext();
 
         // Mapping the selected product type to its index
         selected_product_type_id = product_type_id_dict[selected_product_type];

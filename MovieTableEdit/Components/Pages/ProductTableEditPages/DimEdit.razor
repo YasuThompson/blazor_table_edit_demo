@@ -4,8 +4,7 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
-@inject MovieTableEdit.Data.MovieTableEditContext DbContext
-@* @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory *@
+@inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 
@@ -86,7 +85,7 @@
 
     protected override void OnInitialized() 
     {           
-        db_context = DbContext;
+        db_context = DbFactory.CreateDbContext();
         if (selected_cat_dim == "product-type")
         {   
             product_type_data = db_context.DbSetMockProductTypeDim;
