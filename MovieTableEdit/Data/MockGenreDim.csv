@@ -1,9 +1,9 @@
-GenreId,Genre,Explanation
-1,SciFi,
-2,Action,
-3,Esoteric,A kind of movies which do not make a sense. You like the fact that you saw the films rather than the films themselves.
-4,Drama,
-5,Fantasy,
-6,Musical,
-7,Comedy,Everything can be a comedy or a horror, tragedy.
-8,History/biography,
+Id,GenreId,Genre,Explanation
+1,1,SciFi,
+2,2,Action,
+3,3,Esoteric,A kind of movies which do not make a sense. You like the fact that you saw the films rather than the films themselves.
+4,4,Drama,
+5,5,Fantasy,
+6,6,Musical,
+7,7,Comedy,Everything can be a comedy or a horror, tragedy.
+8,8,History/biography,
