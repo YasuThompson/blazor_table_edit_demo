@@ -17,6 +17,7 @@ public class TempProductDim
     public string TitleIT { get; set; }
     public string TitleJP { get; set; }
     public string Note {get; set;}
+    public bool Active {get; set;}
 }
 
 public class TempGenreDim
@@ -25,6 +26,7 @@ public class TempGenreDim
     public int GenreId { get; set; }
     public string Genre { get; set; }
     public string? Explanation { get; set; }
+    public bool Available {get; set;}
 }
 
 public class TempProductTypeDim
@@ -80,6 +82,8 @@ public class ProductTypeDim
     public int Id { get; set;}
     public int ProductTypeId { get; set; }
     public string ProductType { get; set; }
+
+    
 }
 
 public class RatingDEDim
