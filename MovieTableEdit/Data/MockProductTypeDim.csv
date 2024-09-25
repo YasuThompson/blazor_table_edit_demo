@@ -1,5 +1,8 @@
-Id,ProductTypeId,ProductType
-1,1,Movie
-2,2,TV Show
-3,3,Animated Series
-4,4,Comic
+Id,ProductTypeId,ProductType,Version
+1,1,Movie,1.01
+2,2,TV Show,1.01
+3,3,Animated Series,1.01
+4,1,Movie,1.02
+5,2,TV Show,1.02
+6,3,Animated Series,1.02
+7,4,Comic,1.02
