@@ -3,19 +3,14 @@
 @inject NavigationManager NavigationManager
 
 @inject IJSRuntime JSRuntime
+@using MovieTableEdit.Shared JsStorage;
 
-<h5>Select a table type to edit</h5>
-<select id="condition" @onclick="@FilterOption" @bind="@selected_table_type" >
-    <option value="category-dimension">Dimension table for categories</option>
-    <option value="product-dimension">Dimension table for products</option>
-    <option value="product-price">Product price table</option>
-</select>
-<br>
 
-@if (if_show_cat_dim_filter)
+@if (table_edit_type_config == "dimension-table-edit")
 {
     <h5>Select a dimension table to edit</h5>
-    <select id="condition" @onclick="@FilterOption" @bind="@selected_cat_dim" >
+    <select id="condition" @onclick="@SwitchFilterOption" @bind="@selected_cat_dim" >
+        <option value="product">Product</option>
         <option value="product-type">Product type</option>
         <option value="product-genre">Product genre</option>
         <option value="rating-de">German rating</option>
@@ -38,26 +33,16 @@
 }
 
 @if (if_show_price_table_filters)
-{   
-    <div style="display: flex; align-items: center;">
-    <div style="margin-right: 20px;">
-        <h5>Select a market</h5>
-        <select id="condition" @onclick="@FilterOption" @bind="@selected_country">
-            <option value="DE">Germany</option>
-            <option value="FR">France</option>
-        </select>
-    </div>
-    
+{     
     <div>
         <h5>Select a product type</h5>
-        <select id="condition" @onclick="@FilterOption" @bind="@selected_product_type">
+        <select id="condition" @onclick="@SwitchFilterOption" @bind="@selected_product_type">
             <option value="movie">Movie</option>
             <option value="tv">TV Show</option>
             <option value="anime">Anime</option>
             <option value="comic">Comic</option>
         </select>
     </div>
-</div>
 }
 
 <br>
@@ -71,9 +56,12 @@
     private bool if_ready_to_edit_table = false;
 
     public string selected_table_type { get; set; } = "";
-    public string selected_country { get; set; } = "";
+    @* public string selected_country { get; set; } = ""; *@
     public string selected_product_type { get; set; } = "";
     public string selected_cat_dim { get; set; } = "";
+
+    private string table_edit_type_config = "dimension-table-edit";
+    private string? selected_country_config;
 
 
     // A dictionary for storing product type selections
@@ -85,7 +73,9 @@
         { "Comic", false },
     };
 
-    private void FilterOption()
+
+
+    private void SwitchFilterOption()
     {   
         if (selected_table_type=="category-dimension")
         {   
@@ -124,7 +114,7 @@
         }
         else if(selected_table_type=="product-price")
         {   
-            JSRuntime.InvokeAsync<object>("open", $"/product-price/{selected_country}/{selected_product_type}", "_blank");
+            JSRuntime.InvokeAsync<object>("open", $"/product-price/{selected_country_config}/{selected_product_type}", "_blank");
         }
         
 
