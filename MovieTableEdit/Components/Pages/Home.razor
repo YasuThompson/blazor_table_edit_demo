@@ -3,19 +3,13 @@
 @inject NavigationManager NavigationManager
 
 @inject IJSRuntime JSRuntime
+@inject BlazorState.Client.JSStorage JsStorage;
 
-<h5>Select a table type to edit</h5>
-<select id="condition" @onclick="@FilterOption" @bind="@selected_table_type" >
-    <option value="category-dimension">Dimension table for categories</option>
-    <option value="product-dimension">Dimension table for products</option>
-    <option value="product-price">Product price table</option>
-</select>
-<br>
 
 @if (if_show_cat_dim_filter)
 {
     <h5>Select a dimension table to edit</h5>
-    <select id="condition" @onclick="@FilterOption" @bind="@selected_cat_dim" >
+    <select id="condition" @onclick="@SwitchFilterOption" @bind="@selected_cat_dim" >
         <option value="product-type">Product type</option>
         <option value="product-genre">Product genre</option>
         <option value="rating-de">German rating</option>
@@ -40,23 +34,23 @@
 @if (if_show_price_table_filters)
 {   
     <div style="display: flex; align-items: center;">
-    <div style="margin-right: 20px;">
-        <h5>Select a market</h5>
-        <select id="condition" @onclick="@FilterOption" @bind="@selected_country">
-            <option value="DE">Germany</option>
-            <option value="FR">France</option>
-        </select>
-    </div>
-    
-    <div>
-        <h5>Select a product type</h5>
-        <select id="condition" @onclick="@FilterOption" @bind="@selected_product_type">
-            <option value="movie">Movie</option>
-            <option value="tv">TV Show</option>
-            <option value="anime">Anime</option>
-            <option value="comic">Comic</option>
-        </select>
-    </div>
+        <div style="margin-right: 20px;">
+            <h5>Select a market</h5>
+            <select id="condition" @onclick="@SwitchFilterOption" @bind="@selected_country">
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+            </select>
+        </div>
+        
+        <div>
+            <h5>Select a product type</h5>
+            <select id="condition" @onclick="@SwitchFilterOption" @bind="@selected_product_type">
+                <option value="movie">Movie</option>
+                <option value="tv">TV Show</option>
+                <option value="anime">Anime</option>
+                <option value="comic">Comic</option>
+            </select>
+        </div>
 </div>
 }
 
@@ -75,6 +69,8 @@
     public string selected_product_type { get; set; } = "";
     public string selected_cat_dim { get; set; } = "";
 
+    public string table_edit_type_config { get; set; }
+
 
     // A dictionary for storing product type selections
     Dictionary<string, bool> product_type_option_dict = new Dictionary<string, bool>
@@ -85,7 +81,13 @@
         { "Comic", false },
     };
 
-    private void FilterOption()
+    protected override async Task  OnInitializedAsync()
+    {
+        table_edit_type_config = await JsStorage.Read("table-edit-type");
+    }
+
+
+    private void SwitchFilterOption()
     {   
         if (selected_table_type=="category-dimension")
         {   
