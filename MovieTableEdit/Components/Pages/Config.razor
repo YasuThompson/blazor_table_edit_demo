@@ -5,10 +5,10 @@
 @using MovieTableEdit.Data
 @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
 @inject NavigationManager NavigationManager
-@inject BlazorState.Client.JSStorage JsStorage;
+@inject MovieTableEdit.Shared.JSStorage JsStorage
 
 <h5>Select a table type to edit</h5>
-<select id="condition" @onclick="@SwitchFilterOption" @bind="@table_edit_type" >
+<select id="condition" @onclick="@SwitchFilterOption" @bind="@table_edit_type_config" >
     <option value="dimension-table-edit">Edit dimension tables</option>
     <option value="price-table-edit">Edit a price table</option>
 </select>

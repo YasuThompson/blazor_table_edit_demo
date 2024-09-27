@@ -1,7 +1,7 @@
 using Microsoft.JSInterop;
 
 
-namespace BlazorState.Client
+namespace MovieTableEdit.Shared
 {
     public class JSStorage
     {
