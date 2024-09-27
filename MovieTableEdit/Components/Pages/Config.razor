@@ -1,0 +1,59 @@
+@page "/config"
+
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using MovieTableEdit.Data
+@inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject BlazorState.Client.JSStorage JsStorage;
+
+<h5>Select a table type to edit</h5>
+<select id="condition" @onclick="@SwitchFilterOption" @bind="@table_edit_type" >
+    <option value="dimension-table-edit">Edit dimension tables</option>
+    <option value="price-table-edit">Edit a price table</option>
+</select>
+<br>
+
+
+@code
+{   
+    private MovieTableEditContext db_context = default!;
+
+    private bool if_show_price_table_filters = false;
+
+
+    private string table_edit_type_config {get; set; }
+    private double genre_dim_ver_config { get; set; }
+    private double product_type_dim_ver_config { get; set; }
+    private double product_dim_ver_config { get; set; }
+    private double price_de_ver_config { get; set; }
+
+    private string? selected_country_config {get; set; }
+
+    
+
+    protected override void OnInitialized()
+    {
+        db_context = DbFactory.CreateDbContext();
+    }
+
+
+    private void SwitchFilterOption()
+    {   
+        if (table_edit_type_config=="dimension-table-edit")
+        {   
+            if_show_price_table_filters = false;
+        }
+        else if(table_edit_type_config=="price-table-edit")
+        {   
+            if_show_price_table_filters = true;
+        }
+    }
+
+
+    private async Task NavigateToHomePage()
+    {
+        await JsStorage.Save("table-edit-type", table_edit_type_config.ToString());
+        NavigationManager.NavigateTo("/");
+    }
+}
