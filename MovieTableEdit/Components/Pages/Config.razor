@@ -5,7 +5,8 @@
 @using MovieTableEdit.Data
 @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
 @inject NavigationManager NavigationManager
-@inject MovieTableEdit.Shared.JSStorage JsStorage
+
+@using MovieTableEdit.Shared
 
 <h5>Select a table type to edit</h5>
 <select id="condition" @onclick="@SwitchFilterOption" @bind="@table_edit_type_config" >
@@ -35,6 +36,7 @@
     protected override void OnInitialized()
     {
         db_context = DbFactory.CreateDbContext();
+
     }
 
 
@@ -53,7 +55,7 @@
 
     private async Task NavigateToHomePage()
     {
-        await JsStorage.Save("table-edit-type", table_edit_type_config.ToString());
+        @* await JsStorage.Save("table-edit-type", table_edit_type_config.ToString()); *@
         NavigationManager.NavigateTo("/");
     }
 }
