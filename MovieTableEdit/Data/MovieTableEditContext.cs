@@ -21,14 +21,22 @@ namespace MovieTableEdit.Data
             optionsBuilder.UseSqlite(Configuration.GetConnectionString("MovieTableEditContext"));
         }
 
-        public DbSet<MockProductPriceDE> DbSetMockProductPriceDE { get; set; }
-        public DbSet<MockProductPriceFR> DbSetMockProductPriceFR { get; set; }
+        public DbSet<TempProductPriceDE> DbSetTempProductPriceDE { get; set; }
+        public DbSet<TempProductPriceFR> DbSetTempProductPriceFR { get; set; }
+        public DbSet<ProductPriceDE> DbSetProductPriceDE { get; set; }
+        public DbSet<ProductPriceFR> DbSetProductPriceFR { get; set; }
 
-        public DbSet<MockProductDim> DbSetMockProductDim { get; set; }
-        public DbSet<MockGenreDim> DbSetMockGenreDim { get; set; }
-        public DbSet<MockProductTypeDim> DbSetMockProductTypeDim { get; set; }
-        public DbSet<MockRatingDEDim> DbSetMockRatingDEDim { get; set; }
-        public DbSet<MockRatingFRDim> DbSetMockRatingFRDim { get; set; }
+        public DbSet<ProductDim> DbSetProductDim { get; set; }
+        public DbSet<GenreDim> DbSetGenreDim { get; set; }
+        public DbSet<ProductTypeDim> DbSetProductTypeDim { get; set; }
+        public DbSet<RatingDEDim> DbSetRatingDEDim { get; set; }
+        public DbSet<RatingFRDim> DbSetRatingFRDim { get; set; }
+
+        public DbSet<TempProductDim> DbSetTempProductDim { get; set; }
+        public DbSet<TempGenreDim> DbSetTempGenreDim { get; set; }
+        public DbSet<TempProductTypeDim> DbSetTempProductTypeDim { get; set; }
+        public DbSet<TempRatingDEDim> DbSetTempRatingDEDim { get; set; }
+        public DbSet<TempRatingFRDim> DbSetTempRatingFRDim { get; set; }
 
 
         
@@ -38,50 +46,54 @@ namespace MovieTableEdit.Data
             // TODO: should the processes below generalised and written in a for loop?
             // TODO: Naming rules might not be coherent
 
-            string mock_product_price_de_csv_path = "Data/MockProductPriceDE.csv";
-            List<MockProductPriceDE> mock_product_price_de = ReadCsvAsClassList<MockProductPriceDE>(mock_product_price_de_csv_path);
+            string product_price_de_csv_path = "Data/MockProductPriceDE.csv";
+            List<ProductPriceDE> product_price_de = ReadCsvAsClassList<ProductPriceDE>(product_price_de_csv_path);
 
-            string mock_product_price_fr_csv_path = "Data/MockProductPriceFR.csv";
-            List<MockProductPriceFR> mock_product_price_fr = ReadCsvAsClassList<MockProductPriceFR>(mock_product_price_fr_csv_path);
-
-
-            string mock_product_dim_csv_path = "Data/MockProductDim.csv";
-            List<MockProductDim> mock_product_dims = ReadCsvAsClassList<MockProductDim>(mock_product_dim_csv_path);
-
-            string mock_genre_dim_csv_path = "Data/MockGenreDim.csv";
-            List<MockGenreDim> mock_genre_dims = ReadCsvAsClassList<MockGenreDim>(mock_genre_dim_csv_path);
-
-            string mock_product_type_dim_csv_path = "Data/MockProductTypeDim.csv";
-            List<MockProductTypeDim> mock_product_type_dims = ReadCsvAsClassList<MockProductTypeDim>(mock_product_type_dim_csv_path);
-
-            string mock_rating_de_dim_csv_path = "Data/MockRatingDEDim.csv";
-            List<MockRatingDEDim> mock_rating_de_dims = ReadCsvAsClassList<MockRatingDEDim>(mock_rating_de_dim_csv_path);
-
-            string mock_rating_fr_dim_csv_path = "Data/MockRatingFRDim.csv";
-            List<MockRatingFRDim> mock_rating_fr_dims = ReadCsvAsClassList<MockRatingFRDim>(mock_rating_fr_dim_csv_path);
+            string product_price_fr_csv_path = "Data/MockProductPriceFR.csv";
+            List<ProductPriceFR> product_price_fr = ReadCsvAsClassList<ProductPriceFR>(product_price_fr_csv_path);
 
 
-            modelBuilder.Entity<MockProductPriceDE>().ToTable("MockProductPriceDE");
-            modelBuilder.Entity<MockProductPriceDE>().HasData(mock_product_price_de);
+            string product_dim_csv_path = "Data/MockProductDim.csv";
+            List<ProductDim> product_dims = ReadCsvAsClassList<ProductDim>(product_dim_csv_path);
 
-            modelBuilder.Entity<MockProductPriceFR>().ToTable("MockProductPriceFR");
-            modelBuilder.Entity<MockProductPriceFR>().HasData(mock_product_price_fr);
+            string genre_dim_csv_path = "Data/MockGenreDim.csv";
+            List<GenreDim> genre_dims = ReadCsvAsClassList<GenreDim>(genre_dim_csv_path);
+
+            string product_type_dim_csv_path = "Data/MockProductTypeDim.csv";
+            List<ProductTypeDim> product_type_dims = ReadCsvAsClassList<ProductTypeDim>(product_type_dim_csv_path);
+
+            string rating_de_dim_csv_path = "Data/MockRatingDEDim.csv";
+            List<RatingDEDim> rating_de_dims = ReadCsvAsClassList<RatingDEDim>(rating_de_dim_csv_path);
+
+            string rating_fr_dim_csv_path = "Data/MockRatingFRDim.csv";
+            List<RatingFRDim> rating_fr_dims = ReadCsvAsClassList<RatingFRDim>(rating_fr_dim_csv_path);
 
 
-            modelBuilder.Entity<MockProductDim>().ToTable("MockProductDim");
-            modelBuilder.Entity<MockProductDim>().HasData(mock_product_dims);
+            modelBuilder.Entity<ProductPriceDE>().ToTable("ProductPriceDE");
+            modelBuilder.Entity<ProductPriceDE>().HasData(product_price_de);
+            modelBuilder.Entity<ProductPriceFR>().ToTable("ProductPriceFR");
+            modelBuilder.Entity<ProductPriceFR>().HasData(product_price_fr);
 
-            modelBuilder.Entity<MockProductTypeDim>().ToTable("MockProductTypeDim");
-            modelBuilder.Entity<MockProductTypeDim>().HasData(mock_product_type_dims);
+            modelBuilder.Entity<TempProductPriceDE>().ToTable("TempProductPriceDE");
+            modelBuilder.Entity<TempProductPriceFR>().ToTable("TempProductPriceFR");
 
-            modelBuilder.Entity<MockGenreDim>().ToTable("MockGenreDim");
-            modelBuilder.Entity<MockGenreDim>().HasData(mock_genre_dims);
 
-            modelBuilder.Entity<MockRatingDEDim>().ToTable("MockRatingDEDim");
-            modelBuilder.Entity<MockRatingDEDim>().HasData(mock_rating_de_dims);
+            modelBuilder.Entity<ProductDim>().ToTable("ProductDim");
+            modelBuilder.Entity<ProductDim>().HasData(product_dims);
+            modelBuilder.Entity<ProductTypeDim>().ToTable("ProductTypeDim");
+            modelBuilder.Entity<ProductTypeDim>().HasData(product_type_dims);
+            modelBuilder.Entity<GenreDim>().ToTable("GenreDim");
+            modelBuilder.Entity<GenreDim>().HasData(genre_dims);
+            modelBuilder.Entity<RatingDEDim>().ToTable("RatingDEDim");
+            modelBuilder.Entity<RatingDEDim>().HasData(rating_de_dims);
+            modelBuilder.Entity<RatingFRDim>().ToTable("RatingFRDim");
+            modelBuilder.Entity<RatingFRDim>().HasData(rating_fr_dims);
 
-            modelBuilder.Entity<MockRatingFRDim>().ToTable("MockRatingFRDim");
-            modelBuilder.Entity<MockRatingFRDim>().HasData(mock_rating_fr_dims);
+            modelBuilder.Entity<TempProductDim>().ToTable("TempProductDim");
+            modelBuilder.Entity<TempProductTypeDim>().ToTable("TempProductTypeDim");
+            modelBuilder.Entity<TempGenreDim>().ToTable("TempGenreDim");
+            modelBuilder.Entity<TempRatingDEDim>().ToTable("TempRatingDEDim");
+            modelBuilder.Entity<TempRatingFRDim>().ToTable("TempRatingFRDim");
 
         }
 
@@ -100,6 +112,7 @@ namespace MovieTableEdit.Data
             }
             return RecordList;
         }
+
 
     }
 }

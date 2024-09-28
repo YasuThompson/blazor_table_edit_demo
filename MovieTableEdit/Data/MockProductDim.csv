@@ -1,44 +1,44 @@
-ProductId,Title,ProductTypeId,GenreId,ReleaseDate,TitleDE,TitleFR,TitleES,TitleIT,TitleJP,Note
-1111,Red River,1,4,1948-08-26,Panik am roten Fluß,,,,,One of the only and real wild west films
-1112,The Last Picture Show,1,4,1971-10-22,Die letzte Vorstellung,,,,,
-1113,Network,1,4,1976-11-27,Network,,,,,Greatest American satire
-1114,Traffic,1,4,2000-12-27,Traffic – Macht des Kartells,,,,,
-1115,Florida Project,1,4,2017-10-06,The Florida Project,,,,,
-2222,The Marriage of Maria Braun,1,3,1979-03-23,Die Ehe der Maria Braun,,,,,"One of Rainer Werner Fassbinder's BRD Trilogy, besides Lola and Veronika Voss."
-2223,Aguirre the Wrath of God,1,3,1972-12-29,Aguirre der Zorn Gottes,,,,,
-2224,Head-On,1,4,2004-03-11,Gegen die Wand,,,,,Every Turkish woman likes this
-3333,Children of Paradise,1,4,1945-03-09,Kinder des Olymp,Les Enfants du Paradis,,,,
-3334,The Wages of Fear,1,4,1953-04-22,Lohn der Angst,Le Salaire de la peur,,,,
-3335,Portrait of a Lady on Fire,1,4,2019-09-18,Porträt einer jungen Frau in Flammen,Portrait de la jeune fille en feu,,,,The best French lesbian film
-4444,Talk to Her,1,4,2002-03-15,Sprich mit ihr,,Hable Con Ella,,,My favorite Almodovar film
-4445,The Spirit of the Beehive,1,3,1973-10-08,Der Geist des Bienenstocks,,El espíritu de la colmena,,,"Secretly criticizing Franco regime with metaphors in in the time. "
-4446,Pan's Labyrinth,1,5,2006-05-27,Pans Labyrinth,,El Laberinto Del Fauno,,,
-5555,The Red Shoes,1,6,1948-09-06,Die roten Schuhe,,,,,
-5556,Hot Fuzz,1,7,2007-07-18,Hot Fuzz – Zwei abgewichste Profis,,,,,
-6666,Nights of Cabiria,1,4,1957-05-27,Die Nächte der Cabiria,,,Le notti di Cabiria,,"A little more positive version of La Strada. "
-6667,The Conformist,1,3,1970-10-07,Der große Irrtum,,,Il conformista,,
-6668,Gomorrah,1,4,2008-05-16,Gomorrha – Reise in das Reich der Camorra,,,Gomorra,,
-6669,Il Divo,1,8,2008-05-16,Il Divo,,,Il Divo,,
-7777,Seven Samurai,1,2,1954-04-26,Die sieben Samurai,,,,七人の侍,"The best outside-Hollywood movie according to Empire Magazine. Japanese cinema was outstanding in terms of controling water in the time. "
-7778,Sansho the Bailiff,1,4,1954-03-31,Sansho Dayu – Ein Leben ohne Freiheit,,,,山椒大夫,
-7779,Woman in the Dunes,1,3,1964-02-15,Die Frau in den Dünen,,,,砂の女,
-7780,Harakiri,1,4,1962-09-16,Harakiri,,,,切腹,
-7781,"Merry Christmas, Mr. Lawrence ",1,4,1983-05-28,"Furyo – Merry Christmas, Mr. Lawrence",,,,戦場のメリークリスマス,
-7782,In This Corner of the World,1,4,2016-11-12,,,,,この世界の片隅に,
-10000,Monty Python’s Flying Circus,2,7,1969-10-5,Monty Python’s Flying Circus,,,,,
-10001,M*A*S*H,2,7,1972-09-17,M*A*S*H,,,,,
-10002,The Sopranos,2,4,1999-01-10,Die Sopranos,,,,,
-10003,Mad Men,2,4,2007-07-19,,,,,,My favorite TV show
-10004,Fanny and Alexander,2,4,1982-12-17,Fanny und Alexander,,,,,Ingmar Bergman temporarily retired after this
-10005,Dekalog,2,4,1989-12-10,Dekalog,,,,,
-20000,Attack on Titan,3,2,2100-01-01,Attack on Titan,,,,進撃の巨人,
-20001,JoJo's Bizarre Adventure Stardust Crusaders,3,2,2100-01-01,,,,,ジョジョの奇妙な冒険 スターダストクルセイダース,My sunshine
-20002,JoJo's Bizarre Adventure Diamond Is Unbreakable,3,2,2100-01-01,,,,,ジョジョの奇妙な冒険 ダイヤモンドは砕けない,My sunshine
-20003,JoJo's Bizarre Adventure Golden Wind,3,2,2100-01-01,,,,,ジョジョの奇妙な冒険 黄金の風,My sunshine
-20004,JoJo's Bizarre Adventure Stone Ocean,3,2,2100-01-01,,,,,ジョジョの奇妙な冒険 ストーンオーシャン,My sunshine
-30000,Kingdom,4,8,2100-01-01,,,,,キングダム,Released every Wednesday at 5 pm in German time
-30001,Orb: On the Movements of the Earth,4,4,2100-01-01,Ketzer – Tödliches Wissen über die Bewegungen der Erde,,,,チ。地球の運動について,Also Anime version being released in 2024 September
-30002,Blood on Tracks,4,4,2100-01-01,,,,,血の轍,
-30003,Berserk,4,5,2100-01-01,,,,,ベルセルク,Largely influenced Dark Soul series
-30004,Persepolis,4,8,2100-01-01,Persepolis,,,,,Snobish people's cliche favorite
-30005,Watchmen,4,4,2100-01-01,,,,,,
+Id,ProductId,Title,ProductTypeId,GenreId,ReleaseDate,TitleDE,TitleFR,TitleES,TitleIT,TitleJP,Note
+1,1111,Red River,1,4,1948-08-26,Panik am roten Fluß,,,,,One of the only and real wild west films
+2,1112,The Last Picture Show,1,4,1971-10-22,Die letzte Vorstellung,,,,,
+3,1113,Network,1,4,1976-11-27,Network,,,,,Greatest American satire
+4,1114,Traffic,1,4,2000-12-27,Traffic – Macht des Kartells,,,,,
+5,1115,Florida Project,1,4,2017-10-06,The Florida Project,,,,,
+6,2222,The Marriage of Maria Braun,1,3,1979-03-23,Die Ehe der Maria Braun,,,,,"One of Rainer Werner Fassbinder's BRD Trilogy, besides Lola and Veronika Voss."
+7,2223,Aguirre the Wrath of God,1,3,1972-12-29,Aguirre der Zorn Gottes,,,,,
+8,2224,Head-On,1,4,2004-03-11,Gegen die Wand,,,,,Every Turkish woman likes this
+9,3333,Children of Paradise,1,4,1945-03-09,Kinder des Olymp,Les Enfants du Paradis,,,,
+10,3334,The Wages of Fear,1,4,1953-04-22,Lohn der Angst,Le Salaire de la peur,,,,
+11,3335,Portrait of a Lady on Fire,1,4,2019-09-18,Porträt einer jungen Frau in Flammen,Portrait de la jeune fille en feu,,,,The best French lesbian film
+12,4444,Talk to Her,1,4,2002-03-15,Sprich mit ihr,,Hable Con Ella,,,My favorite Almodovar film
+13,4445,The Spirit of the Beehive,1,3,1973-10-08,Der Geist des Bienenstocks,,El espíritu de la colmena,,,"Secretly criticizing Franco regime with metaphors in in the time. "
+14,4446,Pan's Labyrinth,1,5,2006-05-27,Pans Labyrinth,,El Laberinto Del Fauno,,,
+15,5555,The Red Shoes,1,6,1948-09-06,Die roten Schuhe,,,,,
+16,5556,Hot Fuzz,1,7,2007-07-18,Hot Fuzz – Zwei abgewichste Profis,,,,,
+17,6666,Nights of Cabiria,1,4,1957-05-27,Die Nächte der Cabiria,,,Le notti di Cabiria,,"A little more positive version of La Strada. "
+18,6667,The Conformist,1,3,1970-10-07,Der große Irrtum,,,Il conformista,,
+19,6668,Gomorrah,1,4,2008-05-16,Gomorrha – Reise in das Reich der Camorra,,,Gomorra,,
+20,6669,Il Divo,1,8,2008-05-16,Il Divo,,,Il Divo,,
+21,7777,Seven Samurai,1,2,1954-04-26,Die sieben Samurai,,,,七人の侍,"The best outside-Hollywood movie according to Empire Magazine. Japanese cinema was outstanding in terms of controling water in the time. "
+22,7778,Sansho the Bailiff,1,4,1954-03-31,Sansho Dayu – Ein Leben ohne Freiheit,,,,山椒大夫,
+23,7779,Woman in the Dunes,1,3,1964-02-15,Die Frau in den Dünen,,,,砂の女,
+24,7780,Harakiri,1,4,1962-09-16,Harakiri,,,,切腹,
+25,7781,"Merry Christmas, Mr. Lawrence ",1,4,1983-05-28,"Furyo – Merry Christmas, Mr. Lawrence",,,,戦場のメリークリスマス,
+26,7782,In This Corner of the World,1,4,2016-11-12,,,,,この世界の片隅に,
+27,10000,Monty Python’s Flying Circus,2,7,1969-10-5,Monty Python’s Flying Circus,,,,,
+28,10001,M*A*S*H,2,7,1972-09-17,M*A*S*H,,,,,
+29,10002,The Sopranos,2,4,1999-01-10,Die Sopranos,,,,,
+30,10003,Mad Men,2,4,2007-07-19,,,,,,My favorite TV show
+31,10004,Fanny and Alexander,2,4,1982-12-17,Fanny und Alexander,,,,,Ingmar Bergman temporarily retired after this
+32,10005,Dekalog,2,4,1989-12-10,Dekalog,,,,,
+33,20000,Attack on Titan,3,2,2100-01-01,Attack on Titan,,,,進撃の巨人,
+34,20001,JoJo's Bizarre Adventure Stardust Crusaders,3,2,2100-01-01,,,,,ジョジョの奇妙な冒険 スターダストクルセイダース,My sunshine
+35,20002,JoJo's Bizarre Adventure Diamond Is Unbreakable,3,2,2100-01-01,,,,,ジョジョの奇妙な冒険 ダイヤモンドは砕けない,My sunshine
+36,20003,JoJo's Bizarre Adventure Golden Wind,3,2,2100-01-01,,,,,ジョジョの奇妙な冒険 黄金の風,My sunshine
+37,20004,JoJo's Bizarre Adventure Stone Ocean,3,2,2100-01-01,,,,,ジョジョの奇妙な冒険 ストーンオーシャン,My sunshine
+38,30000,Kingdom,4,8,2100-01-01,,,,,キングダム,Released every Wednesday at 5 pm in German time
+39,30001,Orb: On the Movements of the Earth,4,4,2100-01-01,Ketzer – Tödliches Wissen über die Bewegungen der Erde,,,,チ。地球の運動について,Also Anime version being released in 2024 September
+40,30002,Blood on Tracks,4,4,2100-01-01,,,,,血の轍,
+41,30003,Berserk,4,5,2100-01-01,,,,,ベルセルク,Largely influenced Dark Soul series
+42,30004,Persepolis,4,8,2100-01-01,Persepolis,,,,,Snobish people's cliche favorite
+43,30005,Watchmen,4,4,2100-01-01,,,,,,

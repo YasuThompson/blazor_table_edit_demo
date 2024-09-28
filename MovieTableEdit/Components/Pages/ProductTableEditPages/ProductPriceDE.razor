@@ -17,7 +17,7 @@
         <h3>Queried rows</h3>
 
         <!-- The queried price table based on parameters from the table selection page.  -->
-        <QuickGrid Class="table" Items="filetered_rows" TGridItem="MockProductPriceDE">
+        <QuickGrid Class="table" Items="filetered_rows" TGridItem="TempProductPriceDE">
             <!-- Column of ProductIds -->
             <TemplateColumn Title="Title">
                 <!-- Contents of each cell -->
@@ -112,7 +112,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (MockProductPriceDE _row in added_rows)
+                @foreach (TempProductPriceDE _row in added_rows)
                 {
                     <tr>
                         <td>
@@ -177,12 +177,12 @@
     private Dictionary<int, string> dim_dict_id_genre = new Dictionary<int, string>(); // GenreId to Genre
     
     // Rows queried from the database
-    private IQueryable<MockProductPriceDE> queried_rows;
+    private IQueryable<TempProductPriceDE> queried_rows;
 
     // Lists used to preare the final table to be published with a new version 
-    private List<MockProductPriceDE> reduced_queried_rows = new List<MockProductPriceDE>();
-    private List<MockProductPriceDE> added_rows = new List<MockProductPriceDE>();
-    private List<MockProductPriceDE> published_rows = new List<MockProductPriceDE>();
+    private List<TempProductPriceDE> reduced_queried_rows = new List<TempProductPriceDE>();
+    private List<TempProductPriceDE> added_rows = new List<TempProductPriceDE>();
+    private List<TempProductPriceDE> published_rows = new List<TempProductPriceDE>();
 
     // Hashset of table row indexes to manage rows to delte or edited rows
     private TableIndexManager delete_index_manager = new TableIndexManager();
@@ -198,11 +198,11 @@
     int minMedals;
     int maxMedals = 120;
 
-    IQueryable<MockProductPriceDE> filetered_rows
+    IQueryable<TempProductPriceDE> filetered_rows
     {
         get
         {
-            IQueryable<MockProductPriceDE> result = queried_rows;
+            IQueryable<TempProductPriceDE> result = queried_rows;
             
 
             if (!string.IsNullOrEmpty(nameFilter))
@@ -246,45 +246,40 @@
         // Mapping the selected product type to its index
         selected_product_type_id = product_type_id_dict[selected_product_type];
 
-        // Get the latest price version of the selected product type
-        latest_version = db_context.DbSetMockProductPriceDE
-            .Where(x => x.ProductTypeId == selected_product_type_id) // Querying only the selected product type
-            .Max(x => x.Version);
-
         // Get the biggest index   
-        largest_id_num = db_context.DbSetMockProductPriceDE.Max(x => x.Id);
+        largest_id_num = db_context.DbSetTempProductPriceDE.Max(x => x.Id);
 
         new_version = latest_version +  0.01;
 
         // Queries records of the selected product, with the latest persion 
-        queried_rows = db_context.DbSetMockProductPriceDE
-            .Where(x => x.Version==latest_version && x.ProductTypeId==selected_product_type_id);
+        queried_rows = db_context.DbSetTempProductPriceDE
+            .Where(x => x.ProductTypeId==selected_product_type_id);
 
         // Make dictionaries mapping from an id to its values from dimension tables
-        dim_dict_id_product_title = db_context.DbSetMockProductDim
+        dim_dict_id_product_title = db_context.DbSetTempProductDim
             .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
             .Select(p => new {p.ProductId, p.Title})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
 
-        dim_dict_id_rating_de = db_context.DbSetMockRatingDEDim
+        dim_dict_id_rating_de = db_context.DbSetTempRatingDEDim
             .Select(p => new {p.RatingDEId, p.RatingDE})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
         
-        dim_dict_product_id_note = db_context.DbSetMockProductDim
+        dim_dict_product_id_note = db_context.DbSetTempProductDim
             .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
             .Select(p => new {p.ProductId, p.Note})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductId, kvp => kvp.Note);
 
-        dim_dict_product_id_genre_id = db_context.DbSetMockProductDim
+        dim_dict_product_id_genre_id = db_context.DbSetTempProductDim
             .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
             .Select(p => new {p.ProductId, p.GenreId})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductId, kvp => kvp.GenreId);
 
-        dim_dict_id_genre = db_context.DbSetMockGenreDim
+        dim_dict_id_genre = db_context.DbSetTempGenreDim
             .Select(p => new {p.GenreId, p.Genre})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
@@ -297,11 +292,11 @@
     // Add an empty row to the list of added rows
     private void AddRow()
     {
-        added_rows.Add(new MockProductPriceDE());
+        added_rows.Add(new TempProductPriceDE());
     }
 
     // Delete the clicked row from the added rows
-    private void DelAddedRow(MockProductPriceDE _del_elem)
+    private void DelAddedRow(TempProductPriceDE _del_elem)
     {
         added_rows.Remove(_del_elem);
     }
@@ -336,15 +331,13 @@
         {   
             // Set a proper product type id
             _row.ProductTypeId = selected_product_type_id;
-            // Set the new version
-            _row.Version = new_version;
             // Set unique and sequential indexes
             _row.Id = largest_id_num + cnt + 1;
             cnt += 1;
         }
 
         // Adding the edited rows
-        await db_context.DbSetMockProductPriceDE.AddRangeAsync(published_rows);
+        await db_context.DbSetTempProductPriceDE.AddRangeAsync(published_rows);
 
         // Uploading the rows with a new version to the database
         await db_context.SaveChangesAsync();

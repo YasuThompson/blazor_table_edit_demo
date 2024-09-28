@@ -1,6 +1,6 @@
-RatingFRId,RatingFR
-1,French-G
-2,French-PG
-3,French-PG-13
-4,French-R
-5,French-NC-17
+Id,RatingFRId,RatingFR
+1,1,French-G
+2,2,French-PG
+3,3,French-PG-13
+4,4,French-R
+5,5,French-NC-17

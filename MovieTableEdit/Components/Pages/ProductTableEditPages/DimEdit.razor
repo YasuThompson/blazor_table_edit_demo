@@ -78,29 +78,29 @@
     // TODO: what does this line do?
     private MovieTableEditContext db_context = default!;
     
-    private IQueryable<MockProductTypeDim>? product_type_data;
-    private IQueryable<MockGenreDim>? genre_data;
-    private IQueryable<MockRatingDEDim>? rating_de_data;
-    private IQueryable<MockRatingFRDim>? rating_fr_data;
+    private IQueryable<TempProductTypeDim>? product_type_data;
+    private IQueryable<TempGenreDim>? genre_data;
+    private IQueryable<TempRatingDEDim>? rating_de_data;
+    private IQueryable<TempRatingFRDim>? rating_fr_data;
 
     protected override void OnInitialized() 
     {           
         db_context = DbFactory.CreateDbContext();
         if (selected_cat_dim == "product-type")
         {   
-            product_type_data = db_context.DbSetMockProductTypeDim;
+            product_type_data = db_context.DbSetTempProductTypeDim;
         }
         else if (selected_cat_dim == "product-genre")
         {
-            genre_data = db_context.DbSetMockGenreDim;
+            genre_data = db_context.DbSetTempGenreDim;
         }
         else if (selected_cat_dim == "rating-de")
         {
-            rating_de_data = db_context.DbSetMockRatingDEDim;
+            rating_de_data = db_context.DbSetTempRatingDEDim;
         }
         else if (selected_cat_dim == "rating-fr")
         {
-            rating_fr_data = db_context.DbSetMockRatingFRDim;
+            rating_fr_data = db_context.DbSetTempRatingFRDim;
         }
     }
 

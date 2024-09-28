@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
+@inject IJSRuntime JSRuntime
 
 <h5>Select a table type to edit</h5>
 <select id="condition" @onclick="@FilterOption" @bind="@selected_table_type" >
@@ -60,7 +61,8 @@
 }
 
 <br>
-<button @onclick="NavigateToTableEditPage" disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
+<button @onclick="@NavigateToTableEditPage" disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
+
 
 @code {
     private bool if_show_cat_dim_filter = false;
@@ -109,20 +111,20 @@
     }
 
 
-    private async Task NavigateToTableEditPage()
+    private void NavigateToTableEditPage()
     {      
         if(selected_table_type=="category-dimension")
         {
-            NavigationManager.NavigateTo($"/category-dim/{selected_cat_dim}");
+            JSRuntime.InvokeAsync<object>("open", $"/category-dim/{selected_cat_dim}", "_blank");
         }
         else if(selected_table_type=="product-dimension")
         {   
             string selected_product_types = string.Join("-", product_type_option_dict.Where(kvp => kvp.Value).Select(kvp => kvp.Key));
-            NavigationManager.NavigateTo($"/product-dim/{selected_product_types}");
+            JSRuntime.InvokeAsync<object>("open", $"/product-dim/{selected_product_types}", "_blank");
         }
         else if(selected_table_type=="product-price")
         {   
-            NavigationManager.NavigateTo($"/product-price/{selected_country}/{selected_product_type}");
+            JSRuntime.InvokeAsync<object>("open", $"/product-price/{selected_country}/{selected_product_type}", "_blank");
         }
         
 
