@@ -154,16 +154,46 @@
         { "TitleJP", false },
     };
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         db_context = DbFactory.CreateDbContext();
 
+        bool if_temp_exists = db_context.DbSetTempProductDim.Count() > 0;
 
-        string[] partsArray  = selected_product_types.Split('-');
-        List<string> selected_product_type_list = new List<string>(partsArray);
-        List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_id_dict[type]).ToList();
+        if(!if_temp_exists)
+        {
+            // Get the latest version of the category dimension table
+            var latest_ver = db_context.DbSetProductDim.Max(x => x.Version);
 
-        queried_data = db_context.DbSetTempProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
+            // Get rows with the latest version and cast them to a temporary table
+            var latest_rows = db_context.DbSetProductDim
+                .Where(x => x.Version==latest_ver)
+                .Select(x => new TempProductDim 
+                    {
+                        ProductId = x.ProductId, 
+                        Title = x.Title, 
+                        ProductTypeId = x.ProductTypeId, 
+                        Note = x.Note,
+                        TitleDE = x.TitleDE, 
+                        TitleFR = x.TitleFR,
+                        TitleES = x.TitleES,
+                        TitleIT = x.TitleIT,
+                        TitleJP = x.TitleJP
+                    }
+                );
+
+            await db_context.DbSetTempProductDim.AddRangeAsync(latest_rows);
+
+            // Uploading the rows with a new version to the database
+            await db_context.SaveChangesAsync();
+        }
+
+        //string[] partsArray  = selected_product_types.Split('-');
+        //List<string> selected_product_type_list = new List<string>(partsArray);
+        //List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_id_dict[type]).ToList();
+        //queried_data = db_context.DbSetTempProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
+
+        queried_data = db_context.DbSetTempProductDim;
 
         product_type_dict = db_context.DbSetTempProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
         genre_dict = db_context.DbSetTempGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
