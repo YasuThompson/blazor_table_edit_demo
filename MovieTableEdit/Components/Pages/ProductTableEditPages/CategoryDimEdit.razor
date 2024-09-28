@@ -114,20 +114,92 @@
                 await db_context.SaveChangesAsync();
             }
             
-            
             product_type_data = db_context.DbSetTempProductTypeDim;
 
         }
         else if (selected_cat_dim == "product-genre")
         {
+            bool if_temp_exists = db_context.DbSetTempGenreDim.Count() > 0;
+
+            // When the the temporary table is empty
+            if(!if_temp_exists)
+            {   
+                // Get the latest version of the category dimension table
+                var latest_ver = db_context.DbSetGenreDim.Max(x => x.Version);
+                
+                // Get rows with the latest version and cast them to a temporary table
+                var latest_rows = db_context.DbSetGenreDim
+                    .Where(x => x.Version==latest_ver)
+                    .Select(x => new TempGenreDim 
+                        {
+                            GenreId = x.GenreId, 
+                            Genre = x.Genre
+                        }
+                    );
+
+                await db_context.DbSetTempGenreDim.AddRangeAsync(latest_rows);
+
+                // Uploading the rows with a new version to the database
+                await db_context.SaveChangesAsync();
+            }
+            
             genre_data = db_context.DbSetTempGenreDim;
+
         }
         else if (selected_cat_dim == "rating-de")
-        {
+        {   
+            bool if_temp_exists = db_context.DbSetTempRatingDEDim.Count() > 0;
+
+            // When the the temporary table is empty
+            if(!if_temp_exists)
+            {   
+                // Get the latest version of the category dimension table
+                var latest_ver = db_context.DbSetRatingDEDim.Max(x => x.Version);
+                
+                // Get rows with the latest version and cast them to a temporary table
+                var latest_rows = db_context.DbSetRatingDEDim
+                    .Where(x => x.Version==latest_ver)
+                    .Select(x => new TempRatingDEDim 
+                        {
+                            RatingDEId = x.RatingDEId, 
+                            RatingDE = x.RatingDE
+                        }
+                    );
+
+                await db_context.DbSetTempRatingDEDim.AddRangeAsync(latest_rows);
+
+                // Uploading the rows with a new version to the database
+                await db_context.SaveChangesAsync();
+            }
+
             rating_de_data = db_context.DbSetTempRatingDEDim;
         }
         else if (selected_cat_dim == "rating-fr")
-        {
+        {   
+            bool if_temp_exists = db_context.DbSetTempRatingFRDim.Count() > 0;
+
+            // When the the temporary table is empty
+            if(!if_temp_exists)
+            {   
+                // Get the latest version of the category dimension table
+                var latest_ver = db_context.DbSetRatingFRDim.Max(x => x.Version);
+                
+                // Get rows with the latest version and cast them to a temporary table
+                var latest_rows = db_context.DbSetRatingFRDim
+                    .Where(x => x.Version==latest_ver)
+                    .Select(x => new TempRatingFRDim 
+                        {
+                            RatingFRId = x.RatingFRId, 
+                            RatingFR = x.RatingFR
+                        }
+                    );
+
+                await db_context.DbSetTempRatingFRDim.AddRangeAsync(latest_rows);
+
+                // Uploading the rows with a new version to the database
+                await db_context.SaveChangesAsync();
+            }
+
             rating_fr_data = db_context.DbSetTempRatingFRDim;
         }
     }
