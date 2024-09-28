@@ -12,32 +12,54 @@
 @using MovieTableEdit.Shared
 
 <h5>Select a table type to edit</h5>
-<select id="condition" @onclick="@SwitchFilterOption" @bind="@table_edit_type_config" >
+<select id="condition"  @bind="@table_edit_type_config" >
     <option value="dimension-table-edit">Edit dimension tables</option>
     <option value="price-table-edit">Edit a price table</option>
 </select>
+@if(table_edit_type_config=="price-table-edit")
+{
+    <h5>Select a country</h5>
+    <select id="condition" @bind="@price_country_config" >
+        <option value="DE">Germany</option>
+        <option value="FR">France</option>
+    </select>
+}
+<br>
+<br>
+<h5>Who edits?</h5>
+<select id="condition" @bind="@editor_config" >
+    <option value="crash_bandicoot">Crash Bandicoot</option>
+    <option value="pal">Pal</option>
+    <option value="universal_studio">Universal Studio</option>
+    <option value="uri_geller">Uri Geller</option>
+</select>
+<br>
+<br>
+<h5>Edit note</h5>
+<label>
+    <input type="string" @bind="@edit_note_config" />
+</label>
+<br>
 <br>
 <br>
 <button @onclick="@NavigateToHomePage" >Configure table edit</button>
+
 
 
 @code
 {   
     private MovieTableEditContext db_context = default!;
 
-    private bool if_show_price_table_filters = false;
-
-
     private string table_edit_type_config {get; set; } = "dimension-table-edit";
+    private string editor_config {get; set; } = "pal";
+    private string edit_note_config {get; set; } = "";
     private double genre_dim_ver_config { get; set; }
     private double product_type_dim_ver_config { get; set; }
     private double product_dim_ver_config { get; set; }
     private double price_de_ver_config { get; set; }
-
-    private string? selected_country_config {get; set; }
+    private string? price_country_config {get; set; }
 
     
-
     protected override void OnInitialized()
     {
         db_context = DbFactory.CreateDbContext();
@@ -45,22 +67,12 @@
     }
 
 
-    private void SwitchFilterOption()
-    {   
-        if (table_edit_type_config=="dimension-table-edit")
-        {   
-            if_show_price_table_filters = false;
-        }
-        else if(table_edit_type_config=="price-table-edit")
-        {   
-            if_show_price_table_filters = true;
-        }
-    }
-
-
     private async Task NavigateToHomePage()
     {
         await ProtectedSessionStore.SetAsync("table-edit-type", table_edit_type_config);
+        await ProtectedSessionStore.SetAsync("editor", editor_config);
+        await ProtectedSessionStore.SetAsync("edit-note", edit_note_config);
+        await ProtectedSessionStore.SetAsync("price-country", price_country_config);
         NavigationManager.NavigateTo("/");
     }
 }
