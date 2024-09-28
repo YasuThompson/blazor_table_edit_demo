@@ -2,6 +2,9 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
 @inject IJSRuntime JSRuntime
 
 
@@ -64,9 +67,17 @@
     public string selected_product_type { get; set; } = "";
     public string selected_cat_dim { get; set; } = "";
 
-    private string table_edit_type_config = "dimension-table-edit";
-    @* private string table_edit_type_config = "price-table-edit"; *@
+    private string table_edit_type_config;
     private string? selected_country_config = "DE";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ProtectedSessionStore.GetAsync<string>("table-edit-type");
+        table_edit_type_config = result.Success ? result.Value : "unknown";
+        Console.WriteLine($"Configured table edit type: {table_edit_type_config}");
+
+    }
 
 
     // A dictionary for storing product type selections

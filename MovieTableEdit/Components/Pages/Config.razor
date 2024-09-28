@@ -6,6 +6,9 @@
 @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
 @inject NavigationManager NavigationManager
 
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
 @using MovieTableEdit.Shared
 
 <h5>Select a table type to edit</h5>
@@ -14,6 +17,8 @@
     <option value="price-table-edit">Edit a price table</option>
 </select>
 <br>
+<br>
+<button @onclick="@NavigateToHomePage" >Configure table edit</button>
 
 
 @code
@@ -23,7 +28,7 @@
     private bool if_show_price_table_filters = false;
 
 
-    private string table_edit_type_config {get; set; }
+    private string table_edit_type_config {get; set; } = "dimension-table-edit";
     private double genre_dim_ver_config { get; set; }
     private double product_type_dim_ver_config { get; set; }
     private double product_dim_ver_config { get; set; }
@@ -55,7 +60,7 @@
 
     private async Task NavigateToHomePage()
     {
-        @* await JsStorage.Save("table-edit-type", table_edit_type_config.ToString()); *@
+        await ProtectedSessionStore.SetAsync("table-edit-type", table_edit_type_config);
         NavigationManager.NavigateTo("/");
     }
 }
