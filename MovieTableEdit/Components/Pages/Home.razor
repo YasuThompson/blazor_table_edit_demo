@@ -49,6 +49,10 @@
 <br>
 <button @onclick="@NavigateToTableEditPage" >Start Editing Table</button>
 
+<br>
+<br>
+<button @onclick="@ValidateEdit" >Validate Table Edit</button>
+
 
 @code {
     private bool if_show_cat_dim_filter = false;
@@ -60,7 +64,8 @@
     public string selected_product_type { get; set; } = "";
     public string selected_cat_dim { get; set; } = "";
 
-    private string table_edit_type_config = "price-table-edit";
+    private string table_edit_type_config = "dimension-table-edit";
+    @* private string table_edit_type_config = "price-table-edit"; *@
     private string? selected_country_config = "DE";
 
 
@@ -76,11 +81,11 @@
 
     private void NavigateToTableEditPage()
     {      
-        if(selected_table_type=="category-dimension")
+        if(table_edit_type_config=="dimension-table-edit" && selected_cat_dim!="product-dim")
         {
             JSRuntime.InvokeAsync<object>("open", $"/category-dim/{selected_cat_dim}", "_blank");
         }
-        else if(selected_table_type=="product-dimension")
+        else if(table_edit_type_config=="dimension-table-edit" && selected_cat_dim=="product-dim")
         {   
             string selected_product_types = string.Join("-", product_type_option_dict.Where(kvp => kvp.Value).Select(kvp => kvp.Key));
             JSRuntime.InvokeAsync<object>("open", $"/product-dim/{selected_product_types}", "_blank");
@@ -89,8 +94,18 @@
         {   
             JSRuntime.InvokeAsync<object>("open", $"/product-price/{selected_country_config}/{selected_product_type}", "_blank");
         }
-        
+    }
 
+    private void ValidateEdit()
+    {   
+        if(table_edit_type_config == "dimension-table-edit")
+        {
+            JSRuntime.InvokeAsync<object>("open", $"/validate-dim", "_blank");
+        }
+        else if(table_edit_type_config == "price-table-edit")
+        {
+            JSRuntime.InvokeAsync<object>("open", $"/validate-price", "_blank");
+        }
     }
 
 }

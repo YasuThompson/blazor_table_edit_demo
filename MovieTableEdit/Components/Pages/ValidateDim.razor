@@ -1,0 +1,18 @@
+@page "/validate-dim"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<br>
+<button @onclick="@PublishDimTableEdit" >Publish Table Edit</button>
+
+
+@code
+{
+    private void PublishDimTableEdit()
+    {
+        @* await db_context.SaveChangesAsync(); *@
+
+        // Going back to the table selection page
+        NavigationManager.NavigateTo("/config");
+    }
+}
