@@ -83,12 +83,40 @@
     private IQueryable<TempRatingDEDim>? rating_de_data;
     private IQueryable<TempRatingFRDim>? rating_fr_data;
 
-    protected override void OnInitialized() 
-    {           
+    protected override async Task OnInitializedAsync()
+    {   
+        // Make a database context
         db_context = DbFactory.CreateDbContext();
+
         if (selected_cat_dim == "product-type")
         {   
+            bool if_temp_exists = db_context.DbSetTempProductTypeDim.Count() > 0;
+
+            // When the the temporary table is empty
+            if(!if_temp_exists)
+            {   
+                // Get the latest version of the category dimension table
+                var latest_ver = db_context.DbSetProductTypeDim.Max(x => x.Version);
+                
+                // Get rows with the latest version and cast them to a temporary table
+                var latest_rows = db_context.DbSetProductTypeDim
+                    .Where(x => x.Version==latest_ver)
+                    .Select(x => new TempProductTypeDim 
+                        {
+                            ProductTypeId = x.ProductTypeId, 
+                            ProductType = x.ProductType
+                        }
+                    );
+
+                await db_context.DbSetTempProductTypeDim.AddRangeAsync(latest_rows);
+
+                // Uploading the rows with a new version to the database
+                await db_context.SaveChangesAsync();
+            }
+            
+            
             product_type_data = db_context.DbSetTempProductTypeDim;
+
         }
         else if (selected_cat_dim == "product-genre")
         {
