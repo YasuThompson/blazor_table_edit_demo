@@ -8,34 +8,36 @@
 @if (table_edit_type_config == "dimension-table-edit")
 {
     <h5>Select a dimension table to edit</h5>
-    <select id="condition" @onclick="@SwitchFilterOption" @bind="@selected_cat_dim" >
-        <option value="product">Product</option>
+    <select id="condition" @bind="@selected_cat_dim" >
+        <option value="product-dim">Product</option>
         <option value="product-type">Product type</option>
         <option value="product-genre">Product genre</option>
         <option value="rating-de">German rating</option>
         <option value="rating-fr">French rating</option>
     </select>
     <br>
-}
 
-@if (if_show_product_filters)
-{
-    <h5>Select types of products</h5>
-    <p>
-    @foreach (var option in product_type_option_dict)
+    @if (selected_cat_dim=="product")
     {
-        <label style="margin-right: 10px;">
-            <input type="checkbox" @bind="product_type_option_dict[option.Key]" /> @option.Key
-        </label>
+        <h5>Select types of products</h5>
+        <p>
+        @foreach (var option in product_type_option_dict)
+        {
+            <label style="margin-right: 10px;">
+                <input type="checkbox" @bind="product_type_option_dict[option.Key]" /> @option.Key
+            </label>
+        }
+        </p>
     }
-    </p>
 }
 
-@if (if_show_price_table_filters)
+
+
+@if (table_edit_type_config == "price-table-edit")
 {     
     <div>
         <h5>Select a product type</h5>
-        <select id="condition" @onclick="@SwitchFilterOption" @bind="@selected_product_type">
+        <select id="condition" @bind="@selected_product_type">
             <option value="movie">Movie</option>
             <option value="tv">TV Show</option>
             <option value="anime">Anime</option>
@@ -45,22 +47,21 @@
 }
 
 <br>
-<button @onclick="@NavigateToTableEditPage" disabled="@(if_ready_to_edit_table == false)">Start Editing Table</button>
+<button @onclick="@NavigateToTableEditPage" >Start Editing Table</button>
 
 
 @code {
     private bool if_show_cat_dim_filter = false;
     private bool if_show_product_filters = false;
     private bool if_show_price_table_filters = false;
-    private bool if_ready_to_edit_table = false;
 
     public string selected_table_type { get; set; } = "";
     @* public string selected_country { get; set; } = ""; *@
     public string selected_product_type { get; set; } = "";
     public string selected_cat_dim { get; set; } = "";
 
-    private string table_edit_type_config = "dimension-table-edit";
-    private string? selected_country_config;
+    private string table_edit_type_config = "price-table-edit";
+    private string? selected_country_config = "DE";
 
 
     // A dictionary for storing product type selections
@@ -71,31 +72,6 @@
         { "Anime", false },
         { "Comic", false },
     };
-
-    private void SwitchFilterOption()
-    {   
-        if (selected_table_type=="category-dimension")
-        {   
-            if_show_cat_dim_filter = true;
-            if_show_product_filters = false;
-            if_show_price_table_filters = false;
-            if_ready_to_edit_table = true;
-        }
-        else if(selected_table_type=="product-dimension")
-        {   
-            if_show_cat_dim_filter = false;
-            if_show_product_filters = true;
-            if_show_price_table_filters = false;
-            if_ready_to_edit_table = true;
-        }
-        else if(selected_table_type=="product-price")
-        {   
-            if_show_cat_dim_filter = false;
-            if_show_product_filters = false;
-            if_show_price_table_filters = true;
-            if_ready_to_edit_table = true;
-        }
-    }
 
 
     private void NavigateToTableEditPage()
@@ -109,7 +85,7 @@
             string selected_product_types = string.Join("-", product_type_option_dict.Where(kvp => kvp.Value).Select(kvp => kvp.Key));
             JSRuntime.InvokeAsync<object>("open", $"/product-dim/{selected_product_types}", "_blank");
         }
-        else if(selected_table_type=="product-price")
+        else if(table_edit_type_config == "price-table-edit")
         {   
             JSRuntime.InvokeAsync<object>("open", $"/product-price/{selected_country_config}/{selected_product_type}", "_blank");
         }

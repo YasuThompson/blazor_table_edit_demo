@@ -67,6 +67,7 @@ public class ProductDim
     public string TitleIT { get; set; }
     public string TitleJP { get; set; }
     public string Note {get; set;}
+    public double Version { get; set; }
 }
 
 public class GenreDim
@@ -75,6 +76,7 @@ public class GenreDim
     public int GenreId { get; set; }
     public string Genre { get; set; }
     public string? Explanation { get; set; }
+    public double Version { get; set; }
 }
 
 public class ProductTypeDim
@@ -82,8 +84,7 @@ public class ProductTypeDim
     public int Id { get; set;}
     public int ProductTypeId { get; set; }
     public string ProductType { get; set; }
-
-    
+    public double Version { get; set; }
 }
 
 public class RatingDEDim
@@ -91,6 +92,7 @@ public class RatingDEDim
     public int Id { get; set;}
     public int RatingDEId { get; set; }
     public string RatingDE { get; set; }
+    public double Version { get; set; }
 }
 
 public class RatingFRDim
@@ -98,4 +100,5 @@ public class RatingFRDim
     public int Id { get; set;}
     public int RatingFRId { get; set; }
     public string RatingFR { get; set; }
+    public double Version { get; set; }
 }

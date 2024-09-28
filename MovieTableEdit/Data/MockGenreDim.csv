@@ -1,16 +1,16 @@
 Id,GenreId,Genre,Explanation,Version
-1,1,SciFi,1.01
-2,2,Action,1.01
+1,1,SciFi,,1.01
+2,2,Action,,1.01
 3,3,Esoteric,A kind of movies which do not make a sense. You like the fact that you saw the films rather than the films themselves.,1.01
 4,4,Drama,,1.01
 5,5,Fantasy,,1.01
 6,6,Musical,,1.01
-7,7,Comedy,Everything can be a comedy or a horror, tragedy.,1.01
-8,1,SciFi,1.02
-9,2,Action,1.02
+7,7,Comedy,Everything can be a comedy or a horror or tragedy.,1.01
+8,1,SciFi,,1.02
+9,2,Action,,1.02
 10,3,Esoteric,A kind of movies which do not make a sense. You like the fact that you saw the films rather than the films themselves.,1.02
 11,4,Drama,,1.02
 12,5,Fantasy,,1.02
 13,6,Musical,,1.02
-14,7,Comedy,Everything can be a comedy or a horror, tragedy.,1.02
+14,7,Comedy,Everything can be a comedy or a horror tragedy.,1.02
 15,8,History/biography,,1.02
