@@ -13,17 +13,32 @@
 <PageTitle>Product Information</PageTitle>
 
 <p>
-    Display:
-    @foreach (var option in displayOptions)
-    {
-        <label style="margin-right: 10px;">
-            <input type="checkbox" @bind="displayOptions[option.Key]" /> @option.Key
-        </label>
-    }
+    <div  style="display: flex; align-items: center;">
+        <div style="margin-right: 20px;">
+            Columns to display:
+            <br>
+            @foreach (var option in displayOptions)
+            {
+                <label style="margin-right: 10px;">
+                    <input type="checkbox" @bind="displayOptions[option.Key]" /> @option.Key
+                </label>
+                <br>
+            }
+        </div>
+        <div>
+            Columns to display:
+            @foreach (var option in displayOptions)
+            {
+                <label style="margin-right: 10px;">
+                    <input type="checkbox" @bind="displayOptions[option.Key]" /> @option.Key
+                </label>
+            }
+        </div>
+    </div>
 </p>
 
 
-<QuickGrid Class="table" Items="queried_data">
+<QuickGrid Class="table" Items="filtered_rows">
     <PropertyColumn Title="Movie ID" Property = "movie => movie.ProductId" />
 
     <TemplateColumn Title="Title">
@@ -138,7 +153,7 @@
         { "Comic", 4 },
     };
 
-    private IQueryable<TempProductDim>? queried_data;
+    private IQueryable<TempProductDim>? queried_rows;
 
     private MovieTableEditContext db_context = default!;
 
@@ -153,6 +168,23 @@
         { "TitleIT", false },
         { "TitleJP", false },
     };
+
+
+    private List<string> column_options = new List<string> { "TitleDE" };
+    private List<string> product_type_options = new List<string> { "Option 1", "Option 2", "Option 3", "Option 4" };
+
+    @* private SelectionManager manager = new SelectionManager(options); *@
+
+
+    private IQueryable<TempProductDim> filtered_rows
+    {   
+        get
+        {
+            IQueryable<TempProductDim> result = queried_rows;
+
+            return result;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -191,9 +223,9 @@
         //string[] partsArray  = selected_product_types.Split('-');
         //List<string> selected_product_type_list = new List<string>(partsArray);
         //List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_id_dict[type]).ToList();
-        //queried_data = db_context.DbSetTempProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
+        //queried_rows = db_context.DbSetTempProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
 
-        queried_data = db_context.DbSetTempProductDim;
+        queried_rows = db_context.DbSetTempProductDim;
 
         product_type_dict = db_context.DbSetTempProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
         genre_dict = db_context.DbSetTempGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
