@@ -4,11 +4,12 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
+@using MovieTableEdit.Shared.FilterManager
+@using static MovieTableEdit.Shared.FilterManager.SharedFunctions
+
 @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
-
-
 
 <PageTitle>Product Information</PageTitle>
 
@@ -17,25 +18,28 @@
         <div style="margin-right: 20px;">
             Columns to display:
             <br>
-            @foreach (var option in displayOptions)
+            @foreach (var option in product_type_option_dict)
             {
                 <label style="margin-right: 10px;">
-                    <input type="checkbox" @bind="displayOptions[option.Key]" /> @option.Key
+                    <input type="checkbox" @bind="product_type_option_dict
+                    [option.Key]" /> @option.Key
                 </label>
                 <br>
             }
         </div>
         <div>
             Columns to display:
-            @foreach (var option in displayOptions)
+
+            <br>
+            @foreach (var option in column_option_dict)
             {
                 <label style="margin-right: 10px;">
-                    <input type="checkbox" @bind="displayOptions[option.Key]" /> @option.Key
+                    <input type="checkbox" @bind="column_option_dict[option.Key]" /> @option.Key
                 </label>
             }
         </div>
     </div>
-</p>
+</p> 
 
 
 <QuickGrid Class="table" Items="filtered_rows">
@@ -78,7 +82,7 @@
         </div>
     </TemplateColumn>
 
-    @if(displayOptions["TitleDE"])
+    @if(column_option_dict["TitleDE"])
     {
         <TemplateColumn Title="German Title">
             <div>
@@ -89,7 +93,7 @@
         </TemplateColumn>
     }
 
-    @if(displayOptions["TitleFR"])
+    @if(column_option_dict["TitleFR"])
     {
         <TemplateColumn Title="French Title">
             <div>
@@ -100,7 +104,7 @@
         </TemplateColumn>
     }
 
-    @if(displayOptions["TitleES"])
+    @if(column_option_dict["TitleES"])
     {
         <TemplateColumn Title="Spanish Title">
             <div>
@@ -111,7 +115,7 @@
         </TemplateColumn>
     }
 
-    @if(displayOptions["TitleIT"])
+    @if(column_option_dict["TitleIT"])
     {
         <TemplateColumn Title="Italian Title">
             <div>
@@ -122,7 +126,7 @@
         </TemplateColumn>
     }
 
-    @if(displayOptions["TitleJP"])
+    @if(column_option_dict["TitleJP"])
     {    
         <TemplateColumn Title="Japanese Title">
             <div>
@@ -142,7 +146,7 @@
 @code {
 
     [Parameter]
-    [SupplyParameterFromQuery(Name = "selected_producty_types")]
+    [SupplyParameterFromQuery(Name = "selected_product_types")]
     public required string selected_product_types { get; set; }
 
     private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
@@ -160,21 +164,10 @@
     private Dictionary<int, string> product_type_dict = new Dictionary<int, string>();
     private Dictionary<int, string> genre_dict = new Dictionary<int, string>();
 
-    Dictionary<string, bool> displayOptions = new Dictionary<string, bool>
-    {
-        { "TitleDE", true },
-        { "TitleFR", true },
-        { "TitleES", false },
-        { "TitleIT", false },
-        { "TitleJP", false },
-    };
-
-
-    private List<string> column_options = new List<string> { "TitleDE" };
-    private List<string> product_type_options = new List<string> { "Option 1", "Option 2", "Option 3", "Option 4" };
-
-    @* private SelectionManager manager = new SelectionManager(options); *@
-
+    private static List<string> product_type_option_list = new List<string> { "Movie", "TVShow", "Anime", "Comic"};
+    private Dictionary<string, bool> product_type_option_dict = SharedFunctions.MakeMultiSelectDict(product_type_option_list);
+    private static List<string> column_option_list = new List<string> { "TitleDE", "TitleFR", "TitleES", "TitleIT", "TitleJP"};
+    private Dictionary<string, bool> column_option_dict = SharedFunctions.MakeMultiSelectDict(column_option_list);
 
     private IQueryable<TempProductDim> filtered_rows
     {   
