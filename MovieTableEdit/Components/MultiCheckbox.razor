@@ -4,7 +4,7 @@
 
 
 <button class="btn btn-outline-secondary dropdown-toggle text-truncate text-start" 
-        @onclick="@SampleFunc"
+        @onclick="@TogglePanel"
         type="button" 
         id="dropdownMenuButton" 
         data-bs-toggle="dropdown" 
@@ -12,90 +12,83 @@
         data-bs-auto-close="outside"
         >Click
     
-        @if(if_show_checkbox)
+        @if(true)
         {
-            <div>
-                Columns to display:
+            <div>                
                 <br>
-                @foreach (var option in selection_dict)
-                {
-                    <label style="margin-right: 10px;">
-                        <input type="checkbox" 
-                        checked="@selection_dict[option.Key]" 
-                        @onchange="() => ToggleOption(item)" /> @option.Key
-                    </label>
-                    <br>
+                    @foreach (int _id in OptionIdList)
+                    {
+                        <label style="margin-right: 10px;">
+                            <input type="checkbox" 
+                            checked="@IsOptionSelected(_id)" 
+                            @onchange="() => ToggleOption(_id)"/> @IdOptionDict[_id]
+                        </label>
+                        @if(IfVerticalArrangement)
+                        {
+                            <br> 
+                        }
+                    
                 }
+                
             </div>
         }
     </button>
     @* <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton"> *@
     
-
-@* <style>
-        .filter-container {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-color: white;
-}
-
-.filter-container > div {
-    margin-left: 10px;
-    margin-right: 10px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-}
-
-.dropdown-menu {
-    max-height: 200px;
-    overflow-y: auto;
-    padding-top: 0;
-}
-
-.dropdown-item {
-    user-select: none;
-}
-
-.dropdown-toggle::after {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    margin-top: -2px;
-}
-
-.btn.dropdown-toggle {
-    --bs-btn-hover-color: var(--bs-btn-color);
-    --bs-btn-hover-bg: var(--bs-btn-bg);
-    --bs-btn-hover-border-color: var(--bs-btn-border-color);
-    --bs-btn-active-color: var(--bs-btn-color);
-    --bs-btn-active-bg: var(--bs-btn-bg);
-    --bs-btn-active-border-color: var(--bs-btn-border-color);
-}
-
-.btn.dropdown-toggle.show {
-    color: var(--bs-btn-color);
-    background-color: var(--bs-btn-bg);
-    border-color: var(--bs-btn-border-color);
-}
-</style> *@
 @code
 {
     [Parameter] public List<string> Options { get; set; } = new();
-    [Parameter] public List<int> SelectedOptions { get; set; } = new();
-    [Parameter] public EventCallback<List<int>> SelectedOptionsChanged { get; set; }
+    [Parameter] public Dictionary<int, string> IdOptionDict { get; set; } = new Dictionary<int, string>();
+    [Parameter] public List<int> SelectedIdList { get; set; } = new();
+    [Parameter] public EventCallback<List<int>> SelectedIdListChanged { get; set; }
+    [Parameter] public bool IsMultiSelect { get; set; } = true;    
+    [Parameter] public bool IfVerticalArrangement { get; set; } = true; 
 
     
+    private List<int> OptionIdList = new List<int>();
     private bool if_show_checkbox = false;
-
-    public  Dictionary<string, bool> selection_dict = new Dictionary<string, bool>();
 
     protected override void OnInitialized()
     {
-        selection_dict = MakeMultiSelectDict(Options);
+        if(IdOptionDict.Count() == 0)
+        {
+            for (int i=0; i < Options.Count; i++)
+            {
+                IdOptionDict[i] = Options[i];
+            }
+        }
+
+        for (int i=0; i < Options.Count; i++)
+        {
+            OptionIdList = new List<int>(IdOptionDict.Keys);
+        }
+        
     }
 
-    private void SampleFunc()
+    private bool IsOptionSelected(int _id)
+    {
+        return SelectedIdList.Contains(_id);
+    }
+
+    private async Task ToggleOption(int _id)
+    {
+        if (SelectedIdList.Contains(_id))
+        {
+            SelectedIdList.Remove(_id);
+        }
+        else
+        {
+            if (!IsMultiSelect)
+            {
+                SelectedIdList.Clear();
+            }
+            SelectedIdList.Add(_id);
+        }
+
+        await SelectedIdListChanged.InvokeAsync(SelectedIdList);
+    }
+    
+    private void TogglePanel()
     {   
         if(if_show_checkbox)
         {
@@ -105,18 +98,6 @@
         {
             if_show_checkbox = true;
         }
-    }
-
-    private Dictionary<string, bool> MakeMultiSelectDict(List<string> _option_list)
-    {
-        Dictionary<string, bool> selection_dict = new Dictionary<string, bool>();
-
-        foreach(string elem in _option_list)
-        {
-            selection_dict[elem] = true;
-        }
-
-        return selection_dict;
     }
 
 }
