@@ -11,17 +11,12 @@
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 
-@using MultiCheckbox
+@using CustomComponents.MultiCheckbox
 
 
 <PageTitle>Product Information</PageTitle>
 
 <div  style="display: flex; align-items: center;">
-    <MultiCheckbox
-        Options="product_type_option_list"
-        @bind-SelectedIdList="selected_product_type_id_list"
-        IdOptionDict="product_type_dict"
-        />
 
     <MultiCheckbox
         Options="column_option_list"
@@ -51,14 +46,23 @@
 
 
     <TemplateColumn Title="Product Type">
-        <div>
-            <select type="int" @bind="@context.ProductTypeId">
-                @foreach(var kvp in product_type_dict)
-                {
-                    <option value=@kvp.Key>@kvp.Value</option>
-                }
-            </select>
-        </div>
+        <ChildContent>
+            <div>
+                <select type="int" @bind="@context.ProductTypeId">
+                    @foreach(var kvp in product_type_dict)
+                    {
+                        <option value=@kvp.Key>@kvp.Value</option>
+                    }
+                </select>
+            </div>
+        </ChildContent>
+        <ColumnOptions>
+            <MultiCheckbox
+                Options="product_type_option_list"
+                @bind-SelectedIdList="selected_product_type_id_list"
+                IdOptionDict="product_type_dict"
+                />
+        </ColumnOptions>
     </TemplateColumn>
 
     <TemplateColumn Title="Genre">
@@ -72,7 +76,7 @@
         </div>
     </TemplateColumn>
 
-    @if(selected_column_id_list.Contains(column_option_list.IndexOf("TitleDE")))
+    @if(selected_column_id_list.Contains(column_option_list.IndexOf("German Title")))
     {
         <TemplateColumn Title="German Title">
             <div>
@@ -83,7 +87,7 @@
         </TemplateColumn>
     }
 
-    @if(selected_column_id_list.Contains(column_option_list.IndexOf("TitleFR")))
+    @if(selected_column_id_list.Contains(column_option_list.IndexOf("French Title")))
     {
         <TemplateColumn Title="French Title">
             <div>
@@ -94,7 +98,7 @@
         </TemplateColumn>
     }
 
-    @if(selected_column_id_list.Contains(column_option_list.IndexOf("TitleES")))
+    @if(selected_column_id_list.Contains(column_option_list.IndexOf("Spanish Title")))
     {
         <TemplateColumn Title="Spanish Title">
             <div>
@@ -105,7 +109,7 @@
         </TemplateColumn>
     }
 
-    @if(selected_column_id_list.Contains(column_option_list.IndexOf("TitleIT")))
+    @if(selected_column_id_list.Contains(column_option_list.IndexOf("Italian Title")))
     {
         <TemplateColumn Title="Italian Title">
             <div>
@@ -116,7 +120,7 @@
         </TemplateColumn>
     }
 
-    @if(selected_column_id_list.Contains(column_option_list.IndexOf("TitleJP")))
+    @if(selected_column_id_list.Contains(column_option_list.IndexOf("Japanese Title")))
     {    
         <TemplateColumn Title="Japanese Title">
             <div>
@@ -146,7 +150,7 @@
 
 
     // Members needed for column checkboxes 
-    private static List<string> column_option_list = new () { "TitleDE", "TitleFR", "TitleES", "TitleIT", "TitleJP"};
+    private static List<string> column_option_list = new () { "German Title", "French Title", "Spanish Title", "Italian Title", "Japanese Title"};
     private List<int> selected_column_id_list = new();
 
     
@@ -163,12 +167,7 @@
         get
         {
             IQueryable<TempProductDim> result = queried_rows;
-
-            //string[] partsArray  = selected_product_types.Split('-');
-            //List<string> selected_product_type_list = new List<string>(partsArray);
-            //List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_id_dict[type]).ToList();
-            //queried_rows = db_context.DbSetTempProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
-
+            result = result.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
             return result;
         }
     }
