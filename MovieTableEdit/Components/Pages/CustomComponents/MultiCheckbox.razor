@@ -1,46 +1,31 @@
-
-@namespace MultiCheckbox
 @rendermode InteractiveServer
 
+@namespace CustomComponents.MultiCheckbox
 
-<button class="btn btn-outline-secondary dropdown-toggle text-truncate text-start" 
-        @onclick="@TogglePanel"
-        type="button" 
-        id="dropdownMenuButton" 
-        data-bs-toggle="dropdown" 
-        aria-expanded="false" 
-        data-bs-auto-close="outside"
-        >Click
-    
-        @if(true)
-        {
             <div>                
                 <br>
                     @foreach (int _id in OptionIdList)
                     {
                         <label style="margin-right: 10px;">
-                            <input type="checkbox" 
-                            checked="@IsOptionSelected(_id)" 
-                            @onchange="() => ToggleOption(_id)"/> @IdOptionDict[_id]
+                            <input type="checkbox" checked="@IsOptionSelected(_id)" 
+                                @onchange="() => ToggleOption(_id)"/>
+                                @IdOptionDict[_id]
                         </label>
                         @if(IfVerticalArrangement)
                         {
                             <br> 
                         }
                     
-                }
-                
+                }   
             </div>
-        }
-    </button>
-    @* <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton"> *@
-    
+            
 @code
 {
     [Parameter] public List<string> Options { get; set; } = new();
     [Parameter] public Dictionary<int, string> IdOptionDict { get; set; } = new Dictionary<int, string>();
     [Parameter] public List<int> SelectedIdList { get; set; } = new();
     [Parameter] public EventCallback<List<int>> SelectedIdListChanged { get; set; }
+    [Parameter] public string FilterTitle { get; set; } = "";
     [Parameter] public bool IsMultiSelect { get; set; } = true;    
     [Parameter] public bool IfVerticalArrangement { get; set; } = true; 
 
