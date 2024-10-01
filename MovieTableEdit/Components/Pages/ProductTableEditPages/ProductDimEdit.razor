@@ -31,11 +31,18 @@
     <PropertyColumn Title="Movie ID" Property = "movie => movie.ProductId" />
 
     <TemplateColumn Title="Title">
-        <div>
-            <label>
-                <input type="string" @bind="@context.Title" />
-            </label>
-        </div>
+        <ChildContent>
+            <div>
+                <label>
+                    <input type="string" @bind="@context.Title" />
+                </label>
+            </div>
+        </ChildContent>
+        <ColumnOptions>
+            <div class="search-box">
+                <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="Title name..." />
+            </div> 
+        </ColumnOptions>
     </TemplateColumn>
 
     <TemplateColumn Title="Poster">
@@ -66,14 +73,23 @@
     </TemplateColumn>
 
     <TemplateColumn Title="Genre">
+        <ChildContent>
         <div>
-            <select type="int" @bind="@context.GenreId">
-                @foreach(var kvp in genre_dict)
-                {
-                    <option value=@kvp.Key>@kvp.Value</option>
-                }
-            </select>
-        </div>
+                <select type="int" @bind="@context.GenreId">
+                    @foreach(var kvp in genre_dict)
+                    {
+                        <option value=@kvp.Key>@kvp.Value</option>
+                    }
+                </select>
+            </div>
+        </ChildContent>
+        <ColumnOptions>
+            <MultiCheckbox
+                Options="genre_option_list"
+                @bind-SelectedIdList="selected_genre_id_list"
+                IdOptionDict="genre_dict"
+                />
+        </ColumnOptions>
     </TemplateColumn>
 
     @if(selected_column_id_list.Contains(column_option_list.IndexOf("German Title")))
@@ -148,6 +164,9 @@
     // Temporary product dimension table
     private IQueryable<TempProductDim>? queried_rows;
 
+    // Used for title search box
+    private string nameFilter = "";
+    private Dictionary<int, string> product_title_dict = new Dictionary<int, string>();
 
     // Members needed for column checkboxes 
     private static List<string> column_option_list = new () { "German Title", "French Title", "Spanish Title", "Italian Title", "Japanese Title"};
@@ -161,13 +180,30 @@
 
 
     private Dictionary<int, string> genre_dict = new Dictionary<int, string>();
+    private List<string> genre_option_list = new();
+    private List<int> selected_genre_id_list = new List<int>(); 
 
     private IQueryable<TempProductDim> filtered_rows
     {   
         get
         {
             IQueryable<TempProductDim> result = queried_rows;
+
             result = result.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
+
+            result = result.Where(p => selected_genre_id_list.Contains(p.GenreId));
+
+            if (!string.IsNullOrEmpty(nameFilter))
+            {   
+                // TODO: is the following a redundant approach?
+                List<int> filtered_product_id_list = product_title_dict
+                    .Where(kv => kv.Value.ToLower().Contains(nameFilter.ToLower()) )
+                    .Select(kv => kv.Key)
+                    .ToList();
+                
+                result = result.Where(r => filtered_product_id_list.Contains(r.ProductId));
+            }
+
             return result;
         }
     }
@@ -191,6 +227,7 @@
                         ProductId = x.ProductId, 
                         Title = x.Title, 
                         ProductTypeId = x.ProductTypeId, 
+                        GenreId = x.GenreId, 
                         Note = x.Note,
                         TitleDE = x.TitleDE, 
                         TitleFR = x.TitleFR,
@@ -209,9 +246,14 @@
         queried_rows = db_context.DbSetTempProductDim;
 
         product_type_dict = db_context.DbSetTempProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
+        selected_product_type_id_list = product_type_dict.Keys.ToList();
         product_type_option_list = product_type_dict.Values.ToList();
         
         genre_dict = db_context.DbSetTempGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
+        selected_genre_id_list = genre_dict.Keys.ToList();
+        genre_option_list = genre_dict.Values.ToList();
+
+        product_title_dict = db_context.DbSetTempProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
 
     }
 
