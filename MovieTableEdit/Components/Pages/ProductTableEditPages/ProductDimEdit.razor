@@ -11,35 +11,25 @@
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 
+@using MultiCheckbox
+
+
 <PageTitle>Product Information</PageTitle>
 
-<p>
-    <div  style="display: flex; align-items: center;">
-        <div style="margin-right: 20px;">
-            Columns to display:
-            <br>
-            @foreach (var option in product_type_option_dict)
-            {
-                <label style="margin-right: 10px;">
-                    <input type="checkbox" @bind="product_type_option_dict
-                    [option.Key]" /> @option.Key
-                </label>
-                <br>
-            }
-        </div>
-        <div>
-            Columns to display:
+<div  style="display: flex; align-items: center;">
+    <MultiCheckbox
+        Options="product_type_option_list"
+        @bind-SelectedIdList="selected_product_type_id_list"
+        IdOptionDict="product_type_dict"
+        />
 
-            <br>
-            @foreach (var option in column_option_dict)
-            {
-                <label style="margin-right: 10px;">
-                    <input type="checkbox" @bind="column_option_dict[option.Key]" /> @option.Key
-                </label>
-            }
-        </div>
-    </div>
-</p> 
+    <MultiCheckbox
+        Options="column_option_list"
+        @bind-SelectedIdList="selected_column_id_list"
+        IfVerticalArrangement="false"
+        />
+</div>
+
 
 
 <QuickGrid Class="table" Items="filtered_rows">
@@ -82,7 +72,7 @@
         </div>
     </TemplateColumn>
 
-    @if(column_option_dict["TitleDE"])
+    @if(true)
     {
         <TemplateColumn Title="German Title">
             <div>
@@ -93,7 +83,7 @@
         </TemplateColumn>
     }
 
-    @if(column_option_dict["TitleFR"])
+    @if(true)
     {
         <TemplateColumn Title="French Title">
             <div>
@@ -104,7 +94,7 @@
         </TemplateColumn>
     }
 
-    @if(column_option_dict["TitleES"])
+    @if(true)
     {
         <TemplateColumn Title="Spanish Title">
             <div>
@@ -115,7 +105,7 @@
         </TemplateColumn>
     }
 
-    @if(column_option_dict["TitleIT"])
+    @if(true)
     {
         <TemplateColumn Title="Italian Title">
             <div>
@@ -126,7 +116,7 @@
         </TemplateColumn>
     }
 
-    @if(column_option_dict["TitleJP"])
+    @if(true)
     {    
         <TemplateColumn Title="Japanese Title">
             <div>
@@ -142,38 +132,42 @@
 
 <button @onclick="PublishChanges">Publish Changes</button>
 
-
 @code {
 
     [Parameter]
     [SupplyParameterFromQuery(Name = "selected_product_types")]
     public required string selected_product_types { get; set; }
 
-    private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
-    {
-        { "Movie", 1},
-        { "TV", 2 },
-        { "Anime", 3 },
-        { "Comic", 4 },
-    };
-
-    private IQueryable<TempProductDim>? queried_rows;
-
+    // Database context
     private MovieTableEditContext db_context = default!;
 
-    private Dictionary<int, string> product_type_dict = new Dictionary<int, string>();
-    private Dictionary<int, string> genre_dict = new Dictionary<int, string>();
+    // Temporary product dimension table
+    private IQueryable<TempProductDim>? queried_rows;
 
-    private static List<string> product_type_option_list = new List<string> { "Movie", "TVShow", "Anime", "Comic"};
-    private Dictionary<string, bool> product_type_option_dict = SharedFunctions.MakeMultiSelectDict(product_type_option_list);
-    private static List<string> column_option_list = new List<string> { "TitleDE", "TitleFR", "TitleES", "TitleIT", "TitleJP"};
-    private Dictionary<string, bool> column_option_dict = SharedFunctions.MakeMultiSelectDict(column_option_list);
+
+    // Members needed for column checkboxes 
+    private static List<string> column_option_list = new () { "TitleDE", "TitleFR", "TitleES", "TitleIT", "TitleJP"};
+    private List<int> selected_column_id_list = new();
+
+    
+    // Members needed for product type checkboxes
+    private Dictionary<int, string> product_type_dict = new Dictionary<int, string>();
+    private List<string> product_type_option_list = new();
+    private List<int> selected_product_type_id_list = new List<int>(); 
+
+
+    private Dictionary<int, string> genre_dict = new Dictionary<int, string>();
 
     private IQueryable<TempProductDim> filtered_rows
     {   
         get
         {
             IQueryable<TempProductDim> result = queried_rows;
+
+            //string[] partsArray  = selected_product_types.Split('-');
+            //List<string> selected_product_type_list = new List<string>(partsArray);
+            //List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_id_dict[type]).ToList();
+            //queried_rows = db_context.DbSetTempProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
 
             return result;
         }
@@ -213,14 +207,11 @@
             await db_context.SaveChangesAsync();
         }
 
-        //string[] partsArray  = selected_product_types.Split('-');
-        //List<string> selected_product_type_list = new List<string>(partsArray);
-        //List<int> selected_product_type_id_list = selected_product_type_list.Select(type => product_type_id_dict[type]).ToList();
-        //queried_rows = db_context.DbSetTempProductDim.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
-
         queried_rows = db_context.DbSetTempProductDim;
 
         product_type_dict = db_context.DbSetTempProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
+        product_type_option_list = product_type_dict.Values.ToList();
+        
         genre_dict = db_context.DbSetTempGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
 
     }
