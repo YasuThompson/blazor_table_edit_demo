@@ -158,18 +158,19 @@
 
     // A dictionary mapping from the route parameter to its corresponding index
     // TODO: it might be better to route integer indexes or pass parameters in a different way
-    private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
+    @* private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
     {
         { "movie", 1 },
         { "tv", 2 },
         { "anime", 3 },
         { "comic", 4 },
-    };
+    }; *@
 
     // The index of the selected product type in the table selection page
     private int selected_product_type_id; 
 
     // Dictionaries to map indexes of dimension tables
+    private Dictionary<int, string> dim_dict_id_product_type = new Dictionary<int, string>(); // product type id to product type
     private Dictionary<int, string> dim_dict_id_product_title = new Dictionary<int, string>(); // product id to product tile
     private Dictionary<int, int> dim_dict_product_id_genre_id = new Dictionary<int, int>(); // product id to its genre
     private Dictionary<int, string> dim_dict_id_rating_de = new Dictionary<int, string>(); // RatingDEId to RatingDE
@@ -184,12 +185,11 @@
     private List<TempProductPriceDE> added_rows = new List<TempProductPriceDE>();
     private List<TempProductPriceDE> published_rows = new List<TempProductPriceDE>();
 
-    // Hashset of table row indexes to manage rows to delte or edited rows
+    // Hashset of table row indexes to manage rows to delete or edited rows
     private TableIndexManager delete_index_manager = new TableIndexManager();
     @* private TableIndexManager edited_index_manager = new TableIndexManager(); // Currently not used *@
     
     private double latest_version;
-    private double new_version;
     private int largest_id_num;
 
     private string nameFilter = "";
@@ -207,6 +207,7 @@
 
             if (!string.IsNullOrEmpty(nameFilter))
             {   
+                // Filter out keys whose values contain "nameFilter" and extract as an id list
                 // TODO: is the following a redundant approach?
                 List<int> filtered_product_id_list = dim_dict_id_product_title
                     .Where(kv => kv.Value.ToLower().Contains(nameFilter.ToLower()) )
@@ -238,18 +239,53 @@
         }  
     }
     
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {   
-
         db_context = DbFactory.CreateDbContext();
 
-        // Mapping the selected product type to its index
-        selected_product_type_id = product_type_id_dict[selected_product_type];
+        dim_dict_id_product_type = db_context.DbSetProductTypeDim
+            .Where(p => p.Version==1.02)
+            .Select(p => new {p.ProductTypeId, p.ProductType})
+            .AsEnumerable()
+            .ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
 
+        bool if_temp_exists = db_context.DbSetTempProductPriceDE.Count() > 0;
+
+        if(!if_temp_exists)
+        {
+            foreach(var kvp in dim_dict_id_product_type)
+            {
+                double latest_version = db_context.DbSetProductPriceDE
+                    .Where(p => p.ProductTypeId == kvp.Key)
+                    .Max(p => p.Version);
+
+                IQueryable<TempProductPriceDE> temp_queried_rows = db_context.DbSetProductPriceDE
+                    .Where(x => x.ProductTypeId==kvp.Key && x.Version==latest_version)
+                    .Select(x => new TempProductPriceDE
+                        {
+                            Id = x.Id, 
+                            Price = x.Price, 
+                            ProductTypeId = x.ProductTypeId, 
+                            ProductId = x.ProductId, 
+                            RatingDEId = x.RatingDEId,
+                            Version = x.Version, 
+                            IfActive = true, 
+                            IfEdited = false
+                        }
+                    );
+
+                await db_context.DbSetTempProductPriceDE.AddRangeAsync(temp_queried_rows);
+            }
+
+            await db_context.SaveChangesAsync();
+
+        }
+
+        queried_rows = db_context.DbSetTempProductPriceDE;
+        
         // Get the biggest index   
         largest_id_num = db_context.DbSetTempProductPriceDE.Max(x => x.Id);
 
-        new_version = latest_version +  0.01;
 
         // Queries records of the selected product, with the latest persion 
         queried_rows = db_context.DbSetTempProductPriceDE

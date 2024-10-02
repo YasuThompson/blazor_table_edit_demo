@@ -17,7 +17,6 @@
 <PageTitle>Product Information</PageTitle>
 
 <div  style="display: flex; align-items: center;">
-
     <MultiCheckbox
         Options="column_option_list"
         @bind-SelectedIdList="selected_column_id_list"
@@ -147,7 +146,6 @@
         </TemplateColumn>
     }
 
-
 </QuickGrid>
 
 <button @onclick="PublishChanges">Publish Changes</button>
@@ -157,6 +155,7 @@
     [Parameter]
     [SupplyParameterFromQuery(Name = "selected_product_types")]
     public required string selected_product_types { get; set; }
+
 
     // Database context
     private MovieTableEditContext db_context = default!;
@@ -172,12 +171,10 @@
     private static List<string> column_option_list = new () { "German Title", "French Title", "Spanish Title", "Italian Title", "Japanese Title"};
     private List<int> selected_column_id_list = new();
 
-    
     // Members needed for product type checkboxes
     private Dictionary<int, string> product_type_dict = new Dictionary<int, string>();
     private List<string> product_type_option_list = new();
     private List<int> selected_product_type_id_list = new List<int>(); 
-
 
     private Dictionary<int, string> genre_dict = new Dictionary<int, string>();
     private List<string> genre_option_list = new();
@@ -220,7 +217,7 @@
             var latest_ver = db_context.DbSetProductDim.Max(x => x.Version);
 
             // Get rows with the latest version and cast them to a temporary table
-            var latest_rows = db_context.DbSetProductDim
+            IQueryable<TempProductDim> latest_rows = db_context.DbSetProductDim
                 .Where(x => x.Version==latest_ver)
                 .Select(x => new TempProductDim 
                     {
@@ -233,7 +230,10 @@
                         TitleFR = x.TitleFR,
                         TitleES = x.TitleES,
                         TitleIT = x.TitleIT,
-                        TitleJP = x.TitleJP
+                        TitleJP = x.TitleJP,
+                        Version = x.Version, 
+                        IfActive = true, 
+                        IfEdited = false
                     }
                 );
 

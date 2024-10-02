@@ -104,7 +104,10 @@
                     .Select(x => new TempProductTypeDim 
                         {
                             ProductTypeId = x.ProductTypeId, 
-                            ProductType = x.ProductType
+                            ProductType = x.ProductType,
+                            Version = x.Version, 
+                            IfActive = true, 
+                            IfEdited = false
                         }
                     );
 
@@ -133,7 +136,10 @@
                     .Select(x => new TempGenreDim 
                         {
                             GenreId = x.GenreId, 
-                            Genre = x.Genre
+                            Genre = x.Genre,
+                            Version = x.Version, 
+                            IfActive = true, 
+                            IfEdited = false
                         }
                     );
 
@@ -162,7 +168,10 @@
                     .Select(x => new TempRatingDEDim 
                         {
                             RatingDEId = x.RatingDEId, 
-                            RatingDE = x.RatingDE
+                            RatingDE = x.RatingDE,
+                            Version = x.Version, 
+                            IfActive = true, 
+                            IfEdited = false
                         }
                     );
 
@@ -190,7 +199,10 @@
                     .Select(x => new TempRatingFRDim 
                         {
                             RatingFRId = x.RatingFRId, 
-                            RatingFR = x.RatingFR
+                            RatingFR = x.RatingFR,
+                            Version = x.Version, 
+                            IfActive = true, 
+                            IfEdited = false
                         }
                     );
 

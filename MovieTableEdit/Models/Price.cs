@@ -14,7 +14,10 @@ public class TempProductPriceDE
     public decimal Price { get; set; }
 
     public int? RatingDEId {get; set; }
-    public bool Active {get; set;}
+    public double Version {get; set;}
+    public bool IfActive {get; set;}
+    public bool IfEdited {get; set;}
+    
 }
 
 public class TempProductPriceFR
@@ -28,7 +31,9 @@ public class TempProductPriceFR
     public decimal Price { get; set; }
 
     public int? RatingFRId {get; set; }
-    public bool Active {get; set;}
+    public double Version {get; set;}
+    public bool IfActive {get; set;}
+    public bool IfEdited {get; set;}
 }
 
 
