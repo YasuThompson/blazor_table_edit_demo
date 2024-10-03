@@ -53,26 +53,49 @@
     private string table_edit_type_config {get; set; } = "dimension-table-edit";
     private string editor_config {get; set; } = "pal";
     private string edit_note_config {get; set; } = "";
-    private double genre_dim_ver_config { get; set; }
-    private double product_type_dim_ver_config { get; set; }
-    private double product_dim_ver_config { get; set; }
-    private double price_de_ver_config { get; set; }
-    private string? price_country_config {get; set; }
+    
+    private double genre_dim_ver_config { get; set; } = 1.02;
+    private double product_type_dim_ver_config { get; set; } = 1.02; 
+    private double product_dim_ver_config { get; set; } = 1.02;
+    private double rating_de_dim_ver_config { get; set; } = 1.02;
+    private double rating_fr_dim_ver_config { get; set; } = 1.02;
 
+    private double movie_price_ver_config { get; set; } = 1.02;
+    private double tv_price_ver_config { get; set; } = 2.02;
+    private double anime_price_ver_config { get; set; } = 3.02;
+    private double comic_price_ver_config { get; set; } = 4.02;
+
+    private string? price_country_config {get; set; }
     
     protected override void OnInitialized()
-    {
+    {   
+        // To get a list o
         db_context = DbFactory.CreateDbContext();
 
     }
 
 
     private async Task NavigateToHomePage()
-    {
+    {   
+        // Save basic config information in browser state manager
         await ProtectedSessionStore.SetAsync("table-edit-type", table_edit_type_config);
         await ProtectedSessionStore.SetAsync("editor", editor_config);
         await ProtectedSessionStore.SetAsync("edit-note", edit_note_config);
         await ProtectedSessionStore.SetAsync("price-country", price_country_config);
+
+        // Save categorical dimension table versions in browser state manager
+        await ProtectedSessionStore.SetAsync("genre-dim-ver", genre_dim_ver_config);
+        await ProtectedSessionStore.SetAsync("product-type-dim-ver", product_type_dim_ver_config);
+        await ProtectedSessionStore.SetAsync("product-dim-ver", product_dim_ver_config);
+        await ProtectedSessionStore.SetAsync("rating-de-dim-ver", rating_de_dim_ver_config);
+        await ProtectedSessionStore.SetAsync("rating-fr-dim-ver", rating_fr_dim_ver_config);
+
+        // Save price versions in browser state manager
+        await ProtectedSessionStore.SetAsync("movie-price-ver", movie_price_ver_config);
+        await ProtectedSessionStore.SetAsync("tv-price-ver", tv_price_ver_config);
+        await ProtectedSessionStore.SetAsync("anime-price-ver", anime_price_ver_config);
+        await ProtectedSessionStore.SetAsync("comic-price-ver", comic_price_ver_config);
+
         NavigationManager.NavigateTo("/");
     }
 }

@@ -8,6 +8,9 @@
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
 
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
 <PageTitle>Dimension Table</PageTitle>
 
 
@@ -95,12 +98,12 @@
             // When the the temporary table is empty
             if(!if_temp_exists)
             {   
-                // Get the latest version of the category dimension table
-                var latest_ver = db_context.DbSetProductTypeDim.Max(x => x.Version);
+                var result = await ProtectedSessionStore.GetAsync<double>("product-type-dim-ver");
+                double product_type_dim_ver_config = (double)result.Value;
                 
                 // Get rows with the latest version and cast them to a temporary table
                 var latest_rows = db_context.DbSetProductTypeDim
-                    .Where(x => x.Version==latest_ver)
+                    .Where(x => x.Version==product_type_dim_ver_config)
                     .Select(x => new TempProductTypeDim 
                         {
                             ProductTypeId = x.ProductTypeId, 
@@ -127,12 +130,12 @@
             // When the the temporary table is empty
             if(!if_temp_exists)
             {   
-                // Get the latest version of the category dimension table
-                var latest_ver = db_context.DbSetGenreDim.Max(x => x.Version);
+                var result = await ProtectedSessionStore.GetAsync<double>("genre-dim-ver");
+                double genre_dim_ver_config = (double)result.Value;
                 
                 // Get rows with the latest version and cast them to a temporary table
                 var latest_rows = db_context.DbSetGenreDim
-                    .Where(x => x.Version==latest_ver)
+                    .Where(x => x.Version==genre_dim_ver_config)
                     .Select(x => new TempGenreDim 
                         {
                             GenreId = x.GenreId, 
@@ -159,12 +162,12 @@
             // When the the temporary table is empty
             if(!if_temp_exists)
             {   
-                // Get the latest version of the category dimension table
-                var latest_ver = db_context.DbSetRatingDEDim.Max(x => x.Version);
+                var result = await ProtectedSessionStore.GetAsync<double>("rating-de-dim-ver");
+                double rating_de_dim_ver_config = (double)result.Value;
                 
                 // Get rows with the latest version and cast them to a temporary table
                 var latest_rows = db_context.DbSetRatingDEDim
-                    .Where(x => x.Version==latest_ver)
+                    .Where(x => x.Version==rating_de_dim_ver_config)
                     .Select(x => new TempRatingDEDim 
                         {
                             RatingDEId = x.RatingDEId, 
@@ -190,12 +193,12 @@
             // When the the temporary table is empty
             if(!if_temp_exists)
             {   
-                // Get the latest version of the category dimension table
-                var latest_ver = db_context.DbSetRatingFRDim.Max(x => x.Version);
+                var result = await ProtectedSessionStore.GetAsync<double>("rating-fr-dim-ver");
+                double rating_fr_dim_ver_config = (double)result.Value;
                 
                 // Get rows with the latest version and cast them to a temporary table
                 var latest_rows = db_context.DbSetRatingFRDim
-                    .Where(x => x.Version==latest_ver)
+                    .Where(x => x.Version==rating_fr_dim_ver_config)
                     .Select(x => new TempRatingFRDim 
                         {
                             RatingFRId = x.RatingFRId, 
