@@ -1,4 +1,4 @@
-@page "/product-dim/{selected_product_types}"
+@page "/product-dim-edit/"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -149,12 +149,6 @@
 <button @onclick="ApplyChanges">Publish Changes</button>
 
 @code {
-
-    [Parameter]
-    [SupplyParameterFromQuery(Name = "selected_product_types")]
-    public required string selected_product_types { get; set; }
-
-
     // Database context
     private MovieTableEditContext db_context = default!;
 
@@ -185,8 +179,8 @@
             IQueryable<TempProductDim> result = queried_rows;
 
             result = result.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
-            result = result.Where(p => selected_genre_id_list.Contains(p.GenreId));
-
+            @* result = result.Where(p => selected_genre_id_list.Contains(p.GenreId)); *@
+            
             if (!string.IsNullOrEmpty(nameFilter))
             {   
                 // TODO: is the following a redundant approach?
