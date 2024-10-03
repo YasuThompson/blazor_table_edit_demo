@@ -1,16 +1,90 @@
 @page "/validate-dim"
 @rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
 @inject NavigationManager NavigationManager
 
+@using MovieTableEdit.Models
+@using MovieTableEdit.Data
+@inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<h5>Validation results are displayed here</h5>
 <br>
 <button @onclick="@PublishDimTableEdit" >Publish Table Edit</button>
 
-
 @code
-{
-    private void PublishDimTableEdit()
+{      
+    private MovieTableEditContext db_context = default!;
+
+    bool if_edited_product_type_dim = true;
+    double new_ver_product_type_dim = 1.03;
+
+    protected override void OnInitialized()
     {
-        @* await db_context.SaveChangesAsync(); *@
+        db_context = DbFactory.CreateDbContext();
+    }
+
+    protected async Task PublishDimTableEdit()
+    {
+        bool if_temp_exists;
+        double new_version;
+        int largest_id;
+
+        if_temp_exists = db_context.DbSetTempGenreDim.Count() > 0;
+
+        // If genre dimension table was edited
+        if(if_temp_exists)
+        {   
+            // Set a new version of genre dimension table
+            new_version = db_context.DbSetGenreDim.Max(p => p.Version) + 0.01;
+            largest_id = db_context.DbSetGenreDim.Max(p => p.Id);
+
+            List<GenreDim> edited_genre_rows = db_context.DbSetTempGenreDim
+                .Where(x => x.IfActive == true)
+                .Select(x => new GenreDim
+                    {
+                        GenreId = x.GenreId, 
+                        Genre = x.Genre, 
+                        Explanation = x.Explanation,
+                        Version = new_version
+                    }
+                ).ToList();
+
+            // Asigning unique sequential indexes
+            for (int i=0; i<edited_genre_rows.Count(); i++)
+            {
+                edited_genre_rows[i].Id = largest_id + i + 1;
+            }
+
+            await db_context.DbSetGenreDim.AddRangeAsync(edited_genre_rows);
+
+            db_context.Database.ExecuteSqlRaw("DELETE FROM TempGenreDim");
+
+        }
+
+        await db_context.SaveChangesAsync();
+
+                // Save basic config information in browser state manager
+        await ProtectedSessionStore.DeleteAsync("table-edit-type");
+        await ProtectedSessionStore.DeleteAsync("editor");
+        await ProtectedSessionStore.DeleteAsync("edit-note");
+        await ProtectedSessionStore.DeleteAsync("price-country");
+
+        // Save categorical dimension table versions in browser state manager
+        await ProtectedSessionStore.DeleteAsync("genre-dim-ver");
+        await ProtectedSessionStore.DeleteAsync("product-type-dim-ver");
+        await ProtectedSessionStore.DeleteAsync("product-dim-ver");
+        await ProtectedSessionStore.DeleteAsync("rating-de-dim-ver");
+        await ProtectedSessionStore.DeleteAsync("rating-fr-dim-ver");
+
+        // Save price versions in browser state manager
+        await ProtectedSessionStore.DeleteAsync("movie-price-ver");
+        await ProtectedSessionStore.DeleteAsync("tv-price-ver");
+        await ProtectedSessionStore.DeleteAsync("anime-price-ver");
+        await ProtectedSessionStore.DeleteAsync("comic-price-ver");
+
 
         // Going back to the table selection page
         NavigationManager.NavigateTo("/config");
