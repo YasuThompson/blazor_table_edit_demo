@@ -25,8 +25,6 @@
         />
 </div>
 
-
-
 <QuickGrid Class="table" Items="filtered_rows">
     <PropertyColumn Title="Movie ID" Property = "movie => movie.ProductId" />
 
@@ -50,7 +48,6 @@
                 <img class="w-8 h-6 mr-4" src="@GetPosterImgPath(context.ProductId)" style="width: 100%; height: auto;" />
             </div>
     </TemplateColumn>
-
 
     <TemplateColumn Title="Product Type">
         <ChildContent>
@@ -245,14 +242,63 @@
 
         queried_rows = db_context.DbSetTempProductDim;
 
-        product_type_dict = db_context.DbSetTempProductTypeDim.Select(p => new {p.ProductTypeId, p.ProductType}).AsEnumerable().ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
+
+
+        // Check if a temporary categorical dimension table exists
+        if_temp_exists = db_context.DbSetTempProductTypeDim.Count() > 0;
+
+        if(if_temp_exists) // If the categorical dim table is being edited
+        {   
+            product_type_dict = db_context.DbSetTempProductTypeDim
+                .Select(p => new {p.ProductTypeId, p.ProductType})
+                .AsEnumerable()
+                .ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
+        }
+        else
+        {   
+            var result = await ProtectedSessionStore.GetAsync<double>("product-type-dim-ver");
+            double product_type_dim_ver_config = (double)result.Value;
+
+            product_type_dict = db_context.DbSetTempProductTypeDim
+                .Where(p => p.Version==product_type_dim_ver_config)
+                .Select(p => new {p.ProductTypeId, p.ProductType})
+                .AsEnumerable()
+                .ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
+        }
+        
         selected_product_type_id_list = product_type_dict.Keys.ToList();
         product_type_option_list = product_type_dict.Values.ToList();
+
+
         
+        // Check if a temporary categorical dimension table exists
+        if_temp_exists = db_context.DbSetTempGenreDim.Count() > 0;
+
+        if(if_temp_exists) // If the categorical dim table is being edited
+        {   
+            genre_dict = db_context.DbSetTempGenreDim
+                .Select(p => new {p.GenreId, p.Genre})
+                .AsEnumerable()
+                .ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
+        }
+        else
+        {   
+            var result = await ProtectedSessionStore.GetAsync<double>("genre-dim-ver");
+            double genre_dim_ver_config = (double)result.Value;
+
+            genre_dict = db_context.DbSetTempGenreDim
+                .Where(p => p.Version==genre_dim_ver_config)
+                .Select(p => new {p.GenreId, p.Genre})
+                .AsEnumerable()
+                .ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
+        }
+
         genre_dict = db_context.DbSetTempGenreDim.Select(p => new {p.GenreId, p.Genre}).AsEnumerable().ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
         selected_genre_id_list = genre_dict.Keys.ToList();
         genre_option_list = genre_dict.Values.ToList();
 
+
+        // TODO: how should I implement this?
         product_title_dict = db_context.DbSetTempProductDim.Select(p => new {p.ProductId, p.Title}).AsEnumerable().ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
 
     }
