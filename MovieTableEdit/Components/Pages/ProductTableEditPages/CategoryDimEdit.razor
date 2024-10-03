@@ -70,7 +70,7 @@
     </QuickGrid>
 }
 
-<button @onclick="SaveChanges">Save Changes</button>
+<button @onclick="ApplyChanges">Save Changes</button>
 
 @code {
 
@@ -224,7 +224,7 @@
 
     // A function for debug
 
-    private async Task SaveChanges()
+    private async Task ApplyChanges()
     {
         await db_context.SaveChangesAsync();
 

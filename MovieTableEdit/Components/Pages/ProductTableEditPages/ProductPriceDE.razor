@@ -148,7 +148,7 @@
             </tbody>
         </table>
         <br/>
-        <button @onclick="PublishChanges">Publish Changes</button>
+        <button @onclick="ApplyChanges">Publish Changes</button>
 
 @code {
     private MovieTableEditContext db_context = default!;
@@ -161,13 +161,13 @@
 
     // A dictionary mapping from the route parameter to its corresponding index
     // TODO: it might be better to route integer indexes or pass parameters in a different way
-    @* private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
+    private Dictionary<string, int> product_type_id_dict = new Dictionary<string, int>
     {
         { "movie", 1 },
         { "tv", 2 },
         { "anime", 3 },
         { "comic", 4 },
-    }; *@
+    };
 
     // The index of the selected product type in the table selection page
     private int selected_product_type_id; 
@@ -195,7 +195,6 @@
     @* private TableIndexManager edited_index_manager = new TableIndexManager(); // Currently not used *@
     
     private double latest_version;
-    private int largest_id_num;
 
     private string nameFilter = "";
     private int? rating_de_filter;
@@ -230,8 +229,6 @@
 
             if (genre_filter.HasValue)
             {
-                @* result = result.Where(c => c.GenreId==genre_filter); *@
-                @* result = result.Where(c => c.Genre=="Drama"); *@
                 ;
             }
 
@@ -247,6 +244,8 @@
     protected override async Task OnInitializedAsync()
     {   
         db_context = DbFactory.CreateDbContext();
+
+        selected_product_type_id = product_type_id_dict[selected_product_type];
 
         var result = await ProtectedSessionStore.GetAsync<double>("product-type-dim-ver");
         @* table_edit_type_config = result.Success ? result.Value : "unknown"; *@
@@ -290,18 +289,13 @@
 
         }
 
-        queried_rows = db_context.DbSetTempProductPriceDE;
+        @* queried_rows = db_context.DbSetTempProductPriceDE; *@
         
-        // Get the biggest index   
-        largest_id_num = db_context.DbSetTempProductPriceDE.Max(x => x.Id);
-
-
         // Queries records of the selected product, with the latest persion 
         queried_rows = db_context.DbSetTempProductPriceDE
             .Where(x => x.ProductTypeId==selected_product_type_id);
 
-        
-        
+
         result = await ProtectedSessionStore.GetAsync<double>("product-dim-ver");
         double product_dim_ver_config = (double)result.Value;
 
@@ -363,50 +357,13 @@
         added_rows.Remove(_del_elem);
     }
 
-    // Upload the edited table
-    // TODO: this part might not be memory efficient
-    private async Task PublishChanges()
-    {   
-        int cnt = 0;
-
-        @* published_rows = queried_rows.ToList().Concat(added_rows).ToList(); *@
-
-        // Remove rows to delete
-        // TODO: the following process might be redundant
-        foreach(var _row in queried_rows)
-        {
-            if(delete_index_manager.ContainsIndex(_row.Id))
-            {
-                ;
-            }
-            else 
-            {
-                reduced_queried_rows.Add(_row);
-            }
-        }
-        
-        // Combining the reduced rows and added rows
-        published_rows = reduced_queried_rows.Concat(added_rows).ToList();
-
-        // Give new indexes without duplicates with the older records
-        foreach (var _row in published_rows) 
-        {   
-            // Set a proper product type id
-            _row.ProductTypeId = selected_product_type_id;
-            // Set unique and sequential indexes
-            _row.Id = largest_id_num + cnt + 1;
-            cnt += 1;
-        }
-
-        // Adding the edited rows
-        await db_context.DbSetTempProductPriceDE.AddRangeAsync(published_rows);
-
+   private async Task ApplyChanges()
+    {
         // Uploading the rows with a new version to the database
         await db_context.SaveChangesAsync();
 
         // Going back to the table selection page
-        NavigationManager.NavigateTo("/");
-
+        NavigationManager.NavigateTo("/");;
     }
     
 }

@@ -146,7 +146,7 @@
 
 </QuickGrid>
 
-<button @onclick="PublishChanges">Publish Changes</button>
+<button @onclick="ApplyChanges">Publish Changes</button>
 
 @code {
 
@@ -310,7 +310,7 @@
     }
 
 
-    private async Task PublishChanges()
+    private async Task ApplyChanges()
     {
         // Uploading the rows with a new version to the database
         await db_context.SaveChangesAsync();
