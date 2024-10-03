@@ -32,15 +32,21 @@
         double new_version;
         int largest_id;
 
+        // Check if there is a temporary table
         if_temp_exists = db_context.DbSetTempGenreDim.Count() > 0;
 
         // If genre dimension table was edited
+        // TODO: to ignore the following processes if nothing is edited
+
         if(if_temp_exists)
         {   
             // Set a new version of genre dimension table
             new_version = db_context.DbSetGenreDim.Max(p => p.Version) + 0.01;
+
+            // Get the biggest index of the primary key
             largest_id = db_context.DbSetGenreDim.Max(p => p.Id);
 
+            // Convert the edited temporary table data class to the original class with a new version
             List<GenreDim> edited_genre_rows = db_context.DbSetTempGenreDim
                 .Where(x => x.IfActive == true)
                 .Select(x => new GenreDim
@@ -58,11 +64,137 @@
                 edited_genre_rows[i].Id = largest_id + i + 1;
             }
 
+            // Add the edited rows to the original table
             await db_context.DbSetGenreDim.AddRangeAsync(edited_genre_rows);
 
+            // Empty the temporary table
             db_context.Database.ExecuteSqlRaw("DELETE FROM TempGenreDim");
 
         }
+
+        // Check if there is a temporary table
+        if_temp_exists = db_context.DbSetTempRatingDEDim.Count() > 0;
+
+        // If genre dimension table was edited
+        // TODO: to ignore the following processes if nothing is edited
+
+        if(if_temp_exists)
+        {   
+            // Set a new version of genre dimension table
+            new_version = db_context.DbSetTempRatingDEDim.Max(p => p.Version) + 0.01;
+
+            // Get the biggest index of the primary key
+            largest_id = db_context.DbSetRatingDEDim.Max(p => p.Id);
+
+            // Convert the edited temporary table data class to the original class with a new version
+            List<RatingDEDim> edited_rating_de_rows = db_context.DbSetTempRatingDEDim
+                .Where(x => x.IfActive == true)
+                .Select(x => new RatingDEDim
+                    {
+                        RatingDEId = x.RatingDEId, 
+                        RatingDE = x.RatingDE, 
+                        Version = new_version
+                    }
+                ).ToList();
+
+            // Asigning unique sequential indexes
+            for (int i=0; i<edited_rating_de_rows.Count(); i++)
+            {
+                edited_rating_de_rows[i].Id = largest_id + i + 1;
+            }
+
+            // Add the edited rows to the original table
+            await db_context.DbSetRatingDEDim.AddRangeAsync(edited_rating_de_rows);
+
+            // Empty the temporary table
+            db_context.Database.ExecuteSqlRaw("DELETE FROM TempRatingDEDim");
+        }
+
+        
+        // Check if there is a temporary table
+        if_temp_exists = db_context.DbSetTempRatingFRDim.Count() > 0;
+
+        // If genre dimension table was edited
+        // TODO: to ignore the following processes if nothing is edited
+
+        if(if_temp_exists)
+        {   
+            // Set a new version of genre dimension table
+            new_version = db_context.DbSetTempRatingFRDim.Max(p => p.Version) + 0.01;
+
+            // Get the biggest index of the primary key
+            largest_id = db_context.DbSetRatingFRDim.Max(p => p.Id);
+
+            // Convert the edited temporary table data class to the original class with a new version
+            List<RatingFRDim> edited_rating_fr_rows = db_context.DbSetTempRatingFRDim
+                .Where(x => x.IfActive == true)
+                .Select(x => new RatingFRDim
+                    {
+                        RatingFRId = x.RatingFRId, 
+                        RatingFR = x.RatingFR, 
+                        Version = new_version
+                    }
+                ).ToList();
+
+            // Asigning unique sequential indexes
+            for (int i=0; i<edited_rating_fr_rows.Count(); i++)
+            {
+                edited_rating_fr_rows[i].Id = largest_id + i + 1;
+            }
+
+            // Add the edited rows to the original table
+            await db_context.DbSetRatingFRDim.AddRangeAsync(edited_rating_fr_rows);
+
+            // Empty the temporary table
+            db_context.Database.ExecuteSqlRaw("DELETE FROM TempRatingFRDim");
+        }
+
+
+        // Check if there is a temporary table
+        if_temp_exists = db_context.DbSetTempProductDim.Count() > 0;
+
+        // If genre dimension table was edited
+        // TODO: to ignore the following processes if nothing is edited
+        if(if_temp_exists)
+        {   
+            // Set a new version of genre dimension table
+            new_version = db_context.DbSetTempProductDim.Max(p => p.Version) + 0.01;
+
+            // Get the biggest index of the primary key
+            largest_id = db_context.DbSetProductDim.Max(p => p.Id);
+
+            // Convert the edited temporary table data class to the original class with a new version
+            List<ProductDim> edited_product_dim_rows = db_context.DbSetTempProductDim
+                .Where(x => x.IfActive == true)
+                .Select(x => new ProductDim
+                    {
+                        ProductId = x.ProductId, 
+                        Title = x.Title, 
+                        ProductTypeId = x.ProductTypeId, 
+                        GenreId = x.GenreId, 
+                        Note = x.Note,
+                        TitleDE = x.TitleDE, 
+                        TitleFR = x.TitleFR,
+                        TitleES = x.TitleES,
+                        TitleIT = x.TitleIT,
+                        TitleJP = x.TitleJP,
+                        Version = new_version 
+                    }
+                ).ToList();
+
+            // Asigning unique sequential indexes
+            for (int i=0; i<edited_product_dim_rows.Count(); i++)
+            {
+                edited_product_dim_rows[i].Id = largest_id + i + 1;
+            }
+
+            // Add the edited rows to the original table
+            await db_context.DbSetProductDim.AddRangeAsync(edited_product_dim_rows);
+
+            // Empty the temporary table
+            db_context.Database.ExecuteSqlRaw("DELETE FROM TempProductDim");
+        }
+
 
         await db_context.SaveChangesAsync();
 
