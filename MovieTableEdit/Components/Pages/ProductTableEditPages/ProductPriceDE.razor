@@ -13,6 +13,9 @@
 @inject NavigationManager NavigationManager
 @using System
 
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
 <PageTitle>Product Price</PageTitle>
         <h3>Queried rows</h3>
 
@@ -169,6 +172,8 @@
     // The index of the selected product type in the table selection page
     private int selected_product_type_id; 
 
+    private double product_type_dim_ver;
+
     // Dictionaries to map indexes of dimension tables
     private Dictionary<int, string> dim_dict_id_product_type = new Dictionary<int, string>(); // product type id to product type
     private Dictionary<int, string> dim_dict_id_product_title = new Dictionary<int, string>(); // product id to product tile
@@ -243,8 +248,12 @@
     {   
         db_context = DbFactory.CreateDbContext();
 
+        var result = await ProtectedSessionStore.GetAsync<double>("product-type-dim-ver");
+        @* table_edit_type_config = result.Success ? result.Value : "unknown"; *@
+        product_type_dim_ver = (double)result.Value;
+
         dim_dict_id_product_type = db_context.DbSetProductTypeDim
-            .Where(p => p.Version==1.02)
+            .Where(p => p.Version==product_type_dim_ver)
             .Select(p => new {p.ProductTypeId, p.ProductType})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductTypeId, kvp => kvp.ProductType);
@@ -291,31 +300,48 @@
         queried_rows = db_context.DbSetTempProductPriceDE
             .Where(x => x.ProductTypeId==selected_product_type_id);
 
+        
+        
+        result = await ProtectedSessionStore.GetAsync<double>("product-dim-ver");
+        double product_dim_ver_config = (double)result.Value;
+
         // Make dictionaries mapping from an id to its values from dimension tables
-        dim_dict_id_product_title = db_context.DbSetTempProductDim
-            .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
+        dim_dict_id_product_title = db_context.DbSetProductDim
+            .Where(p => p.Version == product_dim_ver_config && p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
             .Select(p => new {p.ProductId, p.Title})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductId, kvp => kvp.Title);
 
-        dim_dict_id_rating_de = db_context.DbSetTempRatingDEDim
-            .Select(p => new {p.RatingDEId, p.RatingDE})
-            .AsEnumerable()
-            .ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
-        
         dim_dict_product_id_note = db_context.DbSetTempProductDim
-            .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
+            .Where(p => p.Version == product_dim_ver_config && p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
             .Select(p => new {p.ProductId, p.Note})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductId, kvp => kvp.Note);
 
         dim_dict_product_id_genre_id = db_context.DbSetTempProductDim
-            .Where(p => p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
+            .Where(p => p.Version == product_dim_ver_config && p.ProductTypeId == selected_product_type_id) // Querying only the selected product type
             .Select(p => new {p.ProductId, p.GenreId})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.ProductId, kvp => kvp.GenreId);
 
-        dim_dict_id_genre = db_context.DbSetTempGenreDim
+        
+         
+        result = await ProtectedSessionStore.GetAsync<double>("rating-de-dim-ver");
+        double rating_de_dim_ver_config = (double)result.Value;
+        
+        dim_dict_id_rating_de = db_context.DbSetRatingDEDim
+            .Where(p => p.Version == rating_de_dim_ver_config)
+            .Select(p => new {p.RatingDEId, p.RatingDE})
+            .AsEnumerable()
+            .ToDictionary(kvp => kvp.RatingDEId, kvp => kvp.RatingDE);
+
+
+
+        result = await ProtectedSessionStore.GetAsync<double>("genre-dim-ver");
+        double genre_dim_ver_config = (double)result.Value;
+
+        dim_dict_id_genre = db_context.DbSetGenreDim
+            .Where(p => p.Version == genre_dim_ver_config)
             .Select(p => new {p.GenreId, p.Genre})
             .AsEnumerable()
             .ToDictionary(kvp => kvp.GenreId, kvp => kvp.Genre);
