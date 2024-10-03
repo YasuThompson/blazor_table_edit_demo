@@ -4,12 +4,13 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MovieTableEdit.Models
 @using MovieTableEdit.Data
-@using MovieTableEdit.Shared.FilterManager
-@using static MovieTableEdit.Shared.FilterManager.SharedFunctions
 
 @inject IDbContextFactory<MovieTableEdit.Data.MovieTableEditContext> DbFactory
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
 
 @using CustomComponents.MultiCheckbox
 
@@ -187,7 +188,6 @@
             IQueryable<TempProductDim> result = queried_rows;
 
             result = result.Where(p => selected_product_type_id_list.Contains(p.ProductTypeId));
-
             result = result.Where(p => selected_genre_id_list.Contains(p.GenreId));
 
             if (!string.IsNullOrEmpty(nameFilter))
