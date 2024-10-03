@@ -7,7 +7,6 @@
 
 @inject IJSRuntime JSRuntime
 
-
 @if (table_edit_type_config == "dimension-table-edit")
 {
     <h5>Select a dimension table to edit</h5>
@@ -19,19 +18,6 @@
         <option value="rating-fr">French rating</option>
     </select>
     <br>
-
-    @if (selected_cat_dim=="product")
-    {
-        <h5>Select types of products</h5>
-        <p>
-        @foreach (var option in product_type_option_dict)
-        {
-            <label style="margin-right: 10px;">
-                <input type="checkbox" @bind="product_type_option_dict[option.Key]" /> @option.Key
-            </label>
-        }
-        </p>
-    }
 }
 
 
@@ -70,7 +56,6 @@
     private string table_edit_type_config;
     private string? selected_country_config = "DE";
 
-
     protected override async Task OnInitializedAsync()
     {
         var result = await ProtectedSessionStore.GetAsync<string>("table-edit-type");
@@ -80,30 +65,19 @@
     }
 
 
-    // A dictionary for storing product type selections
-    Dictionary<string, bool> product_type_option_dict = new Dictionary<string, bool>
-    {
-        { "Movie", true },
-        { "TV", false },
-        { "Anime", false },
-        { "Comic", false },
-    };
-
-
     private void NavigateToTableEditPage()
     {      
         if(table_edit_type_config=="dimension-table-edit" && selected_cat_dim!="product-dim")
         {
-            JSRuntime.InvokeAsync<object>("open", $"/category-dim/{selected_cat_dim}", "_blank");
+            JSRuntime.InvokeAsync<object>("open", $"/category-dim-edit/{selected_cat_dim}", "_blank");
         }
         else if(table_edit_type_config=="dimension-table-edit" && selected_cat_dim=="product-dim")
         {   
-            string selected_product_types = string.Join("-", product_type_option_dict.Where(kvp => kvp.Value).Select(kvp => kvp.Key));
-            JSRuntime.InvokeAsync<object>("open", $"/product-dim/{selected_product_types}", "_blank");
+            JSRuntime.InvokeAsync<object>("open", $"/product-dim-edit/", "_blank");
         }
         else if(table_edit_type_config == "price-table-edit")
         {   
-            JSRuntime.InvokeAsync<object>("open", $"/product-price/{selected_country_config}/{selected_product_type}", "_blank");
+            JSRuntime.InvokeAsync<object>("open", $"/product-price-edit/{selected_country_config}/{selected_product_type}", "_blank");
         }
     }
 
