@@ -4,9 +4,10 @@ using System.IO;
 using CsvHelper;
 using System.Globalization;
 
-using MovieTableEdit.Models;
 
-namespace MovieTableEdit.Data
+using ProductDataLayer.Models;
+
+namespace ProductDataLayer.Data
 {
     public class MovieTableEditContext : DbContext
     {

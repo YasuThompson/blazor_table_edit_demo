@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MovieTableEdit.Models;
+namespace ProductDataLayer.Models;
 
 public class TempProductPriceDE
 {
