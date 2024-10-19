@@ -1,7 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security;
 
 namespace ProductDataLayer.Models;
+
+public class SampleDim
+{
+    public int Id {get; set; }
+    public int SampleId {get; set; }
+    public string Sample {get; set; }
+}
 
 
 public class TempProductDim
