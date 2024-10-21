@@ -6,5 +6,8 @@ MovieTableEdit/Data/MockMovie.db*
 MovieTableEdit/Data/MockMovie.db
 MovieTableEdit/Migrations
 
-ProductData/bin/
+ProductData/bin
 ProudctData/obj
+
+ProductDataAPI/bin
+ProudctDataAPI/obj
